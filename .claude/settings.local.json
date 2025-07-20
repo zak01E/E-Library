@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer create-project:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(chmod:*)",
+      "Bash(cd:*)",
+      "Bash(rm:*)",
+      "Bash(npm install:*)",
+      "Bash(cd:*)",
+      "Bash(cd:*)",
+      "Bash(php artisan serve:*)",
+      "Bash(php artisan:*)",
+      "Bash(mv:*)",
+      "WebFetch(domain:www.penguinui.com)",
+      "Bash(touch:*)"
+    ],
+    "deny": []
+  }
+}
