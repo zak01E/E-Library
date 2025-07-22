@@ -110,41 +110,50 @@
                     </div>
 
                     @if($books->count() > 0)
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             @foreach($books as $book)
-                                <div class="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                                    @if($book->cover_image)
-                                        <img src="{{ Storage::url($book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-48 object-cover">
-                                    @else
-                                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                                            <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                                            </svg>
-                                        </div>
-                                    @endif
-                                    <div class="p-4">
-                                        <h3 class="font-semibold text-lg mb-2">
-                                            <a href="{{ route('books.show', $book) }}" class="hover:text-indigo-600">
-                                                {{ $book->title }}
-                                            </a>
-                                        </h3>
-                                        <p class="text-gray-600 text-sm mb-2">by {{ $book->author_name }}</p>
-                                        @if($book->category)
-                                            <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-2 mb-2">
-                                                {{ $book->category }}
-                                            </span>
-                                        @endif
-                                        <div class="flex justify-between items-center text-sm text-gray-500 mt-2">
-                                            <span>{{ $book->views }} views</span>
-                                            <span>{{ $book->downloads }} downloads</span>
-                                        </div>
-                                        @if(!$book->is_approved && auth()->user()->role === 'admin')
-                                            <div class="mt-2">
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                    Pending Approval
-                                                </span>
+                                <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 group h-96 flex flex-col">
+                                    <div class="relative h-56 flex-shrink-0">
+                                        @if($book->cover_image)
+                                            <img src="{{ Storage::url($book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        @else
+                                            <div class="w-full h-full bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center group-hover:from-indigo-600 group-hover:to-indigo-700 transition-all duration-300">
+                                                <div class="text-white text-center p-3 max-w-full">
+                                                    <i class="fas fa-book text-2xl mb-2"></i>
+                                                    <div class="font-bold text-xs leading-tight break-words line-clamp-3">{{ Str::limit($book->title, 30) }}</div>
+                                                </div>
                                             </div>
                                         @endif
+                                        <!-- Stats Badge -->
+                                        <div class="absolute top-2 right-2 bg-indigo-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                                            <i class="fas fa-eye mr-1"></i>{{ number_format($book->views) }}
+                                        </div>
+                                    </div>
+                                    <div class="p-4 flex-1 flex flex-col justify-between">
+                                        <div>
+                                            <h3 class="font-heading font-bold text-gray-900 mb-2 text-sm group-hover:text-indigo-600 transition-colors line-clamp-2">
+                                                <a href="{{ route('books.show', $book) }}">
+                                                    {{ $book->title }}
+                                                </a>
+                                            </h3>
+                                            <p class="text-gray-600 text-xs mb-2">Par {{ $book->author_name }}</p>
+                                            @if($book->category)
+                                                <span class="inline-block bg-gray-100 rounded-full px-2 py-1 text-xs font-semibold text-gray-700 mb-2">
+                                                    {{ $book->category }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="mt-auto">
+                                            <div class="flex justify-between items-center text-xs text-gray-500 mb-2">
+                                                <span><i class="fas fa-eye mr-1"></i>{{ $book->views }}</span>
+                                                <span><i class="fas fa-download mr-1"></i>{{ $book->downloads }}</span>
+                                            </div>
+                                            @if(!$book->is_approved && auth()->user()->role === 'admin')
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                    En attente
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach

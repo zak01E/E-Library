@@ -18,9 +18,9 @@
                             @if($book->cover_image)
                                 <img src="{{ asset('storage/' . $book->cover_image) }}"
                                      alt="{{ $book->title }}"
-                                     class="w-full h-32 object-cover">
+                                     class="w-full aspect-[6/7] object-cover">
                             @else
-                                <div class="w-full h-32 bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center">
+                                <div class="w-full aspect-[6/7] bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center">
                                     <i class="fas fa-book text-white text-2xl"></i>
                                 </div>
                             @endif

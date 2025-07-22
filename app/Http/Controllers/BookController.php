@@ -82,6 +82,38 @@ class BookController extends Controller
         return view('admin.book-details', compact('book'));
     }
 
+    public function preview(Book $book)
+    {
+        if ($book->status !== 'approved') {
+            abort(404);
+        }
+
+        // Vérifier si le fichier existe
+        if (!Storage::disk('public')->exists($book->pdf_path)) {
+            abort(404, 'Le fichier PDF n\'existe pas.');
+        }
+
+        try {
+            $filePath = Storage::disk('public')->path($book->pdf_path);
+
+            // Lire seulement les premières pages (limité pour l'aperçu)
+            $headers = [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="preview-' . Str::slug($book->title) . '.pdf"',
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0'
+            ];
+
+            // Pour l'aperçu, on peut retourner le PDF complet mais avec des restrictions côté client
+            return response()->file($filePath, $headers);
+
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de l\'aperçu du livre ID ' . $book->id . ': ' . $e->getMessage());
+            abort(404, 'Impossible d\'afficher l\'aperçu.');
+        }
+    }
+
     public function download(Book $book)
     {
         if ($book->status !== 'approved' && (!auth()->check() || (auth()->user()->role !== 'admin' && auth()->id() !== $book->uploaded_by))) {
@@ -126,20 +158,70 @@ class BookController extends Controller
     }
 
     // Public methods for non-authenticated users
-    public function publicIndex()
+    public function publicIndex(Request $request)
     {
-        $books = Book::with('uploader')
-            ->where('is_approved', true)
-            ->latest()
-            ->paginate(12);
+        $query = Book::with('uploader')->where('status', 'approved');
 
-        return view('books.public.index', compact('books'));
+        // Filter by category
+        if ($request->filled('category') && $request->category !== 'all') {
+            $query->where('category', $request->category);
+        }
+
+        // Filter by language
+        if ($request->filled('language') && $request->language !== 'all') {
+            $query->where('language', $request->language);
+        }
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('author_name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Sort functionality
+        $sort = $request->get('sort', 'latest');
+        switch ($sort) {
+            case 'popular':
+                $query->orderBy('views', 'desc');
+                break;
+            case 'downloads':
+                $query->orderBy('downloads', 'desc');
+                break;
+            case 'alphabetical':
+                $query->orderBy('title', 'asc');
+                break;
+            case 'latest':
+            default:
+                $query->latest();
+                break;
+        }
+
+        $books = $query->paginate(12)->withQueryString();
+
+        // Get unique categories and languages for filters
+        $categories = Book::where('status', 'approved')
+            ->whereNotNull('category')
+            ->distinct()
+            ->pluck('category')
+            ->sort();
+
+        $languages = Book::where('status', 'approved')
+            ->whereNotNull('language')
+            ->distinct()
+            ->pluck('language')
+            ->sort();
+
+        return view('books.public.index', compact('books', 'categories', 'languages'));
     }
 
     public function publicShow(Book $book)
     {
         // Only show approved books to public
-        if (!$book->is_approved) {
+        if ($book->status !== 'approved') {
             abort(404);
         }
 

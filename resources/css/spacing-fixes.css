@@ -1,0 +1,148 @@
+/* Spacing Fixes for E-Library Homepage */
+
+/* Enhanced Grid Spacing - Fix for colliding blocks */
+.grid {
+    gap: 2rem !important;
+}
+
+.grid > * {
+    margin-bottom: 1.5rem;
+}
+
+/* Books Grid Container */
+.books-grid-container {
+    padding: 0 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.books-grid-container .grid {
+    gap: 2rem !important;
+    margin-bottom: 2rem;
+}
+
+/* Book Cards Spacing */
+.book-card {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Categories Grid */
+.categories-grid {
+    gap: 1.5rem !important;
+}
+
+.categories-grid > * {
+    margin-bottom: 1rem;
+}
+
+/* Authors Grid */
+.authors-grid {
+    gap: 2rem !important;
+}
+
+.authors-grid > * {
+    margin-bottom: 1.5rem;
+}
+
+/* Mobile Responsive Spacing */
+@media (max-width: 768px) {
+    .grid {
+        gap: 1.5rem !important;
+    }
+    
+    .grid > * {
+        margin-bottom: 1rem;
+    }
+    
+    .books-grid-container {
+        padding: 0 0.25rem;
+    }
+    
+    .book-card {
+        margin-bottom: 1rem !important;
+    }
+}
+
+/* Tablet Responsive Spacing */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .grid {
+        gap: 1.75rem !important;
+    }
+    
+    .book-card {
+        margin-bottom: 1.25rem !important;
+    }
+}
+
+/* Large Screen Spacing */
+@media (min-width: 1025px) {
+    .grid {
+        gap: 2.5rem !important;
+    }
+    
+    .book-card {
+        margin-bottom: 2rem !important;
+    }
+}
+
+/* Fix for Alpine.js transitions */
+[x-cloak] { 
+    display: none !important; 
+}
+
+/* Ensure cards don't overlap */
+.card-spacing {
+    margin-bottom: 1.5rem !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* Additional spacing for sections */
+.section-spacing {
+    margin-bottom: 4rem;
+    padding: 2rem 0;
+}
+
+/* Grid item spacing */
+.grid-item {
+    margin-bottom: 1.5rem;
+    padding: 0.5rem;
+}
+
+/* Prevent layout shifts */
+.grid-container {
+    min-height: 200px;
+}
+
+/* Enhanced hover effects with proper spacing */
+.hover-lift-spaced {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 1.5rem;
+}
+
+.hover-lift-spaced:hover {
+    transform: translateY(-8px);
+    z-index: 10;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure proper spacing in flex containers */
+.flex-spacing > * {
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+.flex-spacing > *:last-child {
+    margin-right: 0;
+}
+
+/* Grid gap utilities */
+.gap-fixed-sm { gap: 1rem !important; }
+.gap-fixed-md { gap: 1.5rem !important; }
+.gap-fixed-lg { gap: 2rem !important; }
+.gap-fixed-xl { gap: 2.5rem !important; }
+
+/* Margin utilities for grid items */
+.mb-fixed-sm { margin-bottom: 0.5rem !important; }
+.mb-fixed-md { margin-bottom: 1rem !important; }
+.mb-fixed-lg { margin-bottom: 1.5rem !important; }
+.mb-fixed-xl { margin-bottom: 2rem !important; }

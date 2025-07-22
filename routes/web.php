@@ -7,6 +7,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\MainDashboardController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,16 +16,26 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/trending-data', [App\Http\Controllers\HomeController::class, 'getTrendingData'])->name('home.trending');
+Route::get('/filtered-books', [App\Http\Controllers\HomeController::class, 'getFilteredBooks'])->name('home.filtered-books');
+
+// Design showcase route (for development/demo purposes)
+Route::get('/design-showcase', function () {
+    return view('design-showcase');
+})->name('design.showcase');
 
 Route::get('/search', [SearchController::class, 'index'])->name('books.search');
 
 // Public book routes (accessible without authentication)
 Route::get('/library', [BookController::class, 'publicIndex'])->name('books.public.index');
 Route::get('/library/{book}', [BookController::class, 'publicShow'])->name('books.public.show');
-Route::get('/library/{book}/download', [BookController::class, 'download'])->name('books.public.download');
+Route::get('/library/{book}/preview', [BookController::class, 'preview'])->name('books.public.preview');
+
+// Protected download route (requires authentication)
+Route::middleware('auth')->group(function () {
+    Route::get('/library/{book}/download', [BookController::class, 'download'])->name('books.public.download');
+});
 
 // Admin login route
 Route::middleware(['guest', 'admin.guest'])->group(function () {
