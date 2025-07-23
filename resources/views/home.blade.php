@@ -31,10 +31,10 @@
                 <!-- Desktop Navigation -->
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#accueil" class="text-gray-900 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Accueil</a>
-                        <a href="#bibliotheque" class="text-gray-500 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Bibliothèque</a>
-                        <a href="#auteurs" class="text-gray-500 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Auteurs</a>
-                        <a href="#a-propos" class="text-gray-500 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">À propos</a>
+                        <a href="#accueil" class="text-gray-900 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">{{ site_setting('nav_menu_accueil', 'Accueil') }}</a>
+                        <a href="{{ route('books.public.index') }}" class="text-gray-500 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">{{ site_setting('nav_menu_bibliotheque', 'Bibliothèque') }}</a>
+                        <a href="{{ route('authors.index') }}" class="text-gray-500 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">{{ site_setting('nav_menu_auteurs', 'Auteurs') }}</a>
+                        <a href="#a-propos" class="text-gray-500 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">{{ site_setting('nav_menu_apropos', 'À propos') }}</a>
                     </div>
                 </div>
 
@@ -43,15 +43,15 @@
                     @if (Route::has('login'))
                         @auth
                             <a href="{{ url('/dashboard') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                Dashboard
+                                {{ site_setting('nav_button_dashboard', 'Dashboard') }}
                             </a>
                         @else
                             <a href="{{ route('login') }}" class="text-gray-500 hover:text-emerald-600 px-3 py-2 text-sm font-medium transition-colors">
-                                Connexion
+                                {{ site_setting('nav_button_connexion', 'Connexion') }}
                             </a>
                             @if (Route::has('register'))
                                 <a href="{{ route('register') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                    S'inscrire
+                                    {{ site_setting('nav_button_inscription', 'S\'inscrire') }}
                                 </a>
                             @endif
                         @endauth
@@ -70,17 +70,17 @@
         <!-- Mobile Navigation -->
         <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white border-t">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#accueil" class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Accueil</a>
-                <a href="#bibliotheque" class="text-gray-500 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Bibliothèque</a>
-                <a href="#auteurs" class="text-gray-500 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Auteurs</a>
-                <a href="#a-propos" class="text-gray-500 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">À propos</a>
+                <a href="#accueil" class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium">{{ site_setting('nav_menu_accueil', 'Accueil') }}</a>
+                <a href="{{ route('books.public.index') }}" class="text-gray-500 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">{{ site_setting('nav_menu_bibliotheque', 'Bibliothèque') }}</a>
+                <a href="{{ route('authors.index') }}" class="text-gray-500 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">{{ site_setting('nav_menu_auteurs', 'Auteurs') }}</a>
+                <a href="#a-propos" class="text-gray-500 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">{{ site_setting('nav_menu_apropos', 'À propos') }}</a>
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="bg-indigo-600 text-white block px-3 py-2 rounded-md text-base font-medium">Dashboard</a>
+                        <a href="{{ url('/dashboard') }}" class="bg-indigo-600 text-white block px-3 py-2 rounded-md text-base font-medium">{{ site_setting('nav_button_dashboard', 'Dashboard') }}</a>
                     @else
-                        <a href="{{ route('login') }}" class="text-gray-500 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Connexion</a>
+                        <a href="{{ route('login') }}" class="text-gray-500 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">{{ site_setting('nav_button_connexion', 'Connexion') }}</a>
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="bg-indigo-600 text-white block px-3 py-2 rounded-md text-base font-medium">S'inscrire</a>
+                            <a href="{{ route('register') }}" class="bg-indigo-600 text-white block px-3 py-2 rounded-md text-base font-medium">{{ site_setting('nav_button_inscription', 'S\'inscrire') }}</a>
                         @endif
                     @endauth
                 @endif
@@ -93,7 +93,7 @@
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h1 class="text-2xl md:text-3xl font-heading font-bold text-white mb-3">
-                    Bienvenue sur<br>
+                    {{ site_setting('hero_welcome_text', 'Bienvenue sur') }}<br>
                     <span class="text-emerald-200">{{ site_name() }}</span>
                 </h1>
                 <h2 class="text-base md:text-lg font-display text-white/90 mb-5">
@@ -111,11 +111,11 @@
                         <div class="flex-1 relative">
                             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
                             <input type="text" id="heroSearchInput"
-                                   placeholder="Rechercher un livre..."
+                                   placeholder="{{ site_setting('hero_search_placeholder', 'Rechercher un livre...') }}"
                                    class="w-full pl-10 pr-3 py-2.5 text-gray-900 border-0 focus:outline-none focus:ring-0 text-sm">
                         </div>
                         <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 font-semibold transition-colors text-sm">
-                            Rechercher
+                            {{ site_setting('hero_search_button', 'Rechercher') }}
                         </button>
                     </form>
                 </div>
@@ -124,13 +124,13 @@
                 <div class="flex flex-col sm:flex-row gap-2 justify-center items-center mb-6">
                     <a href="{{ route('books.public.index') }}" class="bg-white text-emerald-600 px-5 py-2.5 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow text-sm">
                         <i class="fas fa-book-open mr-2"></i>
-                        Explorer la Bibliothèque
+                        {{ site_setting('hero_cta_explorer', 'Explorer la Bibliothèque') }}
                     </a>
 
                     @guest
                         <a href="{{ route('register') }}" class="bg-white/20 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-white/30 transition-colors border border-white/30 text-sm">
                             <i class="fas fa-user-plus mr-2"></i>
-                            Rejoindre
+                            {{ site_setting('hero_cta_rejoindre', 'Rejoindre') }}
                         </a>
                     @endguest
                 </div>
@@ -139,19 +139,19 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-lg mx-auto" x-data="statsCounter()">
                     <div class="text-center">
                         <div class="text-xl font-bold text-white mb-1" x-text="animatedBooks + '+'"></div>
-                        <div class="text-white/70 text-xs">Livres</div>
+                        <div class="text-white/70 text-xs">{{ site_setting('hero_stats_livres', 'Livres') }}</div>
                     </div>
                     <div class="text-center">
                         <div class="text-xl font-bold text-white mb-1" x-text="animatedUsers + '+'"></div>
-                        <div class="text-white/70 text-xs">Lecteurs</div>
+                        <div class="text-white/70 text-xs">{{ site_setting('hero_stats_lecteurs', 'Lecteurs') }}</div>
                     </div>
                     <div class="text-center">
                         <div class="text-xl font-bold text-white mb-1" x-text="animatedDownloads + '+'"></div>
-                        <div class="text-white/70 text-xs">Téléchargements</div>
+                        <div class="text-white/70 text-xs">{{ site_setting('hero_stats_telechargements', 'Téléchargements') }}</div>
                     </div>
                     <div class="text-center">
                         <div class="text-xl font-bold text-white mb-1" x-text="animatedAuthors + '+'"></div>
-                        <div class="text-white/70 text-xs">Auteurs</div>
+                        <div class="text-white/70 text-xs">{{ site_setting('hero_stats_auteurs', 'Auteurs') }}</div>
                     </div>
                 </div>
             </div>
@@ -163,73 +163,73 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-heading font-bold text-gray-900 mb-4">
-                    Nos Fonctionnalités
+                    {{ site_setting('features_title', 'Nos Fonctionnalités') }}
                 </h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Découvrez ce qui rend notre bibliothèque numérique unique
+                    {{ site_setting('features_subtitle', 'Découvrez ce qui rend notre bibliothèque numérique unique') }}
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-3 gap-3 sm:gap-6">
                 <!-- Feature 1: Lecture -->
-                <div class="bg-white rounded-lg p-6 shadow-sm">
-                    <div class="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-book-reader text-white text-xl"></i>
+                <div class="bg-white rounded-lg p-3 sm:p-6 shadow-sm">
+                    <div class="w-8 h-8 sm:w-12 sm:h-12 bg-{{ site_setting('feature1_color', 'emerald') }}-500 rounded-lg flex items-center justify-center mb-2 sm:mb-4">
+                        <i class="{{ site_setting('feature1_icon', 'fas fa-book-reader') }} text-white text-sm sm:text-xl"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3 font-heading">Lecture Simple</h3>
-                    <p class="text-gray-600 mb-4">
-                        Lisez vos livres préférés avec notre lecteur intégré et intuitif.
+                    <h3 class="text-sm sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3 font-heading">{{ site_setting('feature1_title', 'Lecture Simple') }}</h3>
+                    <p class="text-xs sm:text-base text-gray-600 mb-2 sm:mb-4">
+                        {{ site_setting('feature1_description', 'Lisez vos livres préférés avec notre lecteur intégré et intuitif.') }}
                     </p>
-                    <ul class="space-y-2 text-sm text-gray-600">
+                    <ul class="space-y-1 sm:space-y-2 text-xs sm:text-sm text-gray-600">
                         <li class="flex items-center">
-                            <i class="fas fa-check text-emerald-500 text-xs mr-2"></i>
-                            Lecteur PDF intégré
+                            <i class="fas fa-check text-{{ site_setting('feature1_color', 'emerald') }}-500 text-xs mr-2"></i>
+                            {{ site_setting('feature1_point1', 'Lecteur PDF intégré') }}
                         </li>
                         <li class="flex items-center">
-                            <i class="fas fa-check text-emerald-500 text-xs mr-2"></i>
-                            Mode sombre/clair
+                            <i class="fas fa-check text-{{ site_setting('feature1_color', 'emerald') }}-500 text-xs mr-2"></i>
+                            {{ site_setting('feature1_point2', 'Mode sombre/clair') }}
                         </li>
                     </ul>
                 </div>
 
                 <!-- Feature 2: Publication -->
-                <div class="bg-white rounded-lg p-6 shadow-sm">
-                    <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-pen-fancy text-white text-xl"></i>
+                <div class="bg-white rounded-lg p-3 sm:p-6 shadow-sm">
+                    <div class="w-8 h-8 sm:w-12 sm:h-12 bg-{{ site_setting('feature2_color', 'green') }}-500 rounded-lg flex items-center justify-center mb-2 sm:mb-4">
+                        <i class="{{ site_setting('feature2_icon', 'fas fa-pen-fancy') }} text-white text-sm sm:text-xl"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Publication</h3>
-                    <p class="text-gray-600 mb-4">
-                        Publiez vos œuvres facilement et partagez-les avec la communauté.
+                    <h3 class="text-sm sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3">{{ site_setting('feature2_title', 'Publication') }}</h3>
+                    <p class="text-xs sm:text-base text-gray-600 mb-2 sm:mb-4">
+                        {{ site_setting('feature2_description', 'Publiez vos œuvres facilement et partagez-les avec la communauté.') }}
                     </p>
-                    <ul class="space-y-2 text-sm text-gray-600">
+                    <ul class="space-y-1 sm:space-y-2 text-xs sm:text-sm text-gray-600">
                         <li class="flex items-center">
-                            <i class="fas fa-check text-green-500 text-xs mr-2"></i>
-                            Upload simple
+                            <i class="fas fa-check text-{{ site_setting('feature2_color', 'green') }}-500 text-xs mr-2"></i>
+                            {{ site_setting('feature2_point1', 'Upload simple') }}
                         </li>
                         <li class="flex items-center">
-                            <i class="fas fa-check text-green-500 text-xs mr-2"></i>
-                            Validation rapide
+                            <i class="fas fa-check text-{{ site_setting('feature2_color', 'green') }}-500 text-xs mr-2"></i>
+                            {{ site_setting('feature2_point2', 'Validation rapide') }}
                         </li>
                     </ul>
                 </div>
 
                 <!-- Feature 3: Recherche -->
-                <div class="bg-white rounded-lg p-6 shadow-sm">
-                    <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-search text-white text-xl"></i>
+                <div class="bg-white rounded-lg p-3 sm:p-6 shadow-sm">
+                    <div class="w-8 h-8 sm:w-12 sm:h-12 bg-{{ site_setting('feature3_color', 'orange') }}-500 rounded-lg flex items-center justify-center mb-2 sm:mb-4">
+                        <i class="{{ site_setting('feature3_icon', 'fas fa-search') }} text-white text-sm sm:text-xl"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Recherche</h3>
-                    <p class="text-gray-600 mb-4">
-                        Trouvez rapidement vos livres préférés.
+                    <h3 class="text-sm sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3">{{ site_setting('feature3_title', 'Recherche') }}</h3>
+                    <p class="text-xs sm:text-base text-gray-600 mb-2 sm:mb-4">
+                        {{ site_setting('feature3_description', 'Trouvez rapidement vos livres préférés.') }}
                     </p>
-                    <ul class="space-y-2 text-sm text-gray-600">
+                    <ul class="space-y-1 sm:space-y-2 text-xs sm:text-sm text-gray-600">
                         <li class="flex items-center">
-                            <i class="fas fa-check text-orange-500 text-xs mr-2"></i>
-                            Recherche par titre
+                            <i class="fas fa-check text-{{ site_setting('feature3_color', 'orange') }}-500 text-xs mr-2"></i>
+                            {{ site_setting('feature3_point1', 'Recherche par titre') }}
                         </li>
                         <li class="flex items-center">
-                            <i class="fas fa-check text-orange-500 text-xs mr-2"></i>
-                            Filtres par catégorie
+                            <i class="fas fa-check text-{{ site_setting('feature3_color', 'orange') }}-500 text-xs mr-2"></i>
+                            {{ site_setting('feature3_point2', 'Filtres par catégorie') }}
                         </li>
                     </ul>
                 </div>
@@ -244,91 +244,18 @@
             <!-- Section Header -->
             <div class="text-center mb-8">
                 <h2 class="text-3xl font-heading font-bold text-gray-900 mb-6">
-                    Découvrez nos Livres
+                    {{ site_setting('books_section_title', 'Découvrez nos Livres') }}
                 </h2>
 
                 <!-- Filters Section -->
-                <div class="bg-gray-50 rounded-xl p-4 mb-8 max-w-4xl mx-auto">
-                    <form id="homeFiltersForm" class="flex flex-wrap items-center justify-center gap-4">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-filter text-gray-500 text-sm"></i>
-                            <span class="text-gray-700 font-medium text-sm">Filtres:</span>
-                        </div>
-
-                        <!-- Search -->
-                        <input type="text"
-                               name="search"
-                               placeholder="Rechercher..."
-                               class="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 w-48">
-
-                        <!-- Category Filter -->
-                        <select name="category" class="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
-                            <option value="all">📚 Toutes catégories</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category }}">
-                                    @switch($category)
-                                        @case('Fiction')
-                                            📖 {{ $category }}
-                                            @break
-                                        @case('Science')
-                                            🔬 {{ $category }}
-                                            @break
-                                        @case('Technologie')
-                                            💻 {{ $category }}
-                                            @break
-                                        @case('Histoire')
-                                            🏛️ {{ $category }}
-                                            @break
-                                        @case('Biographie')
-                                            👤 {{ $category }}
-                                            @break
-                                        @default
-                                            📚 {{ $category }}
-                                    @endswitch
-                                </option>
-                            @endforeach
-                        </select>
-
-                        <!-- Language Filter -->
-                        <select name="language" class="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
-                            <option value="all">🌍 Toutes langues</option>
-                            @foreach($languages as $language)
-                                <option value="{{ $language }}">
-                                    @switch($language)
-                                        @case('Français')
-                                            🇫🇷 {{ $language }}
-                                            @break
-                                        @case('Anglais')
-                                            🇬🇧 {{ $language }}
-                                            @break
-                                        @case('Espagnol')
-                                            🇪🇸 {{ $language }}
-                                            @break
-                                        @default
-                                            🌍 {{ $language }}
-                                    @endswitch
-                                </option>
-                            @endforeach
-                        </select>
-
-                        <!-- Author Filter -->
-                        <div class="relative">
-                            <input type="text"
-                                   name="author"
-                                   id="authorSearch"
-                                   placeholder="👤 Rechercher un auteur..."
-                                   class="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 w-48"
-                                   autocomplete="off">
-                            <div id="authorSuggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto hidden">
-                                <!-- Suggestions will be populated by JavaScript -->
-                            </div>
-                        </div>
-
-                        <!-- Clear Filters Button -->
-                        <button type="button" id="clearFilters" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg text-sm transition-colors">
-                            <i class="fas fa-times mr-1"></i>Effacer
-                        </button>
-                    </form>
+                <div class="max-w-4xl mx-auto">
+                    <x-book-filters
+                        :action="route('home')"
+                        :categories="$categories"
+                        :languages="$languages"
+                        :authors="$authors"
+                        :show-sort="false"
+                    />
                 </div>
 
                 <!-- Section Tabs -->
@@ -337,17 +264,17 @@
                         <button @click="activeTab = 'recent'"
                                 :class="activeTab === 'recent' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
                                 class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200">
-                            <i class="fas fa-clock mr-2"></i>Récents
+                            <i class="fas fa-clock mr-2"></i>{{ site_setting('books_tab_recent', 'Récents') }}
                         </button>
                         <button @click="activeTab = 'popular'"
                                 :class="activeTab === 'popular' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
                                 class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200">
-                            <i class="fas fa-fire mr-2"></i>Populaires
+                            <i class="fas fa-fire mr-2"></i>{{ site_setting('books_tab_popular', 'Populaires') }}
                         </button>
                         <button @click="activeTab = 'viewed'"
                                 :class="activeTab === 'viewed' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
                                 class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200">
-                            <i class="fas fa-eye mr-2"></i>Les plus vus
+                            <i class="fas fa-eye mr-2"></i>{{ site_setting('books_tab_viewed', 'Les plus vus') }}
                         </button>
                     </div>
                 </div>
@@ -644,177 +571,153 @@
         </div>
     </section>
 
+    @php
+        // Calculer les livres uniques pour la section simple
+        $usedInTabs = collect($featuredBooks['popular'])
+            ->merge($featuredBooks['recent'])
+            ->merge($featuredBooks['most_viewed'])
+            ->pluck('id')
+            ->unique();
+
+        // Obtenir des livres différents pour cette section
+        $simpleBooks = collect($featuredBooks['popular'])
+            ->merge($featuredBooks['recent'])
+            ->merge($featuredBooks['most_viewed'])
+            ->unique('id')
+            ->take(4);
+
+        // Si on a moins de 8 livres uniques au total, masquer cette section
+        $totalUniqueBooks = $simpleBooks->count();
+        $showSimpleSection = $totalUniqueBooks >= 8;
+    @endphp
+
+    @if($showSimpleSection)
     <!-- Books Section Simple -->
     <section id="bibliotheque" class="py-16 bg-white">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-heading font-bold text-gray-900 mb-4">
-                    Livres Populaires
+                    {{ site_setting('simple_books_title', 'Sélection Spéciale') }}
                 </h2>
                 <p class="text-lg text-gray-600">
-                    Découvrez notre sélection de livres
+                    {{ site_setting('simple_books_subtitle', 'Découvrez notre sélection de livres') }}
                 </p>
             </div>
 
             <!-- Books Grid Simple -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Book 1 -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="aspect-[3/4] bg-emerald-500 flex items-center justify-center">
-                        <div class="text-white text-center p-4">
-                            <i class="fas fa-book text-3xl mb-2"></i>
-                            <div class="font-semibold">L'Art du Code</div>
-                            <div class="text-sm opacity-80">par Jean Dupont</div>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-semibold text-gray-900 mb-2">L'Art du Code</h3>
-                        <p class="text-gray-600 text-sm mb-3">Guide de programmation moderne</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-emerald-600 font-semibold">Gratuit</span>
-                            <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-sm">
-                                Lire
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                @php
+                    $colors = ['emerald', 'green', 'orange', 'blue'];
+                    $icons = ['fas fa-book', 'fas fa-leaf', 'fas fa-brain', 'fas fa-star'];
+                @endphp
 
-                <!-- Book 2 -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="aspect-[3/4] bg-green-500 flex items-center justify-center">
-                        <div class="text-white text-center p-4">
-                            <i class="fas fa-leaf text-3xl mb-2"></i>
-                            <div class="font-semibold">Écologie Moderne</div>
-                            <div class="text-sm opacity-80">par Marie Martin</div>
+                @forelse($simpleBooks as $index => $book)
+                    @php
+                        $color = $colors[$index % count($colors)];
+                        $icon = $icons[$index % count($icons)];
+                    @endphp
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
+                        <div class="aspect-[3/4] bg-{{ $color }}-500 flex items-center justify-center">
+                            @if($book->cover_image)
+                                <img src="{{ asset('storage/' . $book->cover_image) }}"
+                                     alt="{{ $book->title }}"
+                                     class="w-full h-full object-cover">
+                            @else
+                                <div class="text-white text-center p-4">
+                                    <i class="{{ $icon }} text-3xl mb-2"></i>
+                                    <div class="font-semibold">{{ Str::limit($book->title, 20) }}</div>
+                                    <div class="text-sm opacity-80">par {{ $book->author_name }}</div>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-gray-900 mb-2">{{ Str::limit($book->title, 25) }}</h3>
+                            <p class="text-gray-600 text-sm mb-3">{{ Str::limit($book->description ?? $book->category, 40) }}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-{{ $color }}-600 font-semibold">
+                                    {{ $book->price > 0 ? number_format($book->price, 2) . '€' : 'Gratuit' }}
+                                </span>
+                                <a href="{{ route('books.public.show', $book) }}"
+                                   class="bg-{{ $color }}-600 hover:bg-{{ $color }}-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                    Lire
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-4">
-                        <h3 class="font-semibold text-gray-900 mb-2">Écologie Moderne</h3>
-                        <p class="text-gray-600 text-sm mb-3">Enjeux environnementaux</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-green-600 font-semibold">Gratuit</span>
-                            <button class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">
-                                Lire
-                            </button>
-                        </div>
+                @empty
+                    <!-- Fallback si pas de livres -->
+                    <div class="col-span-full text-center py-8">
+                        <p class="text-gray-500">Aucun livre disponible pour le moment.</p>
                     </div>
-                </div>
-
-                <!-- Book 3 -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="aspect-[3/4] bg-orange-500 flex items-center justify-center">
-                        <div class="text-white text-center p-4">
-                            <i class="fas fa-brain text-3xl mb-2"></i>
-                            <div class="font-semibold">Psychologie</div>
-                            <div class="text-sm opacity-80">par Dr. Sophie</div>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-semibold text-gray-900 mb-2">Psychologie Positive</h3>
-                        <p class="text-gray-600 text-sm mb-3">Bien-être mental</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-orange-600 font-semibold">Gratuit</span>
-                            <button class="bg-orange-600 hover:bg-orange-700 text-white px-3 py-1 rounded text-sm">
-                                Lire
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
 
             <!-- View All Button -->
             <div class="text-center mt-8">
                 <a href="{{ route('books.public.index') }}" class="inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
                     <i class="fas fa-book-open mr-2"></i>
-                    Voir Tous les Livres
+                    {{ site_setting('simple_books_button', 'Voir Tous les Livres') }}
                 </a>
             </div>
         </div>
     </section>
+    @endif
 
     <!-- Authors Section -->
     <section id="auteurs" class="py-16 bg-gray-50">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-heading font-bold text-gray-900 mb-4">
-                    Auteurs Vedettes
+                    {{ site_setting('simple_authors_title', 'Auteurs Vedettes') }}
                 </h2>
                 <p class="text-lg text-gray-600">
-                    Découvrez les auteurs les plus appréciés de notre communauté
+                    {{ site_setting('simple_authors_subtitle', 'Découvrez les auteurs les plus appréciés de notre communauté') }}
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Author 1 -->
-                <div class="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-lg transition-all duration-300">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-white font-bold text-xl">JD</span>
-                    </div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Jean Dupont</h3>
-                    <p class="text-gray-600 text-sm mb-3">Spécialiste en programmation et technologies modernes</p>
-                    <div class="flex items-center justify-center space-x-4 text-sm text-gray-500 mb-4">
-                        <span><i class="fas fa-book text-emerald-500 mr-1"></i>12 livres</span>
-                        <span><i class="fas fa-heart text-red-500 mr-1"></i>2.5K</span>
-                    </div>
-                    <a href="#" class="text-emerald-600 hover:text-emerald-700 font-medium text-sm transition-colors">
-                        Voir les livres
-                    </a>
-                </div>
+                @php
+                    $simpleAuthors = $featuredAuthors->take(4);
+                    $colors = [
+                        ['from' => 'blue-400', 'to' => 'blue-600', 'text' => 'blue-600'],
+                        ['from' => 'green-400', 'to' => 'green-600', 'text' => 'green-600'],
+                        ['from' => 'purple-400', 'to' => 'purple-600', 'text' => 'purple-600'],
+                        ['from' => 'orange-400', 'to' => 'orange-600', 'text' => 'orange-600']
+                    ];
+                @endphp
 
-                <!-- Author 2 -->
-                <div class="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-lg transition-all duration-300">
-                    <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-white font-bold text-xl">MM</span>
+                @forelse($simpleAuthors as $index => $author)
+                    @php
+                        $color = $colors[$index % count($colors)];
+                        $initials = collect(explode(' ', $author->name))->map(fn($word) => strtoupper(substr($word, 0, 1)))->take(2)->join('');
+                    @endphp
+                    <div class="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-lg transition-all duration-300">
+                        <div class="w-20 h-20 bg-gradient-to-br from-{{ $color['from'] }} to-{{ $color['to'] }} rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-white font-bold text-xl">{{ $initials }}</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 mb-2">{{ $author->name }}</h3>
+                        <p class="text-gray-600 text-sm mb-3">{{ $author->author_bio ?? 'Auteur sur E-Library' }}</p>
+                        <div class="flex items-center justify-center space-x-4 text-sm text-gray-500 mb-4">
+                            <span><i class="fas fa-book text-{{ explode('-', $color['text'])[0] }}-500 mr-1"></i>{{ $author->approved_books_count }} livre{{ $author->approved_books_count > 1 ? 's' : '' }}</span>
+                            <span><i class="fas fa-heart text-red-500 mr-1"></i>{{ number_format($author->total_views / 1000, 1) }}K</span>
+                        </div>
+                        <a href="{{ route('authors.show', $author) }}" class="text-{{ $color['text'] }} hover:text-{{ $color['text'] }} font-medium text-sm transition-colors">
+                            {{ site_setting('simple_authors_button', 'Voir les livres') }}
+                        </a>
                     </div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Marie Martin</h3>
-                    <p class="text-gray-600 text-sm mb-3">Experte en écologie et développement durable</p>
-                    <div class="flex items-center justify-center space-x-4 text-sm text-gray-500 mb-4">
-                        <span><i class="fas fa-book text-green-500 mr-1"></i>8 livres</span>
-                        <span><i class="fas fa-heart text-red-500 mr-1"></i>1.8K</span>
+                @empty
+                    <!-- Fallback si pas d'auteurs -->
+                    <div class="col-span-full text-center py-8">
+                        <p class="text-gray-500">Aucun auteur disponible pour le moment.</p>
                     </div>
-                    <a href="#" class="text-green-600 hover:text-green-700 font-medium text-sm transition-colors">
-                        Voir les livres
-                    </a>
-                </div>
-
-                <!-- Author 3 -->
-                <div class="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-lg transition-all duration-300">
-                    <div class="w-20 h-20 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-white font-bold text-xl">SL</span>
-                    </div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Dr. Sophie Leroy</h3>
-                    <p class="text-gray-600 text-sm mb-3">Psychologue clinicienne et auteure reconnue</p>
-                    <div class="flex items-center justify-center space-x-4 text-sm text-gray-500 mb-4">
-                        <span><i class="fas fa-book text-purple-500 mr-1"></i>15 livres</span>
-                        <span><i class="fas fa-heart text-red-500 mr-1"></i>3.2K</span>
-                    </div>
-                    <a href="#" class="text-purple-600 hover:text-purple-700 font-medium text-sm transition-colors">
-                        Voir les livres
-                    </a>
-                </div>
-
-                <!-- Author 4 -->
-                <div class="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-lg transition-all duration-300">
-                    <div class="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-white font-bold text-xl">PB</span>
-                    </div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Pierre Bernard</h3>
-                    <p class="text-gray-600 text-sm mb-3">Historien et passionné d'art contemporain</p>
-                    <div class="flex items-center justify-center space-x-4 text-sm text-gray-500 mb-4">
-                        <span><i class="fas fa-book text-orange-500 mr-1"></i>9 livres</span>
-                        <span><i class="fas fa-heart text-red-500 mr-1"></i>1.4K</span>
-                    </div>
-                    <a href="#" class="text-orange-600 hover:text-orange-700 font-medium text-sm transition-colors">
-                        Voir les livres
-                    </a>
-                </div>
+                @endforelse
             </div>
 
             <!-- View All Authors Button -->
             <div class="text-center mt-8">
                 <a href="{{ route('authors.index') }}" class="inline-flex items-center bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
                     <i class="fas fa-users mr-2"></i>
-                    Voir tous les auteurs
+                    {{ site_setting('simple_authors_view_all', 'Voir tous les auteurs') }}
                 </a>
             </div>
         </div>
@@ -825,30 +728,30 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-heading font-bold text-gray-900 mb-4">
-                    Témoignages
+                    {{ site_setting('testimonials_title', 'Témoignages') }}
                 </h2>
                 <p class="text-lg text-gray-600">
-                    Ce que disent nos utilisateurs
+                    {{ site_setting('testimonials_subtitle', 'Ce que disent nos utilisateurs') }}
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Testimonial 1 -->
-                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 relative">
-                    <div class="absolute top-4 left-4 text-indigo-200">
+                <div class="bg-gradient-to-br from-{{ site_setting('testimonial1_color', 'blue') }}-50 to-{{ site_setting('testimonial1_color', 'blue') }}-100 rounded-2xl p-8 relative">
+                    <div class="absolute top-4 left-4 text-{{ site_setting('testimonial1_color', 'blue') }}-200">
                         <i class="fas fa-quote-left text-3xl"></i>
                     </div>
                     <div class="pt-8">
                         <p class="text-gray-700 mb-6 italic">
-                            "E-Library a révolutionné ma façon de lire. L'interface est intuitive et la qualité des livres exceptionnelle. Je recommande vivement !"
+                            "{{ site_setting('testimonial1_text', 'E-Library a révolutionné ma façon de lire. L\'interface est intuitive et la qualité des livres exceptionnelle. Je recommande vivement !') }}"
                         </p>
                         <div class="flex items-center">
-                            <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-                                SM
+                            <div class="w-12 h-12 bg-gradient-to-r from-{{ site_setting('testimonial1_color', 'blue') }}-400 to-{{ site_setting('testimonial1_color', 'blue') }}-600 rounded-full flex items-center justify-center text-white font-bold">
+                                {{ site_setting('testimonial1_initials', 'SM') }}
                             </div>
                             <div class="ml-4">
-                                <div class="font-semibold text-gray-900">Sophie Martin</div>
-                                <div class="text-gray-600 text-sm">Lectrice passionnée</div>
+                                <div class="font-semibold text-gray-900">{{ site_setting('testimonial1_name', 'Sophie Martin') }}</div>
+                                <div class="text-gray-600 text-sm">{{ site_setting('testimonial1_role', 'Lectrice passionnée') }}</div>
                                 <div class="flex text-yellow-400 text-sm mt-1">
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
@@ -862,21 +765,21 @@
                 </div>
 
                 <!-- Testimonial 2 -->
-                <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 relative">
-                    <div class="absolute top-4 left-4 text-green-200">
+                <div class="bg-gradient-to-br from-{{ site_setting('testimonial2_color', 'green') }}-50 to-{{ site_setting('testimonial2_color', 'green') }}-100 rounded-2xl p-8 relative">
+                    <div class="absolute top-4 left-4 text-{{ site_setting('testimonial2_color', 'green') }}-200">
                         <i class="fas fa-quote-left text-3xl"></i>
                     </div>
                     <div class="pt-8">
                         <p class="text-gray-700 mb-6 italic">
-                            "En tant qu'auteur, publier mes livres sur E-Library a été un jeu d'enfant. Les outils d'analytics m'aident à comprendre mon audience."
+                            "{{ site_setting('testimonial2_text', 'En tant qu\'auteur, publier mes livres sur E-Library a été un jeu d\'enfant. Les outils d\'analytics m\'aident à comprendre mon audience.') }}"
                         </p>
                         <div class="flex items-center">
-                            <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center text-white font-bold">
-                                JD
+                            <div class="w-12 h-12 bg-gradient-to-r from-{{ site_setting('testimonial2_color', 'green') }}-400 to-{{ site_setting('testimonial2_color', 'green') }}-600 rounded-full flex items-center justify-center text-white font-bold">
+                                {{ site_setting('testimonial2_initials', 'JD') }}
                             </div>
                             <div class="ml-4">
-                                <div class="font-semibold text-gray-900">Jean Dubois</div>
-                                <div class="text-gray-600 text-sm">Auteur publié</div>
+                                <div class="font-semibold text-gray-900">{{ site_setting('testimonial2_name', 'Jean Dubois') }}</div>
+                                <div class="text-gray-600 text-sm">{{ site_setting('testimonial2_role', 'Auteur publié') }}</div>
                                 <div class="flex text-yellow-400 text-sm mt-1">
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
@@ -890,20 +793,20 @@
                 </div>
 
                 <!-- Testimonial 3 -->
-                <div class="bg-gray-50 rounded-2xl p-8">
-                    <div class="text-gray-400 mb-4">
+                <div class="bg-{{ site_setting('testimonial3_color', 'gray') }}-50 rounded-2xl p-8">
+                    <div class="text-{{ site_setting('testimonial3_color', 'gray') }}-400 mb-4">
                         <i class="fas fa-quote-left text-2xl"></i>
                     </div>
                     <p class="text-gray-700 mb-6 italic">
-                        "Interface simple et efficace. Je trouve facilement mes livres préférés."
+                        "{{ site_setting('testimonial3_text', 'Interface simple et efficace. Je trouve facilement mes livres préférés.') }}"
                     </p>
                     <div class="flex items-center">
-                        <div class="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold">
-                            AL
+                        <div class="w-12 h-12 bg-{{ site_setting('testimonial3_color', 'gray') }}-400 rounded-full flex items-center justify-center text-white font-bold">
+                            {{ site_setting('testimonial3_initials', 'AL') }}
                         </div>
                         <div class="ml-4">
-                            <div class="font-semibold text-gray-900">Alice Leroy</div>
-                            <div class="text-gray-600 text-sm">Étudiante</div>
+                            <div class="font-semibold text-gray-900">{{ site_setting('testimonial3_name', 'Alice Leroy') }}</div>
+                            <div class="text-gray-600 text-sm">{{ site_setting('testimonial3_role', 'Étudiante') }}</div>
                             <div class="flex text-yellow-400 text-sm mt-1">
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
@@ -923,10 +826,10 @@
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-heading font-bold text-gray-900 mb-4">
-                    Questions Fréquentes
+                    {{ site_setting('faq_title', 'Questions Fréquentes') }}
                 </h2>
                 <p class="text-lg text-gray-600">
-                    Trouvez rapidement les réponses à vos questions
+                    {{ site_setting('faq_subtitle', 'Trouvez rapidement les réponses à vos questions') }}
                 </p>
             </div>
 
@@ -935,14 +838,13 @@
                 <div class="bg-gray-50 rounded-lg overflow-hidden">
                     <button @click="openFaq = openFaq === 1 ? null : 1"
                             class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-100 transition-colors">
-                        <span class="font-semibold text-gray-900">Comment puis-je télécharger un livre ?</span>
+                        <span class="font-semibold text-gray-900">{{ site_setting('faq1_question', 'Comment puis-je télécharger un livre ?') }}</span>
                         <i class="fas fa-chevron-down transition-transform duration-200"
                            :class="{ 'rotate-180': openFaq === 1 }"></i>
                     </button>
                     <div x-show="openFaq === 1" x-transition class="px-6 pb-4">
                         <p class="text-gray-600">
-                            Pour télécharger un livre, il suffit de cliquer sur le bouton "Télécharger" sur la page du livre.
-                            Vous devez être connecté à votre compte pour accéder aux téléchargements.
+                            {{ site_setting('faq1_answer', 'Pour télécharger un livre, il suffit de cliquer sur le bouton "Télécharger" sur la page du livre. Vous devez être connecté à votre compte pour accéder aux téléchargements.') }}
                         </p>
                     </div>
                 </div>
@@ -951,14 +853,13 @@
                 <div class="bg-gray-50 rounded-lg overflow-hidden">
                     <button @click="openFaq = openFaq === 2 ? null : 2"
                             class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-100 transition-colors">
-                        <span class="font-semibold text-gray-900">L'inscription est-elle vraiment gratuite ?</span>
+                        <span class="font-semibold text-gray-900">{{ site_setting('faq2_question', 'L\'inscription est-elle vraiment gratuite ?') }}</span>
                         <i class="fas fa-chevron-down transition-transform duration-200"
                            :class="{ 'rotate-180': openFaq === 2 }"></i>
                     </button>
                     <div x-show="openFaq === 2" x-transition class="px-6 pb-4">
                         <p class="text-gray-600">
-                            Oui, l'inscription et l'utilisation de notre bibliothèque sont entièrement gratuites.
-                            Aucun frais caché, aucun abonnement requis.
+                            {{ site_setting('faq2_answer', 'Oui, l\'inscription et l\'utilisation de notre bibliothèque sont entièrement gratuites. Aucun frais caché, aucun abonnement requis.') }}
                         </p>
                     </div>
                 </div>
@@ -967,14 +868,13 @@
                 <div class="bg-gray-50 rounded-lg overflow-hidden">
                     <button @click="openFaq = openFaq === 3 ? null : 3"
                             class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-100 transition-colors">
-                        <span class="font-semibold text-gray-900">Comment publier mon propre livre ?</span>
+                        <span class="font-semibold text-gray-900">{{ site_setting('faq3_question', 'Comment publier mon propre livre ?') }}</span>
                         <i class="fas fa-chevron-down transition-transform duration-200"
                            :class="{ 'rotate-180': openFaq === 3 }"></i>
                     </button>
                     <div x-show="openFaq === 3" x-transition class="px-6 pb-4">
                         <p class="text-gray-600">
-                            Connectez-vous à votre compte, allez dans votre dashboard et cliquez sur "Publier un livre".
-                            Suivez les étapes pour uploader votre fichier PDF et remplir les informations nécessaires.
+                            {{ site_setting('faq3_answer', 'Connectez-vous à votre compte, allez dans votre dashboard et cliquez sur "Publier un livre". Suivez les étapes pour uploader votre fichier PDF et remplir les informations nécessaires.') }}
                         </p>
                     </div>
                 </div>
@@ -983,14 +883,13 @@
                 <div class="bg-gray-50 rounded-lg overflow-hidden">
                     <button @click="openFaq = openFaq === 4 ? null : 4"
                             class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-100 transition-colors">
-                        <span class="font-semibold text-gray-900">Quels formats de fichiers sont acceptés ?</span>
+                        <span class="font-semibold text-gray-900">{{ site_setting('faq4_question', 'Quels formats de fichiers sont acceptés ?') }}</span>
                         <i class="fas fa-chevron-down transition-transform duration-200"
                            :class="{ 'rotate-180': openFaq === 4 }"></i>
                     </button>
                     <div x-show="openFaq === 4" x-transition class="px-6 pb-4">
                         <p class="text-gray-600">
-                            Nous acceptons principalement les fichiers PDF. D'autres formats comme EPUB pourront être
-                            supportés dans le futur selon les demandes de la communauté.
+                            {{ site_setting('faq4_answer', 'Nous acceptons principalement les fichiers PDF. D\'autres formats comme EPUB pourront être supportés dans le futur selon les demandes de la communauté.') }}
                         </p>
                     </div>
                 </div>
@@ -999,14 +898,13 @@
                 <div class="bg-gray-50 rounded-lg overflow-hidden">
                     <button @click="openFaq = openFaq === 5 ? null : 5"
                             class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-100 transition-colors">
-                        <span class="font-semibold text-gray-900">Puis-je lire les livres hors ligne ?</span>
+                        <span class="font-semibold text-gray-900">{{ site_setting('faq5_question', 'Puis-je lire les livres hors ligne ?') }}</span>
                         <i class="fas fa-chevron-down transition-transform duration-200"
                            :class="{ 'rotate-180': openFaq === 5 }"></i>
                     </button>
                     <div x-show="openFaq === 5" x-transition class="px-6 pb-4">
                         <p class="text-gray-600">
-                            Oui, une fois téléchargé, vous pouvez lire le livre hors ligne avec n'importe quel lecteur PDF
-                            sur votre appareil (ordinateur, tablette, smartphone).
+                            {{ site_setting('faq5_answer', 'Oui, une fois téléchargé, vous pouvez lire le livre hors ligne avec n\'importe quel lecteur PDF sur votre appareil (ordinateur, tablette, smartphone).') }}
                         </p>
                     </div>
                 </div>
@@ -1014,11 +912,11 @@
 
             <!-- Contact Support -->
             <div class="text-center mt-8 p-6 bg-emerald-50 rounded-lg">
-                <h3 class="font-semibold text-gray-900 mb-2">Vous ne trouvez pas votre réponse ?</h3>
-                <p class="text-gray-600 mb-4">Notre équipe support est là pour vous aider</p>
+                <h3 class="font-semibold text-gray-900 mb-2">{{ site_setting('faq_support_title', 'Vous ne trouvez pas votre réponse ?') }}</h3>
+                <p class="text-gray-600 mb-4">{{ site_setting('faq_support_subtitle', 'Notre équipe support est là pour vous aider') }}</p>
                 <a href="#" class="inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
                     <i class="fas fa-envelope mr-2"></i>
-                    Contacter le Support
+                    {{ site_setting('faq_support_button', 'Contacter le Support') }}
                 </a>
             </div>
         </div>
@@ -1029,26 +927,26 @@
         <div class="absolute inset-0 bg-black opacity-20"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl md:text-5xl font-heading font-bold text-white mb-6">
-                Prêt à Commencer Votre Aventure Littéraire ?
+                {{ site_setting('cta_title', 'Prêt à Commencer Votre Aventure Littéraire ?') }}
             </h2>
             <p class="text-xl text-white text-opacity-90 mb-8 max-w-3xl mx-auto">
-                Rejoignez notre communauté de passionnés et découvrez un monde de connaissances à portée de clic
+                {{ site_setting('cta_subtitle', 'Rejoignez notre communauté de passionnés et découvrez un monde de connaissances à portée de clic') }}
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
                 @guest
                     <a href="{{ route('register') }}" class="bg-white text-indigo-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg">
                         <i class="fas fa-user-plus mr-2"></i>
-                        Créer un Compte Gratuit
+                        {{ site_setting('cta_button_register', 'Créer un Compte Gratuit') }}
                     </a>
                     <a href="{{ route('books.public.index') }}" class="glass-effect text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-white hover:bg-opacity-20 transition-colors border border-white border-opacity-30">
                         <i class="fas fa-book-open mr-2"></i>
-                        Explorer Sans Compte
+                        {{ site_setting('cta_button_explore', 'Explorer Sans Compte') }}
                     </a>
                 @else
                     <a href="{{ url('/dashboard') }}" class="bg-white text-indigo-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg">
                         <i class="fas fa-tachometer-alt mr-2"></i>
-                        Accéder au Dashboard
+                        {{ site_setting('cta_button_dashboard', 'Accéder au Dashboard') }}
                     </a>
                 @endguest
             </div>
@@ -1059,22 +957,22 @@
                     <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-infinity text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-white font-semibold mb-2">Accès Illimité</h3>
-                    <p class="text-white text-opacity-80 text-sm">Lisez autant que vous voulez, quand vous voulez</p>
+                    <h3 class="text-white font-semibold mb-2">{{ site_setting('cta_feature1_title', 'Accès Illimité') }}</h3>
+                    <p class="text-white text-opacity-80 text-sm">{{ site_setting('cta_feature1_description', 'Lisez autant que vous voulez, quand vous voulez') }}</p>
                 </div>
                 <div class="text-center">
                     <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-shield-alt text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-white font-semibold mb-2">100% Gratuit</h3>
-                    <p class="text-white text-opacity-80 text-sm">Aucun frais caché, aucun abonnement requis</p>
+                    <h3 class="text-white font-semibold mb-2">{{ site_setting('cta_feature2_title', '100% Gratuit') }}</h3>
+                    <p class="text-white text-opacity-80 text-sm">{{ site_setting('cta_feature2_description', 'Aucun frais caché, aucun abonnement requis') }}</p>
                 </div>
                 <div class="text-center">
                     <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-heart text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-white font-semibold mb-2">Communauté</h3>
-                    <p class="text-white text-opacity-80 text-sm">Rejoignez des milliers de lecteurs passionnés</p>
+                    <h3 class="text-white font-semibold mb-2">{{ site_setting('cta_feature3_title', 'Communauté') }}</h3>
+                    <p class="text-white text-opacity-80 text-sm">{{ site_setting('cta_feature3_description', 'Rejoignez des milliers de lecteurs passionnés') }}</p>
                 </div>
             </div>
         </div>
@@ -1087,10 +985,10 @@
                 <div class="mb-6">
                     <i class="fas fa-envelope-open text-white text-4xl mb-4"></i>
                     <h2 class="text-2xl md:text-3xl font-heading font-bold text-white mb-4">
-                        Restez Informé
+                        {{ site_setting('newsletter_title', 'Restez Informé') }}
                     </h2>
                     <p class="text-white/90 text-lg">
-                        Recevez les dernières nouveautés et recommandations directement dans votre boîte mail
+                        {{ site_setting('newsletter_subtitle', 'Recevez les dernières nouveautés et recommandations directement dans votre boîte mail') }}
                     </p>
                 </div>
 
@@ -1099,13 +997,13 @@
                     <div class="flex flex-col sm:flex-row gap-3">
                         <div class="flex-1">
                             <input type="email" name="email" required
-                                   placeholder="Votre adresse email..."
+                                   placeholder="{{ site_setting('newsletter_placeholder', 'Votre adresse email...') }}"
                                    class="w-full px-4 py-3 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-white/50 text-gray-900 placeholder-gray-500">
                         </div>
                         <button type="submit"
                                 class="bg-white text-emerald-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <i class="fas fa-paper-plane mr-2"></i>
-                            S'abonner
+                            {{ site_setting('newsletter_button', 'S\'abonner') }}
                         </button>
                     </div>
                 </form>
@@ -1113,16 +1011,16 @@
                 <div class="mt-6 flex items-center justify-center space-x-6 text-white/80 text-sm">
                     <div class="flex items-center">
                         <i class="fas fa-check-circle mr-2 text-green-300"></i>
-                        <span>Nouveautés hebdomadaires</span>
+                        <span>{{ site_setting('newsletter_feature1', 'Nouveautés hebdomadaires') }}</span>
                     </div>
                     <div class="flex items-center">
                         <i class="fas fa-check-circle mr-2 text-green-300"></i>
-                        <span>Recommandations personnalisées</span>
+                        <span>{{ site_setting('newsletter_feature2', 'Recommandations personnalisées') }}</span>
                     </div>
                 </div>
 
                 <p class="text-white/60 text-xs mt-4">
-                    Pas de spam, désinscription en un clic. Nous respectons votre vie privée.
+                    {{ site_setting('newsletter_privacy', 'Pas de spam, désinscription en un clic. Nous respectons votre vie privée.') }}
                 </p>
             </div>
         </div>
@@ -1131,7 +1029,7 @@
     <!-- Footer Compact -->
     <footer id="a-propos" class="bg-gray-900 text-white">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="footer-grid grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Company Info -->
                 <div>
                     <div class="flex items-center mb-4">
@@ -1162,28 +1060,28 @@
 
                 <!-- Quick Links -->
                 <div>
-                    <h3 class="text-base font-semibold mb-4">Liens Rapides</h3>
+                    <h3 class="text-base font-semibold mb-4">{{ site_setting('footer_links_title', 'Liens Rapides') }}</h3>
                     <ul class="space-y-2">
-                        <li><a href="{{ route('books.public.index') }}" class="text-gray-300 hover:text-white transition-colors text-sm">Bibliothèque</a></li>
-                        <li><a href="{{ route('books.search') }}" class="text-gray-300 hover:text-white transition-colors text-sm">Recherche</a></li>
-                        <li><a href="{{ route('books.categories') }}" class="text-gray-300 hover:text-white transition-colors text-sm">Catégories</a></li>
+                        <li><a href="{{ route('books.public.index') }}" class="text-gray-300 hover:text-white transition-colors text-sm">{{ site_setting('footer_link_library', 'Bibliothèque') }}</a></li>
+                        <li><a href="{{ route('books.search') }}" class="text-gray-300 hover:text-white transition-colors text-sm">{{ site_setting('footer_link_search', 'Recherche') }}</a></li>
+                        <li><a href="{{ route('books.categories') }}" class="text-gray-300 hover:text-white transition-colors text-sm">{{ site_setting('footer_link_categories', 'Catégories') }}</a></li>
                         @auth
-                            <li><a href="{{ url('/dashboard') }}" class="text-gray-300 hover:text-white transition-colors text-sm">Dashboard</a></li>
+                            <li><a href="{{ url('/dashboard') }}" class="text-gray-300 hover:text-white transition-colors text-sm">{{ site_setting('footer_link_dashboard', 'Dashboard') }}</a></li>
                         @else
-                            <li><a href="{{ route('login') }}" class="text-gray-300 hover:text-white transition-colors text-sm">Connexion</a></li>
-                            <li><a href="{{ route('register') }}" class="text-gray-300 hover:text-white transition-colors text-sm">Inscription</a></li>
+                            <li><a href="{{ route('login') }}" class="text-gray-300 hover:text-white transition-colors text-sm">{{ site_setting('footer_link_login', 'Connexion') }}</a></li>
+                            <li><a href="{{ route('register') }}" class="text-gray-300 hover:text-white transition-colors text-sm">{{ site_setting('footer_link_register', 'Inscription') }}</a></li>
                         @endauth
                     </ul>
                 </div>
 
                 <!-- Support -->
                 <div>
-                    <h3 class="text-base font-semibold mb-4">Support</h3>
+                    <h3 class="text-base font-semibold mb-4">{{ site_setting('footer_support_title', 'Support') }}</h3>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Centre d'aide</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">FAQ</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Contact</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Confidentialité</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">{{ site_setting('footer_support_help', 'Centre d\'aide') }}</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">{{ site_setting('footer_support_faq', 'FAQ') }}</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">{{ site_setting('footer_support_contact', 'Contact') }}</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">{{ site_setting('footer_support_privacy', 'Confidentialité') }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -1371,318 +1269,11 @@
         }, 300000); // Update every 5 minutes
         @endif
 
-        // Home page filters functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const filtersForm = document.getElementById('homeFiltersForm');
-            const clearFiltersBtn = document.getElementById('clearFilters');
-            const heroSearchForm = document.getElementById('heroSearchForm');
-            const heroSearchInput = document.getElementById('heroSearchInput');
-            const authorSearchInput = document.getElementById('authorSearch');
-            const authorSuggestions = document.getElementById('authorSuggestions');
-            let searchTimeout;
+        // Book filters are handled by the external book-filters.js script
 
-            // Liste des auteurs disponibles
-            const availableAuthors = @json($authors);
 
-            // Function to apply filters
-            function applyFilters(activeTab = 'recent') {
-                const formData = new FormData(filtersForm);
-                const params = new URLSearchParams();
 
-                // Add form data to params
-                for (let [key, value] of formData.entries()) {
-                    if (value && value !== 'all') {
-                        params.append(key, value);
-                    }
-                }
 
-                // Ensure author filter is included
-                if (authorSearchInput && authorSearchInput.value.trim()) {
-                    params.set('author', authorSearchInput.value.trim());
-                }
-
-                // Add active tab
-                params.append('tab', activeTab);
-
-                // Show loading state
-                showLoadingState();
-
-                // Debug: log the parameters being sent
-                console.log('Applying filters with params:', params.toString());
-                console.log('Author input value:', authorSearchInput ? authorSearchInput.value : 'null');
-                console.log('Form data entries:', Array.from(new FormData(filtersForm).entries()));
-
-                // Fetch filtered books
-                fetch('{{ route("home.filtered-books") }}?' + params.toString())
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            updateBooksDisplay(data.books, activeTab);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching filtered books:', error);
-                    })
-                    .finally(() => {
-                        hideLoadingState();
-                    });
-            }
-
-            // Function to update books display
-            function updateBooksDisplay(books, activeTab) {
-                const container = document.querySelector(`[x-show="activeTab === '${activeTab}'] .grid`);
-                if (!container) return;
-
-                if (books.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-span-full text-center py-12">
-                            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-book text-gray-400 text-2xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Aucun livre trouvé</h3>
-                            <p class="text-gray-500">Essayez de modifier vos critères de recherche</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                container.innerHTML = books.map(book => `
-                    <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 group h-96 flex flex-col">
-                        <div class="relative h-56 flex-shrink-0">
-                            ${book.cover_image ?
-                                `<img src="${book.cover_image}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">` :
-                                `<div class="w-full h-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center group-hover:from-emerald-600 group-hover:to-emerald-700 transition-all duration-300">
-                                    <div class="text-white text-center p-3 max-w-full">
-                                        <i class="fas fa-book text-2xl mb-2 opacity-80"></i>
-                                        <p class="text-xs font-medium leading-tight break-words">${book.title}</p>
-                                    </div>
-                                </div>`
-                            }
-                        </div>
-                        <div class="p-4 flex-1 flex flex-col justify-between">
-                            <div class="flex-1">
-                                <h3 class="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">${book.title}</h3>
-                                <p class="text-gray-600 text-xs mb-2">par ${book.author_name}</p>
-                                <div class="flex items-center gap-2 text-xs text-gray-500 mb-3">
-                                    <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">${book.category || 'Non classé'}</span>
-                                    <span>${book.language || 'FR'}</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3 text-xs text-gray-500">
-                                    <span><i class="fas fa-eye mr-1"></i>${book.views}</span>
-                                    <span><i class="fas fa-download mr-1"></i>${book.downloads}</span>
-                                </div>
-                                <a href="${book.url}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs font-semibold transition-all duration-300">
-                                    Découvrir
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            // Function to show loading state
-            function showLoadingState() {
-                const loadingDiv = document.createElement('div');
-                loadingDiv.id = 'booksLoading';
-                loadingDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-                loadingDiv.innerHTML = `
-                    <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
-                        <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-600"></div>
-                        <span class="text-gray-700">Chargement des livres...</span>
-                    </div>
-                `;
-                document.body.appendChild(loadingDiv);
-            }
-
-            // Function to hide loading state
-            function hideLoadingState() {
-                const loadingDiv = document.getElementById('booksLoading');
-                if (loadingDiv) {
-                    loadingDiv.remove();
-                }
-            }
-
-            // Event listeners for filters
-            filtersForm.addEventListener('input', function(e) {
-                if (e.target.name === 'search') {
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => {
-                        const activeTab = document.querySelector('[x-data] button[class*="bg-white"]')?.getAttribute('@click')?.match(/'(\w+)'/)?.[1] || 'recent';
-                        applyFilters(activeTab);
-                    }, 500);
-                } else {
-                    const activeTab = document.querySelector('[x-data] button[class*="bg-white"]')?.getAttribute('@click')?.match(/'(\w+)'/)?.[1] || 'recent';
-                    applyFilters(activeTab);
-                }
-            });
-
-            filtersForm.addEventListener('change', function(e) {
-                if (e.target.tagName === 'SELECT') {
-                    const activeTab = document.querySelector('[x-data] button[class*="bg-white"]')?.getAttribute('@click')?.match(/'(\w+)'/)?.[1] || 'recent';
-                    applyFilters(activeTab);
-                }
-            });
-
-            // Clear filters
-            clearFiltersBtn.addEventListener('click', function() {
-                filtersForm.reset();
-
-                // Hide author suggestions
-                if (authorSuggestions) {
-                    authorSuggestions.classList.add('hidden');
-                }
-
-                const activeTab = document.querySelector('[x-data] button[class*="bg-white"]')?.getAttribute('@click')?.match(/'(\w+)'/)?.[1] || 'recent';
-                applyFilters(activeTab);
-            });
-
-            // Listen for tab changes
-            document.addEventListener('click', function(e) {
-                if (e.target.matches('[x-data] button')) {
-                    const tabMatch = e.target.getAttribute('@click')?.match(/'(\w+)'/);
-                    if (tabMatch) {
-                        setTimeout(() => {
-                            applyFilters(tabMatch[1]);
-                        }, 100);
-                    }
-                }
-            });
-
-            // Hero search functionality
-            if (heroSearchForm && heroSearchInput) {
-                heroSearchForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-
-                    const searchTerm = heroSearchInput.value.trim();
-                    if (searchTerm) {
-                        // Set the search term in the filters form
-                        const searchInput = filtersForm.querySelector('input[name="search"]');
-                        if (searchInput) {
-                            searchInput.value = searchTerm;
-                        }
-
-                        // Scroll to the books section
-                        const booksSection = document.getElementById('nouveautes');
-                        if (booksSection) {
-                            booksSection.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'start'
-                            });
-
-                            // Apply filters after scrolling
-                            setTimeout(() => {
-                                const activeTab = document.querySelector('[x-data] button[class*="bg-white"]')?.getAttribute('@click')?.match(/'(\w+)'/)?.[1] || 'recent';
-                                applyFilters(activeTab);
-                            }, 500);
-                        }
-                    }
-                });
-
-                // Also handle Enter key in hero search input
-                heroSearchInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        heroSearchForm.dispatchEvent(new Event('submit'));
-                    }
-                });
-            }
-
-            // Author autocomplete functionality
-            if (authorSearchInput && authorSuggestions) {
-                let selectedAuthorIndex = -1;
-
-                // Show suggestions on input
-                authorSearchInput.addEventListener('input', function() {
-                    const query = this.value.toLowerCase().trim();
-                    selectedAuthorIndex = -1;
-
-                    if (query.length === 0) {
-                        authorSuggestions.classList.add('hidden');
-                        // Apply filters with no author filter
-                        const activeTab = document.querySelector('[x-data] button[class*="bg-white"]')?.getAttribute('@click')?.match(/'(\w+)'/)?.[1] || 'recent';
-                        applyFilters(activeTab);
-                        return;
-                    }
-
-                    // Filter authors based on query
-                    const filteredAuthors = availableAuthors.filter(author =>
-                        author.toLowerCase().includes(query)
-                    ).slice(0, 8); // Limit to 8 suggestions
-
-                    if (filteredAuthors.length > 0) {
-                        authorSuggestions.innerHTML = filteredAuthors.map((author, index) =>
-                            `<div class="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm author-suggestion" data-author="${author}" data-index="${index}">
-                                ✍️ ${author}
-                            </div>`
-                        ).join('');
-                        authorSuggestions.classList.remove('hidden');
-                    } else {
-                        authorSuggestions.classList.add('hidden');
-                    }
-                });
-
-                // Handle keyboard navigation
-                authorSearchInput.addEventListener('keydown', function(e) {
-                    const suggestions = authorSuggestions.querySelectorAll('.author-suggestion');
-
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        selectedAuthorIndex = Math.min(selectedAuthorIndex + 1, suggestions.length - 1);
-                        updateSelectedSuggestion(suggestions);
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        selectedAuthorIndex = Math.max(selectedAuthorIndex - 1, -1);
-                        updateSelectedSuggestion(suggestions);
-                    } else if (e.key === 'Enter') {
-                        e.preventDefault();
-                        if (selectedAuthorIndex >= 0 && suggestions[selectedAuthorIndex]) {
-                            selectAuthor(suggestions[selectedAuthorIndex].dataset.author);
-                        }
-                    } else if (e.key === 'Escape') {
-                        authorSuggestions.classList.add('hidden');
-                        selectedAuthorIndex = -1;
-                    }
-                });
-
-                // Handle click on suggestions
-                authorSuggestions.addEventListener('click', function(e) {
-                    const suggestion = e.target.closest('.author-suggestion');
-                    if (suggestion) {
-                        selectAuthor(suggestion.dataset.author);
-                    }
-                });
-
-                // Hide suggestions when clicking outside
-                document.addEventListener('click', function(e) {
-                    if (!authorSearchInput.contains(e.target) && !authorSuggestions.contains(e.target)) {
-                        authorSuggestions.classList.add('hidden');
-                        selectedAuthorIndex = -1;
-                    }
-                });
-
-                function updateSelectedSuggestion(suggestions) {
-                    suggestions.forEach((suggestion, index) => {
-                        if (index === selectedAuthorIndex) {
-                            suggestion.classList.add('bg-emerald-100');
-                        } else {
-                            suggestion.classList.remove('bg-emerald-100');
-                        }
-                    });
-                }
-
-                function selectAuthor(author) {
-                    authorSearchInput.value = author;
-                    authorSuggestions.classList.add('hidden');
-                    selectedAuthorIndex = -1;
-
-                    // Apply filters with selected author
-                    const activeTab = document.querySelector('[x-data] button[class*="bg-white"]')?.getAttribute('@click')?.match(/'(\w+)'/)?.[1] || 'recent';
-                    applyFilters(activeTab);
-                }
-            }
-        });
     </script>
 
     <style>
