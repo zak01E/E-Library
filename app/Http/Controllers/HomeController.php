@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\User;
 use App\Models\ActivityLog;
+use App\Http\Traits\BookFilterTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class HomeController extends Controller
 {
+    use BookFilterTrait;
     /**
      * Display the home page with real data
      */
@@ -31,86 +33,22 @@ class HomeController extends Controller
         // Activité récente
         $recentActivity = $this->getRecentActivity();
 
-        // Obtenir les catégories, langues et auteurs pour les filtres
-        $categories = Book::where('status', 'approved')
-            ->whereNotNull('category')
-            ->distinct()
-            ->pluck('category')
-            ->sort();
+        // Obtenir les options de filtres en utilisant le trait
+        $filterOptions = $this->getFilterOptions();
 
-        $languages = Book::where('status', 'approved')
-            ->whereNotNull('language')
-            ->distinct()
-            ->pluck('language')
-            ->sort();
-
-        $authors = Book::where('status', 'approved')
-            ->whereNotNull('author_name')
-            ->distinct()
-            ->pluck('author_name')
-            ->sort();
-
-        return view('home', compact(
-            'stats',
-            'featuredBooks',
-            'featuredAuthors',
-            'popularCategories',
-            'recentActivity',
-            'categories',
-            'languages',
-            'authors'
-        ));
-    }
-
-    /**
-     * Get filtered books for AJAX requests
-     */
-    public function getFilteredBooks(Request $request)
-    {
-        // Debug: return debug info for testing
-        if ($request->has('debug')) {
-            $authors = Book::where('status', 'approved')
-                ->whereNotNull('author_name')
-                ->distinct()
-                ->pluck('author_name')
-                ->sort();
-
-            $balzacBooks = Book::where('status', 'approved')
-                ->where('author_name', 'Honoré de Balzac')
-                ->count();
-
-            return response()->json([
-                'debug' => true,
-                'request_params' => $request->all(),
-                'total_authors' => $authors->count(),
-                'sample_authors' => $authors->take(10)->values(),
-                'balzac_books_count' => $balzacBooks
-            ]);
-        }
-
-        $featuredBooks = $this->getFeaturedBooks($request);
-
-        $activeTab = $request->get('tab', 'recent');
-        $books = $featuredBooks[$activeTab] ?? $featuredBooks['recent'];
-
-        return response()->json([
-            'success' => true,
-            'books' => $books->map(function($book) {
-                return [
-                    'id' => $book->id,
-                    'title' => $book->title,
-                    'author_name' => $book->author_name,
-                    'category' => $book->category,
-                    'language' => $book->language,
-                    'views' => $book->views,
-                    'downloads' => $book->downloads,
-                    'cover_image' => $book->cover_image ? asset('storage/' . $book->cover_image) : null,
-                    'url' => route('books.public.show', $book),
-                    'created_at' => $book->created_at->format('d M Y')
-                ];
-            })
+        return view('home', [
+            'stats' => $stats,
+            'featuredBooks' => $featuredBooks,
+            'featuredAuthors' => $featuredAuthors,
+            'popularCategories' => $popularCategories,
+            'recentActivity' => $recentActivity,
+            'categories' => $filterOptions['categories'],
+            'languages' => $filterOptions['languages'],
+            'authors' => $filterOptions['authors'],
         ]);
     }
+
+
 
     /**
      * Get general statistics for the homepage
@@ -154,50 +92,42 @@ class HomeController extends Controller
     {
         $baseQuery = Book::where('status', 'approved')->with('uploader');
 
-        // Apply filters if provided
+        // Apply filters if provided using the trait
         if ($request) {
-            // Filter by category
-            if ($request->filled('category') && $request->category !== 'all') {
-                $baseQuery->where('category', $request->category);
-            }
+            $baseQuery = $this->applyBookFilters($baseQuery, $request);
+        }
 
-            // Filter by language
-            if ($request->filled('language') && $request->language !== 'all') {
-                $baseQuery->where('language', $request->language);
-            }
+        // Vérifier le nombre total de livres disponibles
+        $totalBooks = (clone $baseQuery)->count();
 
-            // Filter by author
-            if ($request->filled('author') && $request->author !== 'all') {
-                $baseQuery->where('author_name', $request->author);
-            }
+        // Ajuster le nombre de livres par section selon le total disponible
+        $booksPerSection = min(8, max(1, floor($totalBooks / 3)));
 
-            // Search functionality
-            if ($request->filled('search')) {
-                $search = $request->search;
-                $baseQuery->where(function($q) use ($search) {
-                    $q->where('title', 'like', "%{$search}%")
-                      ->orWhere('author_name', 'like', "%{$search}%")
-                      ->orWhere('description', 'like', "%{$search}%");
-                });
-            }
+        // Si on a moins de 6 livres, on limite à 2 par section pour éviter trop de répétitions
+        if ($totalBooks < 6) {
+            $booksPerSection = min(2, $totalBooks);
         }
 
         // Livres les plus populaires (par téléchargements)
         $popularBooks = (clone $baseQuery)
             ->orderBy('downloads', 'desc')
-            ->take(8)
+            ->take($booksPerSection)
             ->get();
 
-        // Livres récents
+        // Livres récents (exclure les populaires déjà sélectionnés)
+        $popularIds = $popularBooks->pluck('id')->toArray();
         $recentBooks = (clone $baseQuery)
+            ->whereNotIn('id', $popularIds)
             ->latest()
-            ->take(8)
+            ->take($booksPerSection)
             ->get();
 
-        // Livres les plus vus
+        // Livres les plus vus (exclure les déjà sélectionnés)
+        $usedIds = array_merge($popularIds, $recentBooks->pluck('id')->toArray());
         $mostViewedBooks = (clone $baseQuery)
+            ->whereNotIn('id', $usedIds)
             ->orderBy('views', 'desc')
-            ->take(8)
+            ->take($booksPerSection)
             ->get();
 
         return [
