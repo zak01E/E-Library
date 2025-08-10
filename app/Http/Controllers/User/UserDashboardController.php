@@ -142,7 +142,7 @@ class UserDashboardController extends Controller
         try {
             $totalMinutes = ReadingSession::where('user_id', $userId)
                 ->whereNotNull('ended_at')
-                ->sum(DB::raw('TIMESTAMPDIFF(MINUTE, started_at, ended_at)'));
+                ->sum('reading_time_minutes');
             
             if ($totalMinutes > 60) {
                 return round($totalMinutes / 60, 1) . 'h';
