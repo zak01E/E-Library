@@ -25,19 +25,41 @@ class Book extends Model
         'uploaded_by',
         'is_approved',
         'status',
+        'status_reason',
+        'status_changed_at',
+        'status_changed_by',
+        'is_public',
     ];
 
     protected $casts = [
         'is_approved' => 'boolean',
+        'is_public' => 'boolean',
         'pages' => 'integer',
         'downloads' => 'integer',
         'views' => 'integer',
         'publication_year' => 'integer',
+        'status_changed_at' => 'datetime',
     ];
 
     public function uploader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
+    }
+
+    /**
+     * Relation avec l'utilisateur qui a changé le statut
+     */
+    public function statusChangedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'status_changed_by');
+    }
+
+    /**
+     * Relation avec l'historique des changements de statut
+     */
+    public function statusHistory()
+    {
+        return $this->hasMany(BookStatusHistory::class)->orderBy('created_at', 'desc');
     }
 
     /**
@@ -77,6 +99,38 @@ class Book extends Model
     }
 
     /**
+     * Vérifie si le livre est en révision
+     */
+    public function isUnderReview(): bool
+    {
+        return $this->status === 'under_review';
+    }
+
+    /**
+     * Vérifie si le livre est suspendu
+     */
+    public function isSuspended(): bool
+    {
+        return $this->status === 'suspended';
+    }
+
+    /**
+     * Vérifie si le livre est visible au public
+     */
+    public function isPubliclyVisible(): bool
+    {
+        return $this->is_public && in_array($this->status, ['approved']);
+    }
+
+    /**
+     * Vérifie si le livre peut être téléchargé
+     */
+    public function isDownloadable(): bool
+    {
+        return $this->status === 'approved' && $this->is_public;
+    }
+
+    /**
      * Obtient le libellé du statut en français
      */
     public function getStatusLabelAttribute(): string
@@ -85,6 +139,8 @@ class Book extends Model
             'approved' => 'Approuvé',
             'pending' => 'En attente',
             'rejected' => 'Rejeté',
+            'under_review' => 'En révision',
+            'suspended' => 'Suspendu',
             default => 'Inconnu'
         };
     }
@@ -98,8 +154,40 @@ class Book extends Model
             'approved' => 'bg-green-100 text-green-800',
             'pending' => 'bg-yellow-100 text-yellow-800',
             'rejected' => 'bg-red-100 text-red-800',
+            'under_review' => 'bg-blue-100 text-blue-800',
+            'suspended' => 'bg-orange-100 text-orange-800',
             default => 'bg-gray-100 text-gray-800'
         };
+    }
+
+
+
+    /**
+     * Change le statut du livre et enregistre l'historique
+     */
+    public function changeStatus(string $newStatus, string $reason = null, string $adminNotes = null, int $changedBy = null): void
+    {
+        $oldStatus = $this->status;
+
+        // Mettre à jour le livre
+        $this->update([
+            'status' => $newStatus,
+            'status_reason' => $reason,
+            'status_changed_at' => now(),
+            'status_changed_by' => $changedBy ?? auth()->id(),
+            'is_approved' => $newStatus === 'approved',
+            'is_public' => in_array($newStatus, ['approved']) // Seuls les livres approuvés sont publics par défaut
+        ]);
+
+        // Enregistrer dans l'historique
+        BookStatusHistory::create([
+            'book_id' => $this->id,
+            'old_status' => $oldStatus,
+            'new_status' => $newStatus,
+            'reason' => $reason,
+            'admin_notes' => $adminNotes,
+            'changed_by' => $changedBy ?? auth()->id(),
+        ]);
     }
 
     /**

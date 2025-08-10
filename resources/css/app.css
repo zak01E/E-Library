@@ -3,6 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @import './spacing-fixes.css';
 @import './book-cards.css';
+@import './footer-fixes.css';
 
 @tailwind base;
 @tailwind components;

@@ -145,20 +145,26 @@ class AdminController extends Controller
 
     public function approveBook(Book $book)
     {
-        $book->update([
-            'status' => 'approved',
-            'is_approved' => true
-        ]);
-        return redirect()->back()->with('success', 'Livre approuvé avec succès.');
+        $book->changeStatus('approved', 'Livre approuvé par l\'administrateur');
+        return redirect()->back()->with('success', '✅ Livre approuvé avec succès !');
     }
 
     public function rejectBook(Book $book)
     {
-        $book->update([
-            'status' => 'rejected',
-            'is_approved' => false
-        ]);
-        return redirect()->back()->with('success', 'Livre rejeté.');
+        $book->changeStatus('rejected', 'Livre rejeté par l\'administrateur');
+        return redirect()->back()->with('success', '❌ Livre rejeté.');
+    }
+
+    public function suspendBook(Book $book)
+    {
+        $book->changeStatus('suspended', 'Livre suspendu temporairement');
+        return redirect()->back()->with('success', '⚠️ Livre suspendu.');
+    }
+
+    public function putUnderReview(Book $book)
+    {
+        $book->changeStatus('under_review', 'Livre mis en révision pour vérification supplémentaire');
+        return redirect()->back()->with('success', '🔍 Livre mis en révision.');
     }
 
     public function deleteBook(Book $book)

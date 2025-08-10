@@ -1,14 +1,16 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
         <div class="mb-4">
-            <div class="w-16 h-16 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+            <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}"
+                     alt="{{ $siteSettings['site_name'] ?? 'E-Library' }}"
+                     class="max-w-full max-h-full object-contain">
             </div>
         </div>
         <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Connexion</h2>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Accédez à votre bibliothèque personnelle</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+            Accédez à {{ $siteSettings['site_name'] ?? 'votre bibliothèque personnelle' }}
+        </p>
         <div class="mt-3 flex items-center justify-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
             <span class="flex items-center">
                 <svg class="w-4 h-4 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">

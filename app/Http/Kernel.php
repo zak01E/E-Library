@@ -50,5 +50,6 @@ class Kernel extends HttpKernel
         'is-author' => \App\Http\Middleware\IsAuthor::class,
         'admin.guest' => \App\Http\Middleware\AdminGuest::class,
         'author.guest' => \App\Http\Middleware\AuthorGuest::class,
+        'check-role' => \App\Http\Middleware\CheckUserRole::class,
     ];
 }

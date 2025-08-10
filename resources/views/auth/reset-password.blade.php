@@ -1,10 +1,10 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
         <div class="mb-4">
-            <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}"
+                     alt="{{ $siteSettings['site_name'] ?? 'E-Library' }}"
+                     class="max-w-full max-h-full object-contain">
             </div>
         </div>
         <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Nouveau mot de passe</h2>

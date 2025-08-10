@@ -68,6 +68,12 @@ class DatabaseSeeder extends Seeder
             'is_approved' => false,
         ]);
 
+        // Seed site settings
+        $this->call([
+            SiteSettingsSeeder::class,
+            HomepageContentSeeder::class,
+        ]);
+
         $this->command->info('Base de données peuplée avec succès!');
         $this->command->info('');
         $this->command->info('Comptes de test:');

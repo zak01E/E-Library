@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Http\Traits\BookFilterTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +12,7 @@ use Illuminate\View\View;
 
 class BookController extends Controller
 {
+    use BookFilterTrait;
     public function index()
     {
         $books = Book::with('uploader')
@@ -160,62 +162,17 @@ class BookController extends Controller
     // Public methods for non-authenticated users
     public function publicIndex(Request $request)
     {
-        $query = Book::with('uploader')->where('status', 'approved');
+        // Get filtered books using the trait
+        $books = $this->getFilteredBooks($request, 12);
 
-        // Filter by category
-        if ($request->filled('category') && $request->category !== 'all') {
-            $query->where('category', $request->category);
-        }
+        // Get filter options using the trait
+        $filterOptions = $this->getFilterOptions();
 
-        // Filter by language
-        if ($request->filled('language') && $request->language !== 'all') {
-            $query->where('language', $request->language);
-        }
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('author_name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-            });
-        }
-
-        // Sort functionality
-        $sort = $request->get('sort', 'latest');
-        switch ($sort) {
-            case 'popular':
-                $query->orderBy('views', 'desc');
-                break;
-            case 'downloads':
-                $query->orderBy('downloads', 'desc');
-                break;
-            case 'alphabetical':
-                $query->orderBy('title', 'asc');
-                break;
-            case 'latest':
-            default:
-                $query->latest();
-                break;
-        }
-
-        $books = $query->paginate(12)->withQueryString();
-
-        // Get unique categories and languages for filters
-        $categories = Book::where('status', 'approved')
-            ->whereNotNull('category')
-            ->distinct()
-            ->pluck('category')
-            ->sort();
-
-        $languages = Book::where('status', 'approved')
-            ->whereNotNull('language')
-            ->distinct()
-            ->pluck('language')
-            ->sort();
-
-        return view('books.public.index', compact('books', 'categories', 'languages'));
+        return view('books.public.index', [
+            'books' => $books,
+            'categories' => $filterOptions['categories'],
+            'languages' => $filterOptions['languages'],
+        ]);
     }
 
     public function publicShow(Book $book)

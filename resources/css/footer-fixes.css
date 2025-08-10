@@ -1,0 +1,40 @@
+/* Footer Grid Fixes */
+.footer-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+}
+
+@media (min-width: 768px) {
+    .footer-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 2rem !important;
+    }
+}
+
+/* Ensure footer grid works properly */
+footer .grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+    footer .grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+}
+
+/* Override any conflicting styles */
+footer .grid:not(.no-override) {
+    gap: 1.5rem !important;
+    grid-template-columns: 1fr !important;
+}
+
+@media (min-width: 768px) {
+    footer .grid:not(.no-override) {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 2rem !important;
+    }
+}

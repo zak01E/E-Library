@@ -134,89 +134,13 @@
     <!-- Filters Section -->
     <section class="py-6 bg-white">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-gray-50 rounded-xl p-4">
-                <form method="GET" action="{{ route('books.public.index') }}" id="filtersForm">
-                    <!-- Preserve search query -->
-                    <input type="hidden" name="search" value="{{ request('search') }}">
-
-                    <div class="flex flex-wrap items-center justify-center gap-4">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-filter text-gray-500 text-sm"></i>
-                            <span class="text-gray-700 font-medium text-sm">Filtres:</span>
-                        </div>
-
-                        <!-- Category Filter -->
-                        <select name="category" onchange="document.getElementById('filtersForm').submit()"
-                                class="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
-                            <option value="all" {{ request('category', 'all') === 'all' ? 'selected' : '' }}>📚 Toutes catégories</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category }}" {{ request('category') === $category ? 'selected' : '' }}>
-                                    @switch($category)
-                                        @case('Fiction')
-                                            📖 {{ $category }}
-                                            @break
-                                        @case('Science')
-                                            🔬 {{ $category }}
-                                            @break
-                                        @case('Technologie')
-                                            💻 {{ $category }}
-                                            @break
-                                        @case('Histoire')
-                                            🏛️ {{ $category }}
-                                            @break
-                                        @case('Biographie')
-                                            👤 {{ $category }}
-                                            @break
-                                        @default
-                                            📚 {{ $category }}
-                                    @endswitch
-                                </option>
-                            @endforeach
-                        </select>
-
-                        <!-- Language Filter -->
-                        <select name="language" onchange="document.getElementById('filtersForm').submit()"
-                                class="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
-                            <option value="all" {{ request('language', 'all') === 'all' ? 'selected' : '' }}>🌍 Toutes langues</option>
-                            @foreach($languages as $language)
-                                <option value="{{ $language }}" {{ request('language') === $language ? 'selected' : '' }}>
-                                    @switch($language)
-                                        @case('Français')
-                                            🇫🇷 {{ $language }}
-                                            @break
-                                        @case('Anglais')
-                                            🇬🇧 {{ $language }}
-                                            @break
-                                        @case('Espagnol')
-                                            🇪🇸 {{ $language }}
-                                            @break
-                                        @default
-                                            🌍 {{ $language }}
-                                    @endswitch
-                                </option>
-                            @endforeach
-                        </select>
-
-                        <!-- Sort Filter -->
-                        <select name="sort" onchange="document.getElementById('filtersForm').submit()"
-                                class="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
-                            <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>⏰ Plus récents</option>
-                            <option value="popular" {{ request('sort') === 'popular' ? 'selected' : '' }}>🔥 Plus populaires</option>
-                            <option value="downloads" {{ request('sort') === 'downloads' ? 'selected' : '' }}>📥 Plus téléchargés</option>
-                            <option value="alphabetical" {{ request('sort') === 'alphabetical' ? 'selected' : '' }}>🔤 Alphabétique</option>
-                        </select>
-
-                        <!-- Clear Filters Button -->
-                        @if(request()->hasAny(['category', 'language', 'sort', 'search']) &&
-                            (request('category') !== 'all' || request('language') !== 'all' || request('sort') !== 'latest' || request('search')))
-                            <a href="{{ route('books.public.index') }}"
-                               class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg text-sm transition-colors">
-                                <i class="fas fa-times mr-1"></i>Effacer
-                            </a>
-                        @endif
-                    </div>
-                </form>
-            </div>
+            <x-book-filters
+                :action="route('books.public.index')"
+                :categories="$categories"
+                :languages="$languages"
+                :authors="collect()"
+                :show-authors="false"
+            />
         </div>
     </section>
 
@@ -234,7 +158,8 @@
             </div>
 
             <!-- Books Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="books-grid-container">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @forelse($books as $book)
                     <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 group h-96 flex flex-col">
                         <div class="relative h-56 flex-shrink-0">
@@ -291,6 +216,7 @@
                         <p class="text-gray-500">Essayez de modifier vos critères de recherche</p>
                     </div>
                 @endforelse
+                </div>
             </div>
 
             <!-- Pagination -->
@@ -432,22 +358,7 @@
             });
         }
 
-        // Show loading state when filters change
-        const filterSelects = document.querySelectorAll('#filtersForm select');
-        filterSelects.forEach(select => {
-            select.addEventListener('change', function() {
-                // Add loading state
-                const loadingDiv = document.createElement('div');
-                loadingDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-                loadingDiv.innerHTML = `
-                    <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
-                        <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-600"></div>
-                        <span class="text-gray-700">Chargement...</span>
-                    </div>
-                `;
-                document.body.appendChild(loadingDiv);
-            });
-        });
+        // Book filters are handled by the external book-filters.js script
     </script>
 </body>
 </html>

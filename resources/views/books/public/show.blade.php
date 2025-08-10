@@ -219,9 +219,9 @@
             </nav>
 
             <!-- Main Content -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div class="flex flex-col lg:flex-row gap-8 items-center lg:items-start">
                 <!-- Book Cover -->
-                <div class="flex justify-center lg:justify-end">
+                <div class="flex-shrink-0 mb-6 lg:mb-0">
                     <div class="relative">
                         @if($book->cover_image)
                             <img src="{{ Storage::url($book->cover_image) }}"
@@ -254,7 +254,7 @@
                 </div>
 
                 <!-- Book Info -->
-                <div class="text-white">
+                <div class="text-white flex-1 lg:max-w-lg">
                     <div class="mb-4">
                         <h1 class="text-2xl lg:text-3xl font-heading font-bold mb-3">{{ $book->title }}</h1>
                         <div class="flex items-center text-base text-emerald-200 mb-3">

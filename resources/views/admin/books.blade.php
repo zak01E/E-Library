@@ -33,9 +33,11 @@
 </style>
 @endpush
 
+
+
 @section('content')
     <!-- En-tête avec statistiques rapides -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
             <div class="flex items-center">
                 <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
@@ -88,6 +90,43 @@
                 <div class="ml-3">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Rejetés</p>
                     <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $books->where('status', 'rejected')->count() }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques des nouveaux statuts -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+            <div class="flex items-center">
+                <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                    <i class="fas fa-search text-blue-600 dark:text-blue-400"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">En Révision</p>
+                    <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $books->where('status', 'under_review')->count() }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+            <div class="flex items-center">
+                <div class="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg">
+                    <i class="fas fa-pause-circle text-orange-600 dark:text-orange-400"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Suspendus</p>
+                    <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $books->where('status', 'suspended')->count() }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+            <div class="flex items-center">
+                <div class="p-2 bg-emerald-100 dark:bg-emerald-900 rounded-lg">
+                    <i class="fas fa-chart-line text-emerald-600 dark:text-emerald-400"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Publics</p>
+                    <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $books->where('is_public', true)->count() }}</p>
                 </div>
             </div>
         </div>
@@ -231,46 +270,35 @@
                                             </div>
                                         </td>
                                         <td class="px-2 py-1">
-                                            <div class="flex items-center space-x-1">
-                                                <a href="{{ route('admin.books.show', $book) }}"
-                                                   class="action-btn text-gray-600 hover:text-blue-600 hover:bg-blue-50"
-                                                   title="Voir">
-                                                    <i class="fas fa-eye text-xs"></i>
-                                                </a>
-                                                <a href="{{ route('admin.books.edit', $book) }}"
-                                                   class="action-btn text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50"
-                                                   title="Éditer">
-                                                    <i class="fas fa-edit text-xs"></i>
-                                                </a>
-                                                @if($book->status !== 'approved')
-                                                    <!-- Bouton Approuver -->
+                                            <div class="flex items-center space-x-2">
+                                                <!-- Status Selector -->
+                                                @include('admin.components.simple-status-selector', ['book' => $book])
+
+                                                <!-- Quick Actions -->
+                                                <div class="flex items-center space-x-1">
+                                                    <a href="{{ route('admin.books.show', $book) }}"
+                                                       class="action-btn text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+                                                       title="Voir">
+                                                        <i class="fas fa-eye text-xs"></i>
+                                                    </a>
+                                                    <a href="{{ route('admin.books.edit', $book) }}"
+                                                       class="action-btn text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50"
+                                                       title="Éditer">
+                                                        <i class="fas fa-edit text-xs"></i>
+                                                    </a>
+                                                    <a href="{{ route('admin.books.status-history', $book) }}"
+                                                       class="action-btn text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                                                       title="Historique">
+                                                        <i class="fas fa-history text-xs"></i>
+                                                    </a>
+                                                    <!-- Bouton Supprimer -->
                                                     <button type="button"
-                                                            onclick="showApprovalModal({{ $book->id }}, '{{ addslashes($book->title) }}')"
-                                                            class="action-btn text-green-600 hover:text-green-700 hover:bg-green-50 transition-all duration-200"
-                                                            title="Approuver">
-                                                        <i class="fas fa-check text-xs"></i>
+                                                            onclick="showDeleteConfirmation('{{ $book->title }}', '{{ $book->author_name }}', '{{ route('admin.books.delete', $book) }}')"
+                                                            class="action-btn text-red-600 hover:text-red-700 hover:bg-red-50 border-0 bg-transparent cursor-pointer"
+                                                            title="Supprimer définitivement">
+                                                        <i class="fas fa-trash text-xs"></i>
                                                     </button>
-
-                                                    <!-- Bouton Rejeter -->
-                                                    <form method="POST" action="{{ route('admin.books.reject', $book) }}" style="display: inline;">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit"
-                                                                onclick="return confirm('Rejeter ce livre ?')"
-                                                                class="action-btn text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50"
-                                                                title="Rejeter">
-                                                            <i class="fas fa-times text-xs"></i>
-                                                        </button>
-                                                    </form>
-                                                @endif
-
-                                                <!-- Bouton Supprimer -->
-                                                <button type="button"
-                                                        onclick="showDeleteConfirmation('{{ $book->title }}', '{{ $book->author }}', '{{ route('admin.books.delete', $book) }}')"
-                                                        class="action-btn text-red-600 hover:text-red-700 hover:bg-red-50 border-0 bg-transparent cursor-pointer"
-                                                        title="Supprimer définitivement">
-                                                    <i class="fas fa-trash text-xs"></i>
-                                                </button>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>

@@ -1,11 +1,11 @@
 /* Spacing Fixes for E-Library Homepage */
 
-/* Enhanced Grid Spacing - Fix for colliding blocks */
-.grid {
+/* Enhanced Grid Spacing - Fix for colliding blocks (excluding footer) */
+.grid:not(footer .grid) {
     gap: 2rem !important;
 }
 
-.grid > * {
+.grid:not(footer .grid) > * {
     margin-bottom: 1.5rem;
 }
 
@@ -43,28 +43,58 @@
     margin-bottom: 1.5rem;
 }
 
+/* Footer Grid Fixes */
+.footer-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+}
+
+@media (min-width: 768px) {
+    .footer-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 2rem !important;
+    }
+}
+
+footer .grid {
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    footer .grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+}
+
 /* Mobile Responsive Spacing */
 @media (max-width: 768px) {
-    .grid {
+    .grid:not(footer .grid) {
         gap: 1.5rem !important;
     }
-    
-    .grid > * {
+
+    .grid:not(footer .grid) > * {
         margin-bottom: 1rem;
     }
-    
+
     .books-grid-container {
         padding: 0 0.25rem;
     }
-    
+
     .book-card {
         margin-bottom: 1rem !important;
+    }
+
+    footer .grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 }
 
 /* Tablet Responsive Spacing */
 @media (min-width: 769px) and (max-width: 1024px) {
-    .grid {
+    .grid:not(footer .grid) {
         gap: 1.75rem !important;
     }
     
@@ -75,7 +105,7 @@
 
 /* Large Screen Spacing */
 @media (min-width: 1025px) {
-    .grid {
+    .grid:not(footer .grid) {
         gap: 2.5rem !important;
     }
     

@@ -3,21 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion Administrateur - E-Library</title>
+    <title>Connexion Administrateur - {{ $siteSettings['site_name'] ?? 'E-Library' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Favicon -->
+    @if(isset($siteSettings['site_favicon']) && $siteSettings['site_favicon'])
+        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $siteSettings['site_favicon']) }}">
+    @else
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    @endif
 </head>
 <body class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen">
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
             <!-- Logo et titre -->
             <div class="text-center">
-                <div class="mx-auto h-16 w-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center mb-4">
-                    <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
-                </div>
-                <h2 class="text-3xl font-bold text-gray-900">E-Library</h2>
+                @if(isset($siteSettings['admin_logo']) && $siteSettings['admin_logo'])
+                    <div class="mx-auto h-16 w-16 mb-4 flex items-center justify-center">
+                        <img src="{{ asset('storage/' . $siteSettings['admin_logo']) }}"
+                             alt="{{ $siteSettings['site_name'] ?? 'E-Library' }} Admin"
+                             class="max-w-full max-h-full object-contain">
+                    </div>
+                @elseif(isset($siteSettings['site_logo']) && $siteSettings['site_logo'])
+                    <div class="mx-auto h-16 w-16 mb-4 flex items-center justify-center">
+                        <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}"
+                             alt="{{ $siteSettings['site_name'] ?? 'E-Library' }}"
+                             class="max-w-full max-h-full object-contain">
+                    </div>
+                @else
+                    <div class="mx-auto h-16 w-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center mb-4">
+                        <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                @endif
+                <h2 class="text-3xl font-bold text-gray-900">{{ $siteSettings['site_name'] ?? 'E-Library' }}</h2>
                 <p class="mt-2 text-lg font-semibold text-gray-700">Connexion Administrateur</p>
                 <p class="text-sm text-gray-500 mt-1">Accès réservé aux administrateurs</p>
             </div>

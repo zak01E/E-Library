@@ -1,10 +1,10 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
         <div class="mb-4">
-            <div class="w-16 h-16 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                </svg>
+            <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}"
+                     alt="{{ $siteSettings['site_name'] ?? 'E-Library' }}"
+                     class="max-w-full max-h-full object-contain">
             </div>
         </div>
         <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Mot de passe oublié</h2>

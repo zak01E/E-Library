@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/trending-data', [App\Http\Controllers\HomeController::class, 'getTrendingData'])->name('home.trending');
-Route::get('/filtered-books', [App\Http\Controllers\HomeController::class, 'getFilteredBooks'])->name('home.filtered-books');
 
 // Design showcase route (for development/demo purposes)
 Route::get('/design-showcase', function () {
@@ -31,6 +30,10 @@ Route::get('/search', [SearchController::class, 'index'])->name('books.search');
 Route::get('/library', [BookController::class, 'publicIndex'])->name('books.public.index');
 Route::get('/library/{book}', [BookController::class, 'publicShow'])->name('books.public.show');
 Route::get('/library/{book}/preview', [BookController::class, 'preview'])->name('books.public.preview');
+
+// Public author routes (accessible without authentication)
+Route::get('/authors', [App\Http\Controllers\PublicAuthorController::class, 'index'])->name('authors.index');
+Route::get('/authors/{author}', [App\Http\Controllers\PublicAuthorController::class, 'show'])->name('authors.show');
 
 // Protected download route (requires authentication)
 Route::middleware('auth')->group(function () {
@@ -237,7 +240,16 @@ Route::middleware('auth')->group(function () {
         Route::put('/books/{book}', [AdminController::class, 'updateBook'])->name('books.update');
         Route::patch('/books/{book}/approve', [AdminController::class, 'approveBook'])->name('books.approve');
         Route::patch('/books/{book}/reject', [AdminController::class, 'rejectBook'])->name('books.reject');
+        Route::post('/books/{book}/suspend', [AdminController::class, 'suspendBook'])->name('books.suspend');
+        Route::post('/books/{book}/review', [AdminController::class, 'putUnderReview'])->name('books.review');
         Route::delete('/books/{book}', [AdminController::class, 'deleteBook'])->name('books.delete');
+
+        // Enhanced status management
+        Route::patch('/books/{book}/status', [App\Http\Controllers\Admin\BookStatusController::class, 'changeStatus'])->name('books.change-status');
+        Route::get('/books/{book}/status-history', [App\Http\Controllers\Admin\BookStatusController::class, 'showHistory'])->name('books.status-history');
+        Route::get('/books/status-stats', [App\Http\Controllers\Admin\BookStatusController::class, 'statusStats'])->name('books.status-stats');
+        Route::post('/books/bulk-status', [App\Http\Controllers\Admin\BookStatusController::class, 'bulkStatusChange'])->name('books.bulk-status');
+
 
         // Categories
         Route::get('/categories', [AdminController::class, 'categories'])->name('categories');
@@ -261,9 +273,19 @@ Route::middleware('auth')->group(function () {
         Route::post('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
         Route::post('/settings/logos', [AdminController::class, 'updateLogos'])->name('settings.logos.update');
         Route::delete('/settings/logo/{type}', [AdminController::class, 'deleteLogo'])->name('settings.logo.delete');
-        Route::get('/settings/index', function() { return view('admin.settings.index'); })->name('settings.index');
+        // Settings routes with proper controllers
+        Route::get('/settings', [App\Http\Controllers\Admin\AdminSettingsController::class, 'index'])->name('settings');
+        Route::get('/settings/general', [App\Http\Controllers\Admin\AdminSettingsController::class, 'general'])->name('settings.general');
+        Route::get('/settings/security', [App\Http\Controllers\Admin\AdminSettingsController::class, 'security'])->name('settings.security');
+        Route::get('/settings/email', [App\Http\Controllers\Admin\AdminSettingsController::class, 'email'])->name('settings.email');
+        Route::get('/settings/maintenance', [App\Http\Controllers\Admin\AdminSettingsController::class, 'maintenance'])->name('settings.maintenance');
+        Route::post('/settings/update', [App\Http\Controllers\Admin\AdminSettingsController::class, 'update'])->name('settings.update');
         Route::get('/system-settings', function() { return view('admin.system-settings'); })->name('system-settings');
         Route::get('/themes', function() { return view('admin.themes'); })->name('themes');
+
+        // Homepage content management
+        Route::get('/homepage-content', [App\Http\Controllers\Admin\HomepageContentController::class, 'index'])->name('homepage-content.index');
+        Route::put('/homepage-content', [App\Http\Controllers\Admin\HomepageContentController::class, 'update'])->name('homepage-content.update');
         // Backup Management
         Route::get('/backup', [App\Http\Controllers\Admin\BackupController::class, 'index'])->name('backup');
         Route::post('/backup/create', [App\Http\Controllers\Admin\BackupController::class, 'create'])->name('backup.create');
@@ -282,9 +304,9 @@ Route::middleware('auth')->group(function () {
     // Admin-only management routes (outside admin prefix for main dashboard access)
     Route::middleware('is-admin')->group(function () {
         // Authors management routes
-        Route::get('authors', [MainDashboardController::class, 'authorsIndex'])->name('authors.index');
-        Route::get('authors/featured', function() { return view('authors.featured'); })->name('authors.featured');
-        Route::get('authors/applications', function() { return view('authors.applications'); })->name('authors.applications');
+        Route::get('admin/authors', [MainDashboardController::class, 'authorsIndex'])->name('admin.authors.index');
+        Route::get('admin/authors/featured', function() { return view('authors.featured'); })->name('admin.authors.featured');
+        Route::get('admin/authors/applications', function() { return view('authors.applications'); })->name('admin.authors.applications');
     });
 
     // Author routes
@@ -345,6 +367,8 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/user.php';
+require __DIR__.'/admin.php';
 
 // Author Authentication Routes
 Route::middleware(['guest', 'author.guest'])->group(function () {

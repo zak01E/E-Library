@@ -207,6 +207,9 @@
                             <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.settings*') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <i class="fas fa-sliders-h w-4 h-4 mr-2"></i>Paramètres généraux
                             </a>
+                            <a href="{{ route('admin.homepage-content.index') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.homepage-content*') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                <i class="fas fa-home w-4 h-4 mr-2"></i>Contenu Page d'Accueil
+                            </a>
                             <a href="{{ route('admin.backup') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.backup') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <i class="fas fa-database w-4 h-4 mr-2"></i>Sauvegarde
                             </a>

@@ -50,5 +50,8 @@
                 @endisset
             </main>
         </div>
+
+        <!-- Book Filters JavaScript -->
+        <script src="{{ asset('js/book-filters.js') }}"></script>
     </body>
 </html>
