@@ -11,6 +11,7 @@ use App\Http\Controllers\User\UserCollectionController;
 use App\Http\Controllers\User\UserHelpController;
 use App\Http\Controllers\User\UserNotificationController;
 use App\Http\Controllers\User\UserProfileController;
+use App\Http\Controllers\User\UserSettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -166,7 +167,19 @@ Route::middleware(['auth', 'verified'])->prefix('user')->name('user.')->group(fu
         Route::delete('/security/2fa', [UserProfileController::class, 'disable2FA'])->name('2fa.disable');
         Route::post('/security/password', [UserProfileController::class, 'updatePassword'])->name('password.update');
     });
-    
+
+    // Settings
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::get('/', [UserSettingsController::class, 'index'])->name('index');
+        Route::post('/general', [UserSettingsController::class, 'updateGeneral'])->name('general.update');
+        Route::post('/reading', [UserSettingsController::class, 'updateReading'])->name('reading.update');
+        Route::post('/notifications', [UserSettingsController::class, 'updateNotifications'])->name('notifications.update');
+        Route::post('/privacy', [UserSettingsController::class, 'updatePrivacy'])->name('privacy.update');
+        Route::post('/appearance', [UserSettingsController::class, 'updateAppearance'])->name('appearance.update');
+        Route::get('/export', [UserSettingsController::class, 'exportData'])->name('export');
+        Route::post('/reset', [UserSettingsController::class, 'resetToDefault'])->name('reset');
+    });
+
     // Reviews & Ratings
     Route::prefix('reviews')->name('reviews.')->group(function () {
         Route::get('/my-reviews', [UserReviewController::class, 'myReviews'])->name('my');

@@ -164,7 +164,7 @@ class DashboardController extends Controller
         // Activité récente (mock data pour l'instant)
         $recent_activity = collect([]);
 
-        return view('dashboard.user', compact(
+        return view('user.dashboard.index', compact(
             'stats',
             'recent_books',
             'popular_books',

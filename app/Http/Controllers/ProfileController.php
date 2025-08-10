@@ -40,7 +40,7 @@ class ProfileController extends Controller
                     'user' => $user,
                 ]);
             default:
-                return view('profile.edit', [
+                return view('user.profile.edit', [
                     'user' => $user,
                 ]);
         }
