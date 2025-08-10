@@ -63,6 +63,9 @@ class UserLibraryController extends Controller
                 ->orderBy('returned_at', 'desc')
                 ->paginate(20);
 
+            // Get read books (same as history for now)
+            $readBooks = $history;
+
             $stats = [
                 'total_borrowed' => Borrowing::where('user_id', Auth::id())->count(),
                 'currently_reading' => Borrowing::where('user_id', Auth::id())
@@ -73,6 +76,7 @@ class UserLibraryController extends Controller
         } catch (\Exception $e) {
             // If table doesn't exist or other error, return empty data
             $history = collect()->paginate(20);
+            $readBooks = collect();
             $stats = [
                 'total_borrowed' => 0,
                 'currently_reading' => 0,
@@ -80,7 +84,7 @@ class UserLibraryController extends Controller
             ];
         }
 
-        return view('user.library.history', compact('history', 'stats'));
+        return view('user.library.history', compact('history', 'stats', 'readBooks'));
     }
 
     /**

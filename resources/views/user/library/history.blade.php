@@ -104,7 +104,7 @@
             
             @foreach($readBooks as $book)
                 @php
-                    $bookMonth = $book->completed_at ? $book->completed_at->format('F Y') : 'Mars 2024';
+                    $bookMonth = $book->returned_at ? $book->returned_at->format('F Y') : 'Mars 2024';
                 @endphp
                 
                 @if($currentMonth !== $bookMonth)
@@ -122,8 +122,8 @@
                     <div class="flex items-start space-x-4">
                         <!-- Book Cover -->
                         <div class="flex-shrink-0">
-                            <img src="{{ $book->cover_image ?? '/images/default-book-cover.jpg' }}" 
-                                 alt="{{ $book->title }}" 
+                            <img src="{{ $book->book->cover_image ?? $book->cover_image ?? '/images/default-book-cover.jpg' }}"
+                                 alt="{{ $book->book->title ?? $book->title ?? 'Livre' }}"
                                  class="w-16 h-20 object-cover rounded-lg">
                         </div>
 
@@ -131,14 +131,14 @@
                         <div class="flex-1 min-w-0">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ $book->title }}</h3>
-                                    <p class="text-gray-600 text-sm mb-2">par {{ $book->author }}</p>
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ $book->book->title ?? $book->title ?? 'Titre non disponible' }}</h3>
+                                    <p class="text-gray-600 text-sm mb-2">par {{ $book->book->author_name ?? $book->author ?? 'Auteur inconnu' }}</p>
                                     
                                     <!-- Reading Details -->
                                     <div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">
                                         <span>
                                             <i class="fas fa-calendar-check mr-1"></i>
-                                            Terminé le {{ $book->completed_at ? $book->completed_at->format('d/m/Y') : '15/03/2024' }}
+                                            Terminé le {{ $book->returned_at ? $book->returned_at->format('d/m/Y') : '15/03/2024' }}
                                         </span>
                                         @if(isset($book->reading_duration))
                                         <span>
@@ -146,10 +146,10 @@
                                             Lu en {{ $book->reading_duration ?? '5 jours' }}
                                         </span>
                                         @endif
-                                        @if(isset($book->pages))
+                                        @if(isset($book->book->pages) || isset($book->pages))
                                         <span>
                                             <i class="fas fa-file-alt mr-1"></i>
-                                            {{ $book->pages }} pages
+                                            {{ $book->book->pages ?? $book->pages ?? 0 }} pages
                                         </span>
                                         @endif
                                     </div>
