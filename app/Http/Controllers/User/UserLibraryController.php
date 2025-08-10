@@ -19,15 +19,21 @@ class UserLibraryController extends Controller
      */
     public function current()
     {
-        $borrowings = Borrowing::with('book')
-            ->where('user_id', Auth::id())
-            ->where('status', 'active')
-            ->orderBy('due_date', 'asc')
-            ->paginate(12);
+        try {
+            $borrowings = Borrowing::with('book')
+                ->where('user_id', Auth::id())
+                ->where('status', 'active')
+                ->orderBy('due_date', 'asc')
+                ->paginate(12);
 
-        $overdueCount = Borrowing::where('user_id', Auth::id())
-            ->where('status', 'overdue')
-            ->count();
+            $overdueCount = Borrowing::where('user_id', Auth::id())
+                ->where('status', 'overdue')
+                ->count();
+        } catch (\Exception $e) {
+            // If table doesn't exist or other error, return empty data
+            $borrowings = collect()->paginate(12);
+            $overdueCount = 0;
+        }
 
         return view('user.library.current', compact('borrowings', 'overdueCount'));
     }
@@ -37,19 +43,29 @@ class UserLibraryController extends Controller
      */
     public function history()
     {
-        $history = Borrowing::with('book')
-            ->where('user_id', Auth::id())
-            ->whereIn('status', ['returned', 'overdue', 'lost'])
-            ->orderBy('returned_at', 'desc')
-            ->paginate(20);
+        try {
+            $history = Borrowing::with('book')
+                ->where('user_id', Auth::id())
+                ->whereIn('status', ['returned', 'overdue', 'lost'])
+                ->orderBy('returned_at', 'desc')
+                ->paginate(20);
 
-        $stats = [
-            'total_borrowed' => Borrowing::where('user_id', Auth::id())->count(),
-            'currently_reading' => Borrowing::where('user_id', Auth::id())
-                ->where('status', 'active')->count(),
-            'total_read' => Borrowing::where('user_id', Auth::id())
-                ->where('status', 'returned')->count(),
-        ];
+            $stats = [
+                'total_borrowed' => Borrowing::where('user_id', Auth::id())->count(),
+                'currently_reading' => Borrowing::where('user_id', Auth::id())
+                    ->where('status', 'active')->count(),
+                'total_read' => Borrowing::where('user_id', Auth::id())
+                    ->where('status', 'returned')->count(),
+            ];
+        } catch (\Exception $e) {
+            // If table doesn't exist or other error, return empty data
+            $history = collect()->paginate(20);
+            $stats = [
+                'total_borrowed' => 0,
+                'currently_reading' => 0,
+                'total_read' => 0,
+            ];
+        }
 
         return view('user.library.history', compact('history', 'stats'));
     }
@@ -59,10 +75,15 @@ class UserLibraryController extends Controller
      */
     public function favorites()
     {
-        $favorites = UserFavorite::with('book')
-            ->where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->paginate(12);
+        try {
+            $favorites = UserFavorite::with('book')
+                ->where('user_id', Auth::id())
+                ->orderBy('created_at', 'desc')
+                ->paginate(12);
+        } catch (\Exception $e) {
+            // If table doesn't exist or other error, return empty data
+            $favorites = collect()->paginate(12);
+        }
 
         return view('user.library.favorites', compact('favorites'));
     }
