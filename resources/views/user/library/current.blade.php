@@ -78,8 +78,8 @@
             @foreach($currentBooks as $book)
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
                 <div class="relative">
-                    <img src="{{ $book->cover_image ?? '/images/default-book-cover.jpg' }}" 
-                         alt="{{ $book->title }}" 
+                    <img src="{{ $book->book->cover_image ?? $book->cover_image ?? '/images/default-book-cover.jpg' }}"
+                         alt="{{ $book->book->title ?? $book->title ?? 'Livre' }}"
                          class="w-full h-48 object-cover">
                     <div class="absolute top-3 right-3">
                         <span class="bg-blue-600 text-white text-xs font-medium px-2 py-1 rounded-full">
@@ -89,8 +89,8 @@
                 </div>
                 
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{{ $book->title }}</h3>
-                    <p class="text-gray-600 text-sm mb-3">par {{ $book->author }}</p>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{{ $book->book->title ?? $book->title ?? 'Titre non disponible' }}</h3>
+                    <p class="text-gray-600 text-sm mb-3">par {{ $book->book->author_name ?? $book->author ?? 'Auteur inconnu' }}</p>
                     
                     <!-- Progress Bar -->
                     <div class="mb-4">
@@ -118,7 +118,7 @@
 
                     <!-- Actions -->
                     <div class="flex items-center space-x-2">
-                        <a href="{{ route('user.reading-room.read', $book->id) }}" 
+                        <a href="{{ route('user.reading-room.read', $book->book->id ?? $book->id ?? '#') }}"
                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-lg text-sm font-medium transition-colors">
                             <i class="fas fa-play mr-2"></i>Continuer
                         </a>

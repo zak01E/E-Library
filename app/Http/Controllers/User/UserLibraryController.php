@@ -29,13 +29,26 @@ class UserLibraryController extends Controller
             $overdueCount = Borrowing::where('user_id', Auth::id())
                 ->where('status', 'overdue')
                 ->count();
+
+            // Get current reading books (same as borrowings for now)
+            $currentBooks = $borrowings;
+
+            // Calculate statistics (mock data for now)
+            $averageProgress = 65;
+            $weeklyReadingTime = '8h 30min';
+            $monthlyGoal = 5;
+
         } catch (\Exception $e) {
             // If table doesn't exist or other error, return empty data
             $borrowings = collect()->paginate(12);
             $overdueCount = 0;
+            $currentBooks = collect();
+            $averageProgress = 0;
+            $weeklyReadingTime = '0h';
+            $monthlyGoal = 5;
         }
 
-        return view('user.library.current', compact('borrowings', 'overdueCount'));
+        return view('user.library.current', compact('borrowings', 'overdueCount', 'currentBooks', 'averageProgress', 'weeklyReadingTime', 'monthlyGoal'));
     }
 
     /**
