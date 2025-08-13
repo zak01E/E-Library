@@ -60,8 +60,8 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div class="flex items-center">
-                <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                    <i class="fas fa-download text-purple-600 dark:text-purple-400"></i>
+                <div class="p-2 bg-teal-100 dark:bg-purple-900 rounded-lg">
+                    <i class="fas fa-download text-teal-600 dark:text-purple-400"></i>
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total ventes</p>

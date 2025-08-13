@@ -18,7 +18,7 @@
             </p>
         </div>
         <div class="flex space-x-3">
-            <select id="period-selector" class="border-gray-300 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500">
+            <select id="period-selector" class="border-gray-300 rounded-lg text-sm focus:ring-emerald-500 focus:border-emerald-500">
                 <option value="1h">Dernière heure</option>
                 <option value="24h" selected>Dernières 24h</option>
                 <option value="7d">Dernière semaine</option>
@@ -31,7 +31,7 @@
                 Actualiser
             </button>
             <label class="flex items-center">
-                <input type="checkbox" id="auto-refresh" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked>
+                <input type="checkbox" id="auto-refresh" class="rounded border-gray-300 text-emerald-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked>
                 <span class="ml-2 text-sm text-gray-600">Auto-refresh (15s)</span>
             </label>
         </div>
@@ -151,8 +151,8 @@
 
                 <div class="flex space-x-3">
                     <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                             </svg>
                         </div>
@@ -199,8 +199,8 @@
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
             <h3 class="text-lg font-semibold text-gray-900">Journal d'activité détaillé</h3>
             <div class="flex items-center space-x-3">
-                <input type="text" id="search-input" placeholder="Rechercher un utilisateur..." class="border-gray-300 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                <select id="action-filter" class="border-gray-300 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <input type="text" id="search-input" placeholder="Rechercher un utilisateur..." class="border-gray-300 rounded-lg text-sm focus:ring-emerald-500 focus:border-emerald-500">
+                <select id="action-filter" class="border-gray-300 rounded-lg text-sm focus:ring-emerald-500 focus:border-emerald-500">
                     <option value="all">Toutes les actions</option>
                     <option value="login">Connexions</option>
                     <option value="download">Téléchargements</option>
@@ -313,7 +313,7 @@
                 limit: 50
             });
 
-            const response = await fetch(`{{ route('admin.activity.realtime-data') }}?${params.toString()}`);
+            const response = await fetch(`{{ admin_route('activity.realtime-data') }}?${params.toString()}`);
             const data = await response.json();
 
             // Mettre à jour les statistiques
@@ -474,8 +474,8 @@
             <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 h-8 w-8">
-                        <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                            <span class="text-xs font-medium text-indigo-700">${initials}</span>
+                        <div class="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                            <span class="text-xs font-medium text-emerald-700">${initials}</span>
                         </div>
                     </div>
                     <div class="ml-3">
@@ -499,7 +499,7 @@
             'login': 'bg-green-100',
             'logout': 'bg-gray-100',
             'register': 'bg-blue-100',
-            'download': 'bg-purple-100',
+            'download': 'bg-teal-100',
             'view': 'bg-yellow-100',
             'error': 'bg-red-100'
         };
@@ -511,7 +511,7 @@
             'login': '<svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>',
             'logout': '<svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>',
             'register': '<svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>',
-            'download': '<svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" /></svg>',
+            'download': '<svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" /></svg>',
             'view': '<svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>'
         };
         return icons[action] || '<svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';

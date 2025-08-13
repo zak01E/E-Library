@@ -78,15 +78,15 @@
         <!-- Temps de lecture -->
         <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 bg-purple-100 rounded-lg">
-                    <i class="fas fa-clock text-purple-600 text-xl"></i>
+                <div class="p-3 bg-teal-100 rounded-lg">
+                    <i class="fas fa-clock text-teal-600 text-xl"></i>
                 </div>
                 <span class="text-sm text-gray-500">Cette semaine</span>
             </div>
             <h3 class="text-2xl font-bold text-gray-900 mb-1">{{ $stats['reading_time'] ?? '12h' }}</h3>
             <p class="text-sm text-gray-600">Temps de lecture</p>
             <div class="mt-2 flex items-center text-xs">
-                <span class="text-purple-600 font-medium">
+                <span class="text-teal-600 font-medium">
                     <i class="fas fa-arrow-up mr-1"></i>+2h
                 </span>
                 <span class="text-gray-500 ml-1">vs semaine dernière</span>
@@ -223,8 +223,8 @@
                         
                         <div class="flex items-start space-x-3">
                             <div class="flex-shrink-0">
-                                <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-star text-purple-600 text-xs"></i>
+                                <div class="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-star text-teal-600 text-xs"></i>
                                 </div>
                             </div>
                             <div class="flex-1 min-w-0">
@@ -255,8 +255,8 @@
             </a>
             
             <a href="{{ route('user.stats.index') }}" 
-               class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-                <i class="fas fa-chart-bar text-2xl text-purple-600 mb-2"></i>
+               class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-teal-100 transition-colors">
+                <i class="fas fa-chart-bar text-2xl text-teal-600 mb-2"></i>
                 <span class="text-sm font-medium text-purple-900">Statistiques</span>
             </a>
             

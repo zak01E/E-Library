@@ -35,8 +35,8 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
-                    <i class="fas fa-mouse-pointer text-purple-600 dark:text-purple-400 text-xl"></i>
+                <div class="p-3 rounded-full bg-teal-100 dark:bg-purple-900">
+                    <i class="fas fa-mouse-pointer text-teal-600 dark:text-purple-400 text-xl"></i>
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Taux de Clic</p>
@@ -63,7 +63,7 @@
     <!-- Action Bar -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div class="flex items-center space-x-4 mb-4 sm:mb-0">
-            <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
+            <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
                 <i class="fas fa-plus"></i>
                 <span>Nouvelle Campagne</span>
             </button>
@@ -83,7 +83,7 @@
         <div class="flex items-center space-x-3">
             <div class="relative">
                 <input type="text" placeholder="Rechercher une campagne..." 
-                       class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                       class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                 <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
         </div>
@@ -247,7 +247,7 @@
                     <span class="font-medium text-gray-900 dark:text-white">€890 / €1,500</span>
                 </div>
                 <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div class="bg-purple-500 h-2 rounded-full" style="width: 59.3%"></div>
+                    <div class="bg-teal-500 h-2 rounded-full" style="width: 59.3%"></div>
                 </div>
             </div>
             
@@ -306,7 +306,7 @@
             
             <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                 <span>Créée il y a 1 jour</span>
-                <button class="text-indigo-600 hover:text-indigo-700 font-medium">Lancer la campagne</button>
+                <button class="text-emerald-600 hover:text-emerald-700 font-medium">Lancer la campagne</button>
             </div>
         </div>
     </div>
@@ -316,7 +316,7 @@
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Performance des Campagnes</h3>
             <div class="flex items-center space-x-2">
-                <button class="px-3 py-1 text-sm bg-indigo-100 text-indigo-700 rounded-full">7 jours</button>
+                <button class="px-3 py-1 text-sm bg-emerald-100 text-emerald-700 rounded-full">7 jours</button>
                 <button class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200">30 jours</button>
                 <button class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200">90 jours</button>
             </div>
@@ -342,7 +342,7 @@
                     <h4 class="font-medium text-gray-900 dark:text-white">Email Marketing</h4>
                 </div>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Campagne email ciblée avec segmentation automatique</p>
-                <button class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">Utiliser ce modèle</button>
+                <button class="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Utiliser ce modèle</button>
             </div>
             
             <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:border-indigo-300 cursor-pointer transition-colors">
@@ -353,18 +353,18 @@
                     <h4 class="font-medium text-gray-900 dark:text-white">Réseaux Sociaux</h4>
                 </div>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Promotion multi-plateformes avec contenu adapté</p>
-                <button class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">Utiliser ce modèle</button>
+                <button class="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Utiliser ce modèle</button>
             </div>
             
             <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:border-indigo-300 cursor-pointer transition-colors">
                 <div class="flex items-center space-x-3 mb-3">
-                    <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                        <i class="fas fa-bullhorn text-purple-600 dark:text-purple-400"></i>
+                    <div class="p-2 bg-teal-100 dark:bg-purple-900 rounded-lg">
+                        <i class="fas fa-bullhorn text-teal-600 dark:text-purple-400"></i>
                     </div>
                     <h4 class="font-medium text-gray-900 dark:text-white">Display Ads</h4>
                 </div>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Bannières publicitaires avec retargeting intelligent</p>
-                <button class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">Utiliser ce modèle</button>
+                <button class="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Utiliser ce modèle</button>
             </div>
         </div>
     </div>

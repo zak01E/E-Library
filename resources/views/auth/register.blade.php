@@ -2,8 +2,8 @@
     <div class="mb-6 text-center">
         <div class="mb-4">
             <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}"
-                     alt="{{ $siteSettings['site_name'] ?? 'E-Library' }}"
+                <img src="{{ site_logo() }}"
+                     alt="{{ site_name() }}"
                      class="max-w-full max-h-full object-contain">
             </div>
         </div>
@@ -90,12 +90,12 @@
 
         <!-- Terms and Conditions -->
         <div class="flex items-start">
-            <input id="terms" type="checkbox" class="mt-1 rounded border-gray-300 dark:border-gray-600 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-400" required>
+            <input id="terms" type="checkbox" class="mt-1 rounded border-gray-300 dark:border-gray-600 text-emerald-600 shadow-sm focus:ring-emerald-500 dark:focus:ring-emerald-400" required>
             <label for="terms" class="ml-2 text-sm text-gray-600 dark:text-gray-400">
                 J'accepte les
-                <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 underline">conditions d'utilisation</a>
+                <a href="#" class="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-teal-300 underline">conditions d'utilisation</a>
                 et la
-                <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 underline">politique de confidentialité</a>
+                <a href="#" class="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-teal-300 underline">politique de confidentialité</a>
             </label>
         </div>
 
@@ -113,7 +113,7 @@
         <div class="text-center mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
             <p class="text-sm text-gray-600 dark:text-gray-400">
                 Vous avez déjà un compte ?
-                <a href="{{ route('login') }}" class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors">
+                <a href="{{ route('login') }}" class="font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-teal-300 transition-colors">
                     Se connecter
                 </a>
             </p>

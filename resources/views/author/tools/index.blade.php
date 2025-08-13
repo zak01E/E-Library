@@ -46,8 +46,8 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 opacity-75">
             <div class="flex items-center mb-4">
-                <div class="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                    <i class="fas fa-chart-line text-purple-600 dark:text-purple-400 text-xl"></i>
+                <div class="p-3 bg-teal-100 dark:bg-purple-900 rounded-lg">
+                    <i class="fas fa-chart-line text-teal-600 dark:text-purple-400 text-xl"></i>
                 </div>
                 <div class="ml-4">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Analytics</h3>
@@ -92,13 +92,13 @@
 
             <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
                 <div class="flex items-center mb-3">
-                    <i class="fas fa-share-alt text-purple-600 text-xl mr-3"></i>
+                    <i class="fas fa-share-alt text-teal-600 text-xl mr-3"></i>
                     <h4 class="font-medium text-gray-900 dark:text-white">Partage social</h4>
                 </div>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
                     Générez du contenu optimisé pour les réseaux sociaux.
                 </p>
-                <button class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm">
+                <button class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm">
                     Générer
                 </button>
             </div>
@@ -150,13 +150,13 @@
 
             <div class="text-center">
                 <div class="p-4 bg-purple-50 dark:bg-purple-900 rounded-lg mb-4">
-                    <i class="fas fa-users text-purple-600 dark:text-purple-400 text-2xl"></i>
+                    <i class="fas fa-users text-teal-600 dark:text-purple-400 text-2xl"></i>
                 </div>
                 <h4 class="font-medium text-gray-900 dark:text-white mb-2">Communauté</h4>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
                     Échangez avec d'autres auteurs et partagez vos expériences.
                 </p>
-                <a href="#" class="text-purple-600 hover:text-purple-700 text-sm font-medium">
+                <a href="#" class="text-teal-600 hover:text-purple-700 text-sm font-medium">
                     Rejoindre →
                 </a>
             </div>

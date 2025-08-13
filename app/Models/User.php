@@ -48,4 +48,12 @@ class User extends Authenticatable
         // Fallback to ui-avatars.com
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=6366f1&color=fff&size=200';
     }
+    
+    /**
+     * Get books uploaded by this user
+     */
+    public function uploadedBooks()
+    {
+        return $this->hasMany(Book::class, 'uploaded_by');
+    }
 }

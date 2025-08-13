@@ -1,26 +1,19 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{
-    darkMode: localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches),
-    toggleDarkMode() {
-        this.darkMode = !this.darkMode;
-        localStorage.setItem('darkMode', this.darkMode);
-    }
-}" :class="{ 'dark': darkMode }">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $siteSettings['site_name'] ?? config('app.name', 'eLibrary') }} - Admin Dashboard</title>
+    <title>{{ site_name() }} - Admin Dashboard</title>
 
     <!-- Favicon -->
-    @if(isset($siteSettings['site_favicon']) && $siteSettings['site_favicon'])
-        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $siteSettings['site_favicon']) }}">
-    @endif
+    <link rel="icon" type="image/x-icon" href="{{ site_favicon() }}">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Fonts (même police que home.blade.php) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,11 +22,22 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <style>
+        /* Styles uniformes avec home.blade.php */
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+    </style>
+
     @stack('scripts')
 </head>
-<body class="font-sans antialiased bg-gray-50 dark:bg-gray-900">
+<body class="font-sans antialiased bg-white">
     <div x-data="{
-        sidebarOpen: true,
+        sidebarOpen: window.innerWidth > 1024,
         activeMenu: null,
         toggleSubmenu(menu) {
             this.activeMenu = this.activeMenu === menu ? null : menu;
@@ -76,19 +80,19 @@
 
         <!-- Sidebar -->
         <aside :class="sidebarOpen ? 'w-72' : 'w-20'"
-               class="fixed inset-y-0 left-0 z-50 bg-white dark:bg-gray-800 shadow-xl transition-all duration-300 ease-in-out border-r border-gray-200 dark:border-gray-700">
+               class="fixed inset-y-0 left-0 z-50 bg-white shadow-lg transition-all duration-300 ease-in-out border-r border-gray-100">
 
             <!-- Logo & Toggle -->
-            <div class="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-indigo-600 to-purple-600">
+            <div class="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-emerald-600 to-teal-600">
                 <div class="flex items-center">
-                    @if(isset($siteSettings['admin_logo']) && $siteSettings['admin_logo'])
-                        <img src="{{ asset('storage/' . $siteSettings['admin_logo']) }}" alt="Admin Logo" class="w-8 h-8 object-contain">
-                    @elseif(isset($siteSettings['site_logo']) && $siteSettings['site_logo'])
-                        <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}" alt="Site Logo" class="w-8 h-8 object-contain">
+                    @if(site_logo('admin_logo'))
+                        <img src="{{ site_logo('admin_logo') }}" alt="Admin Logo" class="w-8 h-8 object-contain">
+                    @elseif(site_logo())
+                        <img src="{{ site_logo() }}" alt="Site Logo" class="w-8 h-8 object-contain">
                     @else
                         <i class="fas fa-book-open text-white text-2xl"></i>
                     @endif
-                    <span x-show="sidebarOpen" x-transition class="ml-3 text-xl font-bold text-white">{{ $siteSettings['site_name'] ?? 'eLibrary' }} Admin</span>
+                    <span x-show="sidebarOpen" x-transition class="ml-3 text-xl font-bold text-white">{{ site_name() }} Admin</span>
                 </div>
                 <button @click="sidebarOpen = !sidebarOpen"
                         class="text-white hover:bg-white/10 p-2 rounded-lg transition-colors">
@@ -101,66 +105,94 @@
 
                 <!-- Dashboard -->
                 <div class="mb-6">
-                    <a href="{{ route('admin.dashboard') }}"
-                       class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-indigo-100 dark:bg-gray-700 text-indigo-700 dark:text-indigo-300' : '' }}">
-                        <i class="fas fa-tachometer-alt w-5 h-5"></i>
-                        <span x-show="sidebarOpen" x-transition class="ml-3 font-medium">Dashboard</span>
+                    <a href="{{ admin_route('dashboard') }}"
+                       class="flex items-center px-4 py-3 text-gray-700 rounded-xl hover:bg-emerald-50 transition-colors group {{ request()->is('admin/dashboard') ? 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border-l-4 border-emerald-500' : '' }}">
+                        <div class="{{ request()->is('admin/dashboard') ? 'bg-emerald-500' : 'bg-gray-400' }} w-8 h-8 rounded-full flex items-center justify-center group-hover:bg-emerald-500 transition">
+                            <i class="fas fa-tachometer-alt text-white text-sm"></i>
+                        </div>
+                        <span x-show="sidebarOpen" x-transition class="ml-3 font-semibold">Dashboard</span>
                     </a>
                 </div>
 
                 <!-- Content Management -->
                 <div class="mb-4">
-                    <div x-show="sidebarOpen" class="px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+                    <div x-show="sidebarOpen" class="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
                         Gestion du contenu
                     </div>
 
                     <!-- Books Management -->
                     <div class="space-y-1">
                         <button @click="toggleSubmenu('books')"
-                                :class="activeMenu === 'books' ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'"
-                                class="flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors">
+                                :class="activeMenu === 'books' ? 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700' : 'text-gray-700 hover:bg-gray-50'"
+                                class="flex items-center justify-between w-full px-4 py-3 rounded-xl transition-all group">
                             <div class="flex items-center">
-                                <i class="fas fa-book w-5 h-5"></i>
-                                <span x-show="sidebarOpen" x-transition class="ml-3">Livres</span>
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center transition"
+                                     :class="activeMenu === 'books' ? 'bg-emerald-500' : 'bg-gray-300 group-hover:bg-emerald-400'">
+                                    <i class="fas fa-book text-white text-sm"></i>
+                                </div>
+                                <span x-show="sidebarOpen" x-transition class="ml-3 font-medium">Livres</span>
                             </div>
                             <i x-show="sidebarOpen" :class="activeMenu === 'books' ? 'fa-chevron-down' : 'fa-chevron-right'"
-                               class="fas text-xs transition-transform"></i>
+                               class="fas text-xs text-gray-400 transition-transform"></i>
                         </button>
 
-                        <div x-show="activeMenu === 'books' && sidebarOpen" x-transition class="ml-8 space-y-1">
-                            <a href="{{ route('admin.books') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.books') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-                                <i class="fas fa-list w-4 h-4 mr-2"></i>Tous les livres
-                            </a>
-                            <a href="{{ route('admin.books.create') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.books.create') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-                                <i class="fas fa-plus w-4 h-4 mr-2"></i>Ajouter un livre
-                            </a>
-                            <a href="{{ route('admin.categories') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.categories') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-                                <i class="fas fa-tags w-4 h-4 mr-2"></i>Catégories
-                            </a>
+                        <div x-show="activeMenu === 'books' && sidebarOpen" x-transition class="ml-12 space-y-1">
+                            @if(Route::has('admin.books'))
+                                <a href="{{ admin_route('books') }}" class="block px-4 py-2 text-sm rounded-lg transition-all hover:translate-x-1 {{ request()->is('admin/books') ? 'bg-emerald-50 text-emerald-700 font-medium' : 'text-gray-600 hover:text-emerald-600' }}">
+                                    <i class="fas fa-list w-4 h-4 mr-2 text-emerald-500"></i>Tous les livres
+                                </a>
+                            @else
+                                <a href="/admin/books" class="block px-4 py-2 text-sm rounded-lg transition-all hover:translate-x-1 text-gray-600 hover:text-emerald-600">
+                                    <i class="fas fa-list w-4 h-4 mr-2 text-emerald-500"></i>Tous les livres
+                                </a>
+                            @endif
+                            
+                            @if(Route::has('admin.books.create'))
+                                <a href="{{ admin_route('books.create') }}" class="block px-4 py-2 text-sm rounded-lg transition-all hover:translate-x-1 {{ request()->is('admin/books/create') ? 'bg-emerald-50 text-emerald-700 font-medium' : 'text-gray-600 hover:text-emerald-600' }}">
+                                    <i class="fas fa-plus w-4 h-4 mr-2 text-emerald-500"></i>Ajouter un livre
+                                </a>
+                            @else
+                                <a href="/admin/books/create" class="block px-4 py-2 text-sm rounded-lg transition-all hover:translate-x-1 text-gray-600 hover:text-emerald-600">
+                                    <i class="fas fa-plus w-4 h-4 mr-2 text-emerald-500"></i>Ajouter un livre
+                                </a>
+                            @endif
+                            
+                            @if(Route::has('admin.categories'))
+                                <a href="{{ admin_route('categories') }}" class="block px-4 py-2 text-sm rounded-lg transition-all hover:translate-x-1 {{ request()->is('admin/categories') ? 'bg-emerald-50 text-emerald-700 font-medium' : 'text-gray-600 hover:text-emerald-600' }}">
+                                    <i class="fas fa-tags w-4 h-4 mr-2 text-emerald-500"></i>Catégories
+                                </a>
+                            @else
+                                <a href="/admin/categories" class="block px-4 py-2 text-sm rounded-lg transition-all hover:translate-x-1 text-gray-600 hover:text-emerald-600">
+                                    <i class="fas fa-tags w-4 h-4 mr-2 text-emerald-500"></i>Catégories
+                                </a>
+                            @endif
                         </div>
                     </div>
 
                     <!-- Users Management -->
                     <div class="space-y-1">
                         <button @click="toggleSubmenu('users')"
-                                :class="activeMenu === 'users' ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'"
-                                class="flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors">
+                                :class="activeMenu === 'users' ? 'bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-700' : 'text-gray-700 hover:bg-gray-50'"
+                                class="flex items-center justify-between w-full px-4 py-3 rounded-xl transition-all group">
                             <div class="flex items-center">
-                                <i class="fas fa-users w-5 h-5"></i>
-                                <span x-show="sidebarOpen" x-transition class="ml-3">Utilisateurs</span>
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center transition"
+                                     :class="activeMenu === 'users' ? 'bg-blue-500' : 'bg-gray-300 group-hover:bg-blue-400'">
+                                    <i class="fas fa-users text-white text-sm"></i>
+                                </div>
+                                <span x-show="sidebarOpen" x-transition class="ml-3 font-medium">Utilisateurs</span>
                             </div>
                             <i x-show="sidebarOpen" :class="activeMenu === 'users' ? 'fa-chevron-down' : 'fa-chevron-right'"
                                class="fas text-xs transition-transform"></i>
                         </button>
 
                         <div x-show="activeMenu === 'users' && sidebarOpen" x-transition class="ml-8 space-y-1">
-                            <a href="{{ route('admin.users') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.users') && !request()->has('status') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            <a href="{{ admin_route('users') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->is('admin/users') && !request()->has('status') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <i class="fas fa-list w-4 h-4 mr-2"></i>Tous les utilisateurs
                             </a>
-                            <a href="{{ route('admin.users.active') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.users.active') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            <a href="{{ admin_route('users.active') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->is('admin/users/active') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <i class="fas fa-user-check w-4 h-4 mr-2"></i>Utilisateurs actifs
                             </a>
-                            <a href="{{ route('admin.permissions') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.permissions') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            <a href="{{ admin_route('permissions') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->is('admin/permissions') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <i class="fas fa-shield-alt w-4 h-4 mr-2"></i>Permissions & Rôles
                             </a>
                         </div>
@@ -174,11 +206,11 @@
                     </div>
 
                     <div class="space-y-1">
-                        <a href="{{ route('admin.reports') }}" class="flex items-center px-4 py-3 rounded-lg transition-colors {{ request()->routeIs('admin.reports*') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <a href="{{ admin_route('reports') }}" class="flex items-center px-4 py-3 rounded-lg transition-colors {{ request()->is('admin/reports*') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                             <i class="fas fa-chart-line w-5 h-5"></i>
                             <span x-show="sidebarOpen" x-transition class="ml-3">Rapports</span>
                         </a>
-                        <a href="{{ route('admin.activity') }}" class="flex items-center px-4 py-3 rounded-lg transition-colors {{ request()->routeIs('admin.activity') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <a href="{{ admin_route('activity') }}" class="flex items-center px-4 py-3 rounded-lg transition-colors {{ request()->is('admin/activity') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                             <i class="fas fa-chart-pie w-5 h-5"></i>
                             <span x-show="sidebarOpen" x-transition class="ml-3">Activité</span>
                         </a>
@@ -193,7 +225,7 @@
 
                     <div class="space-y-1">
                         <button @click="toggleSubmenu('system')"
-                                :class="activeMenu === 'system' ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'"
+                                :class="activeMenu === 'system' ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'"
                                 class="flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors">
                             <div class="flex items-center">
                                 <i class="fas fa-cogs w-5 h-5"></i>
@@ -204,19 +236,19 @@
                         </button>
 
                         <div x-show="activeMenu === 'system' && sidebarOpen" x-transition class="ml-8 space-y-1">
-                            <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.settings*') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            <a href="{{ admin_route('settings') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->is('admin/settings*') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <i class="fas fa-sliders-h w-4 h-4 mr-2"></i>Paramètres généraux
                             </a>
-                            <a href="{{ route('admin.homepage-content.index') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.homepage-content*') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            <a href="{{ admin_route('homepage-content.index') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->is('admin/homepage-content*') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <i class="fas fa-home w-4 h-4 mr-2"></i>Contenu Page d'Accueil
                             </a>
-                            <a href="{{ route('admin.backup') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.backup') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            <a href="{{ admin_route('backup') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->is('admin/backup') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <i class="fas fa-database w-4 h-4 mr-2"></i>Sauvegarde
                             </a>
-                            <a href="{{ route('admin.logs') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.logs') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            <a href="{{ admin_route('logs') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->is('admin/logs') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <i class="fas fa-file-alt w-4 h-4 mr-2"></i>Logs système
                             </a>
-                            <a href="{{ route('admin.system-settings') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->routeIs('admin.system-settings') ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            <a href="{{ admin_route('system-settings') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->is('admin/system-settings') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <i class="fas fa-tools w-4 h-4 mr-2"></i>Maintenance
                             </a>
                         </div>
@@ -260,7 +292,7 @@
                             <!-- Search -->
                             <div class="relative">
                                 <input type="text" placeholder="Rechercher..."
-                                       class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                                       class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                                 <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             </div>
 
@@ -286,7 +318,7 @@
 
                                 <div x-show="open" @click.away="open = false" x-transition
                                      class="absolute right-0 mt-1 w-48 bg-white dark:bg-gray-800 rounded-md shadow-md border border-gray-200 dark:border-gray-700 z-50">
-                                    <a href="{{ route('admin.profile.edit') }}" class="block px-3 py-1.5 text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <a href="{{ admin_route('profile.edit') }}" class="block px-3 py-1.5 text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                                         <i class="fas fa-user w-3 h-3 mr-1.5"></i>Profil
                                     </a>
                                     <a href="#" class="block px-3 py-1.5 text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -544,7 +576,7 @@
 
         function confirmLogout() {
             // Rediriger vers la route de déconnexion
-            window.location.href = "{{ route('admin.simple.logout') }}";
+            window.location.href = "{{ admin_route('simple.logout') }}";
         }
 
         // Fermer la modal en cliquant à l'extérieur

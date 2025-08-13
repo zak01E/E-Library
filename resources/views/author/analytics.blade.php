@@ -12,7 +12,7 @@
                     <div class="text-gray-600">Total vues</div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <div class="text-2xl font-bold text-purple-600">{{ number_format($total_engagement['avg_downloads'], 1) }}</div>
+                    <div class="text-2xl font-bold text-teal-600">{{ number_format($total_engagement['avg_downloads'], 1) }}</div>
                     <div class="text-gray-600">Moyenne téléchargements</div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">

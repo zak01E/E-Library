@@ -1,8 +1,8 @@
-@extends(auth()->user()->role === 'admin' ? 'layouts.admin-dashboard' : 'layouts.author-dashboard')
+@extends(auth()->check() && auth()->user()->role === 'admin' ? 'layouts.admin-dashboard' : 'layouts.author-dashboard')
 
 @section('content')
     <div class="space-y-6">
-            @if(auth()->user()->role === 'author')
+            @if(auth()->check() && auth()->user()->role === 'author')
                 <div class="mb-6">
                     <a href="{{ route('books.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         Ajouter un livre
@@ -36,7 +36,7 @@
                                 <div class="flex items-center justify-between">
                                     <span class="text-xs text-gray-500">{{ $book->created_at->format('d/m/Y') }}</span>
                                     
-                                    @if(auth()->user()->role === 'admin' && !$book->is_approved)
+                                    @if(auth()->check() && auth()->user()->role === 'admin' && !$book->is_approved)
                                         <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">
                                             En attente
                                         </span>
@@ -49,7 +49,7 @@
                             </div>
                         </a>
 
-                        @if(auth()->user()->role === 'admin' && !$book->is_approved)
+                        @if(auth()->check() && auth()->user()->role === 'admin' && !$book->is_approved)
                             <div class="border-t px-4 py-3 bg-gray-50">
                                 <form action="{{ route('books.approve', $book) }}" method="POST" class="inline">
                                     @csrf

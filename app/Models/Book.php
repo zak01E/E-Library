@@ -12,6 +12,7 @@ class Book extends Model
 
     protected $fillable = [
         'title',
+        'slug',
         'description',
         'author_name',
         'isbn',
@@ -29,6 +30,9 @@ class Book extends Model
         'status_changed_at',
         'status_changed_by',
         'is_public',
+        'visibility',
+        'views',
+        'downloads',
     ];
 
     protected $casts = [
@@ -44,6 +48,14 @@ class Book extends Model
     public function uploader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
+    }
+
+    /**
+     * Relation avec la catégorie
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category', 'name');
     }
 
     /**

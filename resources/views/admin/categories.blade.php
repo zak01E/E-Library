@@ -25,8 +25,8 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div class="flex items-center">
-                <div class="p-3 bg-indigo-100 dark:bg-indigo-900 rounded-lg">
-                    <i class="fas fa-tags text-indigo-600 dark:text-indigo-400 text-xl"></i>
+                <div class="p-3 bg-emerald-100 dark:bg-indigo-900 rounded-lg">
+                    <i class="fas fa-tags text-emerald-600 dark:text-emerald-400 text-xl"></i>
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Catégories Actives</p>
@@ -107,14 +107,14 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <a
-                                        href="{{ route('admin.categories.edit', $category) }}"
-                                        class="text-indigo-600 hover:text-indigo-900 mr-3"
+                                        href="{{ admin_route('categories.edit', $category) }}"
+                                        class="text-emerald-600 hover:text-indigo-900 mr-3"
                                     >
                                         Éditer
                                     </a>
                                     <button
                                         type="button"
-                                        onclick="showDeleteConfirmation('{{ $category->name }}', {{ $category->books_count }}, '{{ route('admin.categories.delete', $category) }}')"
+                                        onclick="showDeleteConfirmation('{{ $category->name }}', {{ $category->books_count }}, '{{ admin_route('categories.delete', $category) }}')"
                                         class="text-red-600 hover:text-red-900"
                                     >
                                         Supprimer
@@ -141,7 +141,7 @@
                 Ajouter une nouvelle catégorie
             </h2>
 
-            <form method="POST" action="{{ route('admin.categories.store') }}" class="mt-6 space-y-4">
+            <form method="POST" action="{{ admin_route('categories.store') }}" class="mt-6 space-y-4">
                 @csrf
                 <div>
                     <x-input-label for="category-name" value="Nom de la catégorie" />
@@ -175,7 +175,7 @@
                         id="category-description"
                         name="description"
                         rows="3"
-                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                         placeholder="Description de la catégorie..."
                     ></textarea>
                 </div>
@@ -186,7 +186,7 @@
                         name="is_active"
                         type="checkbox"
                         value="1"
-                        class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800"
+                        class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-emerald-600 shadow-sm focus:ring-emerald-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800"
                         checked
                     >
                     <label for="category-active" class="ml-2 text-sm text-gray-600 dark:text-gray-400">

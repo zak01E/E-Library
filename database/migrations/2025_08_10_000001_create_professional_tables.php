@@ -9,7 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         // Profiles table
-        Schema::create('profiles', function (Blueprint $table) {
+        if (!Schema::hasTable('profiles')) {
+            Schema::create('profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('first_name')->nullable();
@@ -29,10 +30,12 @@ return new class extends Migration
             $table->timestamps();
             
             $table->index('user_id');
-        });
+            });
+        }
 
         // Authors enhanced table
-        Schema::create('authors', function (Blueprint $table) {
+        if (!Schema::hasTable('authors')) {
+            Schema::create('authors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('pen_name')->nullable();
@@ -54,10 +57,12 @@ return new class extends Migration
             
             $table->index('user_id');
             $table->index('verification_status');
-        });
+            });
+        }
 
         // Book authors relationship
-        Schema::create('book_authors', function (Blueprint $table) {
+        if (!Schema::hasTable('book_authors')) {
+            Schema::create('book_authors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
             $table->foreignId('author_id')->constrained()->onDelete('cascade');
@@ -69,10 +74,12 @@ return new class extends Migration
             $table->unique(['book_id', 'author_id']);
             $table->index('book_id');
             $table->index('author_id');
-        });
+            });
+        }
 
         // Borrowings table
-        Schema::create('borrowings', function (Blueprint $table) {
+        if (!Schema::hasTable('borrowings')) {
+            Schema::create('borrowings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
@@ -89,10 +96,12 @@ return new class extends Migration
             $table->index(['user_id', 'status']);
             $table->index(['book_id', 'status']);
             $table->index('due_date');
-        });
+            });
+        }
 
         // Reservations table
-        Schema::create('reservations', function (Blueprint $table) {
+        if (!Schema::hasTable('reservations')) {
+            Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
@@ -106,10 +115,12 @@ return new class extends Migration
             $table->index(['user_id', 'status']);
             $table->index(['book_id', 'status']);
             $table->index('expires_at');
-        });
+            });
+        }
 
         // Reading sessions table
-        Schema::create('reading_sessions', function (Blueprint $table) {
+        if (!Schema::hasTable('reading_sessions')) {
+            Schema::create('reading_sessions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
@@ -126,10 +137,12 @@ return new class extends Migration
             
             $table->index(['user_id', 'book_id']);
             $table->index('started_at');
-        });
+            });
+        }
 
         // Reviews table
-        Schema::create('reviews', function (Blueprint $table) {
+        if (!Schema::hasTable('reviews')) {
+            Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
@@ -146,10 +159,12 @@ return new class extends Migration
             $table->unique(['user_id', 'book_id']);
             $table->index(['book_id', 'status']);
             $table->index('rating');
-        });
+            });
+        }
 
         // Collections table
-        Schema::create('collections', function (Blueprint $table) {
+        if (!Schema::hasTable('collections')) {
+            Schema::create('collections', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name');
@@ -164,10 +179,12 @@ return new class extends Migration
             
             $table->index(['user_id', 'is_public']);
             $table->index('slug');
-        });
+            });
+        }
 
         // Collection books relationship
-        Schema::create('collection_books', function (Blueprint $table) {
+        if (!Schema::hasTable('collection_books')) {
+            Schema::create('collection_books', function (Blueprint $table) {
             $table->id();
             $table->foreignId('collection_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
@@ -178,10 +195,12 @@ return new class extends Migration
             $table->unique(['collection_id', 'book_id']);
             $table->index('collection_id');
             $table->index('book_id');
-        });
+            });
+        }
 
         // Transactions table
-        Schema::create('transactions', function (Blueprint $table) {
+        if (!Schema::hasTable('transactions')) {
+            Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['purchase', 'subscription', 'fine', 'refund']);
@@ -198,10 +217,12 @@ return new class extends Migration
             $table->index(['user_id', 'status']);
             $table->index('invoice_number');
             $table->index('created_at');
-        });
+            });
+        }
 
         // Analytics events table
-        Schema::create('analytics_events', function (Blueprint $table) {
+        if (!Schema::hasTable('analytics_events')) {
+            Schema::create('analytics_events', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->string('session_id');
@@ -224,10 +245,12 @@ return new class extends Migration
             $table->index(['user_id', 'event_type']);
             $table->index('session_id');
             $table->index('created_at');
-        });
+            });
+        }
 
         // Notifications table
-        Schema::create('notifications', function (Blueprint $table) {
+        if (!Schema::hasTable('notifications')) {
+            Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('type');
@@ -242,10 +265,12 @@ return new class extends Migration
             
             $table->index(['user_id', 'is_read']);
             $table->index('created_at');
-        });
+            });
+        }
 
         // Book categories relationship
-        Schema::create('book_categories', function (Blueprint $table) {
+        if (!Schema::hasTable('book_categories')) {
+            Schema::create('book_categories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
@@ -255,10 +280,12 @@ return new class extends Migration
             $table->unique(['book_id', 'category_id']);
             $table->index('book_id');
             $table->index('category_id');
-        });
+            });
+        }
 
         // User favorites
-        Schema::create('user_favorites', function (Blueprint $table) {
+        if (!Schema::hasTable('user_favorites')) {
+            Schema::create('user_favorites', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
@@ -267,10 +294,12 @@ return new class extends Migration
             $table->unique(['user_id', 'book_id']);
             $table->index('user_id');
             $table->index('book_id');
-        });
+            });
+        }
 
         // User reading list (wishlist)
-        Schema::create('user_reading_lists', function (Blueprint $table) {
+        if (!Schema::hasTable('user_reading_lists')) {
+            Schema::create('user_reading_lists', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
@@ -280,65 +309,115 @@ return new class extends Migration
             
             $table->unique(['user_id', 'book_id']);
             $table->index(['user_id', 'priority']);
-        });
+            });
+        }
 
         // Enhance existing users table
-        Schema::table('users', function (Blueprint $table) {
-            $table->uuid('uuid')->after('id')->unique()->nullable();
-            $table->string('username')->after('email')->unique()->nullable();
-            $table->enum('status', ['active', 'suspended', 'banned', 'pending'])->default('active')->after('role');
-            $table->enum('subscription_type', ['free', 'basic', 'premium', 'enterprise'])->default('free')->after('status');
-            $table->timestamp('subscription_expires_at')->nullable()->after('subscription_type');
-            $table->timestamp('last_login_at')->nullable();
-            $table->integer('login_count')->default(0);
-            $table->string('ip_address')->nullable();
-            $table->string('user_agent')->nullable();
-            $table->boolean('two_factor_enabled')->default(false);
-            $table->string('two_factor_secret')->nullable();
-            $table->string('phone')->nullable();
-            $table->timestamp('phone_verified_at')->nullable();
-            $table->json('preferences')->nullable();
-            $table->softDeletes();
-            
-            $table->index('username');
-            $table->index('status');
-            $table->index('subscription_type');
-        });
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                if (!Schema::hasColumn('users', 'uuid')) {
+                    $table->uuid('uuid')->after('id')->unique()->nullable();
+                }
+                if (!Schema::hasColumn('users', 'username')) {
+                    $table->string('username')->after('email')->unique()->nullable();
+                }
+                if (!Schema::hasColumn('users', 'status')) {
+                    $table->enum('status', ['active', 'suspended', 'banned', 'pending'])->default('active')->after('role');
+                }
+                if (!Schema::hasColumn('users', 'subscription_type')) {
+                    $table->enum('subscription_type', ['free', 'basic', 'premium', 'enterprise'])->default('free')->after('status');
+                }
+                if (!Schema::hasColumn('users', 'subscription_expires_at')) {
+                    $table->timestamp('subscription_expires_at')->nullable()->after('subscription_type');
+                }
+                if (!Schema::hasColumn('users', 'last_login_at')) {
+                    $table->timestamp('last_login_at')->nullable();
+                }
+                if (!Schema::hasColumn('users', 'login_count')) {
+                    $table->integer('login_count')->default(0);
+                }
+                if (!Schema::hasColumn('users', 'ip_address')) {
+                    $table->string('ip_address')->nullable();
+                }
+                if (!Schema::hasColumn('users', 'user_agent')) {
+                    $table->string('user_agent')->nullable();
+                }
+                if (!Schema::hasColumn('users', 'two_factor_enabled')) {
+                    $table->boolean('two_factor_enabled')->default(false);
+                }
+                if (!Schema::hasColumn('users', 'two_factor_secret')) {
+                    $table->string('two_factor_secret')->nullable();
+                }
+                if (!Schema::hasColumn('users', 'phone')) {
+                    $table->string('phone')->nullable();
+                }
+                if (!Schema::hasColumn('users', 'phone_verified_at')) {
+                    $table->timestamp('phone_verified_at')->nullable();
+                }
+                if (!Schema::hasColumn('users', 'preferences')) {
+                    $table->json('preferences')->nullable();
+                }
+                if (!Schema::hasColumn('users', 'deleted_at')) {
+                    $table->softDeletes();
+                }
+                
+                // Skip indexes due to potential conflicts
+            });
+        }
 
         // Enhance existing books table
-        Schema::table('books', function (Blueprint $table) {
-            $table->uuid('uuid')->after('id')->unique()->nullable();
-            $table->string('slug')->after('title')->unique()->nullable();
-            $table->string('isbn13')->after('isbn')->nullable();
-            $table->text('summary')->after('description')->nullable();
-            $table->string('original_language')->after('language')->nullable();
-            $table->date('publication_date')->after('publication_year')->nullable();
-            $table->foreignId('publisher_id')->nullable()->after('publisher');
-            $table->string('edition')->nullable()->after('publisher_id');
-            $table->string('volume')->nullable()->after('edition');
-            $table->enum('format', ['pdf', 'epub', 'mobi', 'azw3'])->default('pdf')->after('pages');
-            $table->bigInteger('file_size')->nullable()->after('format');
-            $table->string('preview_file')->nullable()->after('cover_image');
-            $table->decimal('price', 8, 2)->default(0)->after('preview_file');
-            $table->decimal('discount_percentage', 5, 2)->default(0)->after('price');
-            $table->enum('visibility', ['public', 'private', 'restricted'])->default('public')->after('status');
-            $table->boolean('drm_protected')->default(false)->after('visibility');
-            $table->integer('download_count')->default(0)->after('downloads');
-            $table->integer('view_count')->default(0)->after('views');
-            $table->decimal('rating_average', 3, 2)->default(0)->after('view_count');
-            $table->integer('rating_count')->default(0)->after('rating_average');
-            $table->boolean('featured')->default(false)->after('rating_count');
-            $table->timestamp('featured_until')->nullable()->after('featured');
-            $table->json('metadata')->nullable();
-            $table->timestamp('published_at')->nullable();
-            $table->softDeletes();
-            
-            $table->index('slug');
-            $table->index('isbn13');
-            $table->index('status');
-            $table->index('visibility');
-            $table->index('featured');
-        });
+        if (Schema::hasTable('books')) {
+            Schema::table('books', function (Blueprint $table) {
+                $columnsToAdd = [
+                    'uuid' => fn() => $table->uuid('uuid')->after('id')->unique()->nullable(),
+                    'slug' => fn() => $table->string('slug')->after('title')->unique()->nullable(),
+                    'isbn13' => fn() => $table->string('isbn13')->after('isbn')->nullable(),
+                    'summary' => fn() => $table->text('summary')->after('description')->nullable(),
+                    'original_language' => fn() => $table->string('original_language')->after('language')->nullable(),
+                    'publication_date' => fn() => $table->date('publication_date')->after('publication_year')->nullable(),
+                    'publisher_id' => fn() => $table->foreignId('publisher_id')->nullable()->after('publisher'),
+                    'edition' => fn() => $table->string('edition')->nullable()->after('publisher_id'),
+                    'volume' => fn() => $table->string('volume')->nullable()->after('edition'),
+                    'format' => fn() => $table->enum('format', ['pdf', 'epub', 'mobi', 'azw3'])->default('pdf')->after('pages'),
+                    'file_size' => fn() => $table->bigInteger('file_size')->nullable()->after('format'),
+                    'preview_file' => fn() => $table->string('preview_file')->nullable()->after('cover_image'),
+                    'price' => fn() => $table->decimal('price', 8, 2)->default(0)->after('preview_file'),
+                    'discount_percentage' => fn() => $table->decimal('discount_percentage', 5, 2)->default(0)->after('price'),
+                    'drm_protected' => fn() => $table->boolean('drm_protected')->default(false)->after('visibility'),
+                    'download_count' => fn() => $table->integer('download_count')->default(0)->after('downloads'),
+                    'view_count' => fn() => $table->integer('view_count')->default(0)->after('views'),
+                    'rating_average' => fn() => $table->decimal('rating_average', 3, 2)->default(0)->after('view_count'),
+                    'rating_count' => fn() => $table->integer('rating_count')->default(0)->after('rating_average'),
+                    'metadata' => fn() => $table->json('metadata')->nullable(),
+                    'published_at' => fn() => $table->timestamp('published_at')->nullable(),
+                    'deleted_at' => fn() => $table->softDeletes()
+                ];
+
+                foreach ($columnsToAdd as $column => $addFunction) {
+                    if (!Schema::hasColumn('books', $column)) {
+                        $addFunction();
+                    }
+                }
+
+                // Add visibility column if it doesn't exist (already added by another migration)
+                if (!Schema::hasColumn('books', 'visibility')) {
+                    $table->enum('visibility', ['public', 'private', 'restricted'])->default('public')->after('status');
+                }
+
+                // Add featured column if it doesn't exist (already added by another migration)
+                if (!Schema::hasColumn('books', 'featured')) {
+                    $table->boolean('featured')->default(false)->after('rating_count');
+                }
+
+                if (!Schema::hasColumn('books', 'featured_until')) {
+                    $table->timestamp('featured_until')->nullable()->after('featured');
+                }
+
+                // Add indexes for columns that exist (check if index doesn't already exist)
+                // Note: Laravel doesn't have a built-in way to check for index existence,
+                // so we'll skip indexing for now as it's causing conflicts
+            });
+        }
     }
 
     public function down(): void

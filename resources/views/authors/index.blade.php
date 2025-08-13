@@ -35,8 +35,8 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
-                    <i class="fas fa-crown text-purple-600 dark:text-purple-400 text-xl"></i>
+                <div class="p-3 rounded-full bg-teal-100 dark:bg-purple-900">
+                    <i class="fas fa-crown text-teal-600 dark:text-purple-400 text-xl"></i>
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Auteurs Vedettes</p>
@@ -63,7 +63,7 @@
     <!-- Filters and Actions -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div class="flex items-center space-x-4 mb-4 sm:mb-0">
-            <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
+            <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
                 <i class="fas fa-user-plus"></i>
                 <span>Inviter un Auteur</span>
             </button>
@@ -86,7 +86,7 @@
         <div class="flex items-center space-x-3">
             <div class="relative">
                 <input type="text" placeholder="Rechercher un auteur..." 
-                       class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                       class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                 <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
         </div>
@@ -105,7 +105,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-1">
-                    <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">Vedette</span>
+                    <span class="px-2 py-1 bg-teal-100 text-purple-800 text-xs rounded-full">Vedette</span>
                 </div>
             </div>
             
@@ -270,7 +270,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-1">
-                    <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">Vedette</span>
+                    <span class="px-2 py-1 bg-teal-100 text-purple-800 text-xs rounded-full">Vedette</span>
                 </div>
             </div>
             
@@ -434,7 +434,7 @@
             <button class="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
                 Précédent
             </button>
-            <button class="px-3 py-2 text-sm bg-indigo-600 text-white rounded-lg">1</button>
+            <button class="px-3 py-2 text-sm bg-emerald-600 text-white rounded-lg">1</button>
             <button class="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">2</button>
             <button class="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">3</button>
             <button class="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">

@@ -8,7 +8,7 @@
     <!-- Action Bar -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div class="flex items-center space-x-4 mb-4 sm:mb-0">
-            <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
+            <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
                 <i class="fas fa-plus"></i>
                 <span>Nouvelle Catégorie</span>
             </button>
@@ -21,7 +21,7 @@
         <div class="flex items-center space-x-3">
             <div class="relative">
                 <input type="text" placeholder="Rechercher une catégorie..." 
-                       class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                       class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                 <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
             <select class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-white">
@@ -89,8 +89,8 @@
         <!-- Technology Category -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                    <i class="fas fa-laptop-code text-purple-600 dark:text-purple-400 text-xl"></i>
+                <div class="p-3 bg-teal-100 dark:bg-purple-900 rounded-lg">
+                    <i class="fas fa-laptop-code text-teal-600 dark:text-purple-400 text-xl"></i>
                 </div>
                 <div class="flex items-center space-x-2">
                     <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -167,8 +167,8 @@
         <!-- Business Category -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 bg-indigo-100 dark:bg-indigo-900 rounded-lg">
-                    <i class="fas fa-briefcase text-indigo-600 dark:text-indigo-400 text-xl"></i>
+                <div class="p-3 bg-emerald-100 dark:bg-indigo-900 rounded-lg">
+                    <i class="fas fa-briefcase text-emerald-600 dark:text-emerald-400 text-xl"></i>
                 </div>
                 <div class="flex items-center space-x-2">
                     <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -249,7 +249,7 @@
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="text-center">
-                <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-2">8</div>
+                <div class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">8</div>
                 <div class="text-sm text-gray-600 dark:text-gray-400">Catégories Actives</div>
             </div>
             <div class="text-center">

@@ -35,8 +35,8 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
-                    <i class="fas fa-crown text-purple-600 dark:text-purple-400 text-xl"></i>
+                <div class="p-3 rounded-full bg-teal-100 dark:bg-purple-900">
+                    <i class="fas fa-crown text-teal-600 dark:text-purple-400 text-xl"></i>
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Abonnés Premium</p>
@@ -63,7 +63,7 @@
     <!-- Filters and Actions -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div class="flex items-center space-x-4 mb-4 sm:mb-0">
-            <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
+            <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
                 <i class="fas fa-user-plus"></i>
                 <span>Nouvel Utilisateur</span>
             </button>
@@ -88,7 +88,7 @@
         <div class="flex items-center space-x-3">
             <div class="relative">
                 <input type="text" placeholder="Rechercher un utilisateur..." 
-                       class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                       class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                 <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
         </div>
@@ -101,7 +101,7 @@
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            <input type="checkbox" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <input type="checkbox" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             Utilisateur
@@ -127,7 +127,7 @@
                     <!-- User Row 1 -->
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <input type="checkbox" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <input type="checkbox" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
@@ -139,7 +139,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-teal-100 text-purple-800">
                                 Auteur
                             </span>
                         </td>
@@ -156,7 +156,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center space-x-2">
-                                <button class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400">
+                                <button class="text-emerald-600 hover:text-indigo-900 dark:text-emerald-400">
                                     <i class="fas fa-eye"></i>
                                 </button>
                                 <button class="text-green-600 hover:text-green-900 dark:text-green-400">
@@ -172,7 +172,7 @@
                     <!-- User Row 2 -->
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <input type="checkbox" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <input type="checkbox" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
@@ -201,7 +201,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center space-x-2">
-                                <button class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400">
+                                <button class="text-emerald-600 hover:text-indigo-900 dark:text-emerald-400">
                                     <i class="fas fa-eye"></i>
                                 </button>
                                 <button class="text-green-600 hover:text-green-900 dark:text-green-400">
@@ -217,7 +217,7 @@
                     <!-- User Row 3 -->
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <input type="checkbox" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <input type="checkbox" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
@@ -246,7 +246,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center space-x-2">
-                                <button class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400">
+                                <button class="text-emerald-600 hover:text-indigo-900 dark:text-emerald-400">
                                     <i class="fas fa-eye"></i>
                                 </button>
                                 <button class="text-green-600 hover:text-green-900 dark:text-green-400">
@@ -262,7 +262,7 @@
                     <!-- User Row 4 -->
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <input type="checkbox" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <input type="checkbox" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
@@ -291,7 +291,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center space-x-2">
-                                <button class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400">
+                                <button class="text-emerald-600 hover:text-indigo-900 dark:text-emerald-400">
                                     <i class="fas fa-eye"></i>
                                 </button>
                                 <button class="text-green-600 hover:text-green-900 dark:text-green-400">
@@ -307,7 +307,7 @@
                     <!-- User Row 5 -->
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <input type="checkbox" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <input type="checkbox" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
@@ -319,7 +319,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-teal-100 text-purple-800">
                                 Auteur
                             </span>
                         </td>
@@ -336,7 +336,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center space-x-2">
-                                <button class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400">
+                                <button class="text-emerald-600 hover:text-indigo-900 dark:text-emerald-400">
                                     <i class="fas fa-eye"></i>
                                 </button>
                                 <button class="text-green-600 hover:text-green-900 dark:text-green-400">
@@ -362,7 +362,7 @@
             <button class="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
                 Précédent
             </button>
-            <button class="px-3 py-2 text-sm bg-indigo-600 text-white rounded-lg">1</button>
+            <button class="px-3 py-2 text-sm bg-emerald-600 text-white rounded-lg">1</button>
             <button class="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">2</button>
             <button class="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">3</button>
             <span class="px-3 py-2 text-sm text-gray-500">...</span>

@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'E-Library') }} - Espace Utilisateur</title>
+    <title>{{ site_name() }} - Espace Utilisateur</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ site_favicon() }}">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Fonts (même police que home.blade.php) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,8 +23,19 @@
     
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        /* Styles uniformes avec home.blade.php */
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
-<body class="font-sans antialiased bg-gray-50">
+<body class="font-sans antialiased bg-white">
     <div x-data="{ 
         sidebarOpen: window.innerWidth >= 1024,
         userMenuOpen: false,
@@ -33,21 +48,25 @@
         
         <!-- Sidebar -->
         <div :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" 
-             class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
+             class="fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 border-r border-gray-100">
             
             <!-- Logo -->
-            <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+            <div class="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-emerald-600 to-teal-600">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <i class="fas fa-book-open text-2xl text-blue-600"></i>
-                    </div>
+                    @if(site_logo())
+                        <img src="{{ site_logo() }}" alt="{{ site_name() }}" class="h-8 w-auto brightness-0 invert">
+                    @else
+                        <div class="bg-white/20 p-2 rounded-lg">
+                            <i class="fas fa-book-open text-2xl text-white"></i>
+                        </div>
+                    @endif
                     <div class="ml-3">
-                        <h1 class="text-xl font-bold text-gray-900">E-Library</h1>
-                        <p class="text-xs text-gray-500">Espace Utilisateur</p>
+                        <h1 class="text-lg font-bold text-white">{{ site_name() }}</h1>
+                        <p class="text-xs text-emerald-100">Espace Utilisateur</p>
                     </div>
                 </div>
-                <button @click="sidebarOpen = false" class="lg:hidden text-gray-500 hover:text-gray-700">
-                    <i class="fas fa-times text-xl"></i>
+                <button @click="sidebarOpen = false" class="lg:hidden text-white hover:bg-white/10 p-2 rounded-lg transition">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
 
@@ -56,41 +75,51 @@
                 
                 <!-- Dashboard -->
                 <div class="mb-6">
-                    <a href="{{ route('dashboard') }}" 
-                       class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors {{ request()->routeIs('dashboard') ? 'bg-blue-100 text-blue-700 font-semibold' : '' }}">
-                        <i class="fas fa-tachometer-alt w-5 h-5"></i>
-                        <span class="ml-3">Tableau de bord</span>
+                    <a href="{{ route('user.dashboard') }}" 
+                       class="flex items-center px-4 py-3 text-gray-700 rounded-xl hover:bg-emerald-50 transition-colors group {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border-l-4 border-emerald-500' : '' }}">
+                        <div class="{{ request()->routeIs('dashboard') ? 'bg-emerald-500' : 'bg-gray-400' }} w-8 h-8 rounded-full flex items-center justify-center group-hover:bg-emerald-500 transition">
+                            <i class="fas fa-tachometer-alt text-white text-sm"></i>
+                        </div>
+                        <span class="ml-3 font-semibold">Tableau de bord</span>
                     </a>
                 </div>
 
                 <!-- Ma Bibliothèque -->
                 <div class="mb-4">
-                    <div class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                    <div class="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
                         Ma Bibliothèque
                     </div>
                     
                     <div class="space-y-1">
                         <a href="{{ route('user.library.current') }}" 
-                           class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-900 {{ request()->routeIs('user.library.current') ? 'bg-gray-100 text-gray-900 font-medium' : '' }}">
-                            <i class="fas fa-book-reader w-4 h-4 mr-3"></i>
+                           class="flex items-center px-4 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition-all group {{ request()->routeIs('user.library.current') ? 'bg-emerald-50 text-emerald-700 font-medium' : '' }}">
+                            <div class="w-6 h-6 rounded-full flex items-center justify-center mr-3 {{ request()->routeIs('user.library.current') ? 'bg-emerald-500' : 'bg-gray-300' }} group-hover:bg-emerald-400 transition">
+                                <i class="fas fa-book-reader text-white text-xs"></i>
+                            </div>
                             En cours de lecture
                         </a>
                         
                         <a href="{{ route('user.library.favorites') }}" 
-                           class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-900 {{ request()->routeIs('user.library.favorites') ? 'bg-gray-100 text-gray-900 font-medium' : '' }}">
-                            <i class="fas fa-heart w-4 h-4 mr-3"></i>
+                           class="flex items-center px-4 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-red-50 hover:text-red-700 transition-all group {{ request()->routeIs('user.library.favorites') ? 'bg-red-50 text-red-700 font-medium' : '' }}">
+                            <div class="w-6 h-6 rounded-full flex items-center justify-center mr-3 {{ request()->routeIs('user.library.favorites') ? 'bg-red-500' : 'bg-gray-300' }} group-hover:bg-red-400 transition">
+                                <i class="fas fa-heart text-white text-xs"></i>
+                            </div>
                             Favoris
                         </a>
                         
                         <a href="{{ route('user.library.history') }}" 
-                           class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-900 {{ request()->routeIs('user.library.history') ? 'bg-gray-100 text-gray-900 font-medium' : '' }}">
-                            <i class="fas fa-history w-4 h-4 mr-3"></i>
+                           class="flex items-center px-4 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-all group {{ request()->routeIs('user.library.history') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}">
+                            <div class="w-6 h-6 rounded-full flex items-center justify-center mr-3 {{ request()->routeIs('user.library.history') ? 'bg-blue-500' : 'bg-gray-300' }} group-hover:bg-blue-400 transition">
+                                <i class="fas fa-history text-white text-xs"></i>
+                            </div>
                             Historique
                         </a>
                         
                         <a href="{{ route('user.collections.index') }}" 
-                           class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-900 {{ request()->routeIs('user.collections.*') ? 'bg-gray-100 text-gray-900 font-medium' : '' }}">
-                            <i class="fas fa-folder w-4 h-4 mr-3"></i>
+                           class="flex items-center px-4 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-amber-50 hover:text-amber-700 transition-all group {{ request()->routeIs('user.collections.*') ? 'bg-amber-50 text-amber-700 font-medium' : '' }}">
+                            <div class="w-6 h-6 rounded-full flex items-center justify-center mr-3 {{ request()->routeIs('user.collections.*') ? 'bg-amber-500' : 'bg-gray-300' }} group-hover:bg-amber-400 transition">
+                                <i class="fas fa-folder text-white text-xs"></i>
+                            </div>
                             Mes collections
                         </a>
                     </div>
@@ -103,8 +132,8 @@
                     </div>
                     
                     <div class="space-y-1">
-                        <a href="{{ route('books.public.index') }}" 
-                           class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-900 {{ request()->routeIs('books.public.index') ? 'bg-gray-100 text-gray-900 font-medium' : '' }}">
+                        <a href="{{ route('user.discover.index') }}" 
+                           class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-900 {{ request()->routeIs('user.discover.index') ? 'bg-gray-100 text-gray-900 font-medium' : '' }}">
                             <i class="fas fa-book w-4 h-4 mr-3"></i>
                             Tous les livres
                         </a>
@@ -127,8 +156,8 @@
                             Catégories
                         </a>
                         
-                        <a href="{{ route('authors.index') }}" 
-                           class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-900 {{ request()->routeIs('authors.index') ? 'bg-gray-100 text-gray-900 font-medium' : '' }}">
+                        <a href="{{ route('user.discover.authors') }}" 
+                           class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-900 {{ request()->routeIs('user.discover.authors') ? 'bg-gray-100 text-gray-900 font-medium' : '' }}">
                             <i class="fas fa-user-edit w-4 h-4 mr-3"></i>
                             Auteurs
                         </a>
@@ -147,7 +176,7 @@
                 <!-- Statistiques -->
                 <div class="mb-4">
                     <a href="{{ route('user.stats.index') }}" 
-                       class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-purple-50 hover:text-purple-700 transition-colors {{ request()->routeIs('user.stats.*') ? 'bg-purple-100 text-purple-700 font-semibold' : '' }}">
+                       class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-purple-50 hover:text-purple-700 transition-colors {{ request()->routeIs('user.stats.*') ? 'bg-teal-100 text-purple-700 font-semibold' : '' }}">
                         <i class="fas fa-chart-bar w-5 h-5"></i>
                         <span class="ml-3">Mes statistiques</span>
                     </a>
@@ -181,16 +210,16 @@
                     <div class="flex-shrink-0">
                         <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
                             <span class="text-sm font-medium text-white">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                {{ auth()->check() ? strtoupper(substr(auth()->user()->name, 0, 1)) : 'G' }}
                             </span>
                         </div>
                     </div>
                     <div class="ml-3 flex-1 min-w-0">
                         <p class="text-sm font-medium text-gray-900 truncate">
-                            {{ auth()->user()->name }}
+                            {{ auth()->check() ? auth()->user()->name : 'Guest' }}
                         </p>
                         <p class="text-xs text-gray-500 truncate">
-                            {{ auth()->user()->email }}
+                            {{ auth()->check() ? auth()->user()->email : '' }}
                         </p>
                     </div>
                 </div>
@@ -245,7 +274,7 @@
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                 <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
-                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                    {{ auth()->check() ? strtoupper(substr(auth()->user()->name, 0, 1)) : 'G' }}
                                 </div>
                             </button>
                             <div x-show="open" @click.away="open = false" x-transition

@@ -35,8 +35,8 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
-                    <i class="fas fa-download text-purple-600 dark:text-purple-400 text-xl"></i>
+                <div class="p-3 rounded-full bg-teal-100 dark:bg-purple-900">
+                    <i class="fas fa-download text-teal-600 dark:text-purple-400 text-xl"></i>
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Téléchargements</p>
@@ -106,12 +106,12 @@
                 </div>
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <div class="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
+                        <div class="w-3 h-3 bg-teal-500 rounded-full mr-3"></div>
                         <span class="text-sm text-gray-700 dark:text-gray-300">Histoire</span>
                     </div>
                     <div class="flex items-center">
                         <div class="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
-                            <div class="bg-purple-500 h-2 rounded-full" style="width: 68%"></div>
+                            <div class="bg-teal-500 h-2 rounded-full" style="width: 68%"></div>
                         </div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">68%</span>
                     </div>
@@ -159,8 +159,8 @@
                     </div>
                 </div>
                 <div class="flex items-start space-x-3">
-                    <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
-                        <i class="fas fa-star text-purple-600 dark:text-purple-400 text-xs"></i>
+                    <div class="w-8 h-8 bg-teal-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
+                        <i class="fas fa-star text-teal-600 dark:text-purple-400 text-xs"></i>
                     </div>
                     <div class="flex-1">
                         <p class="text-sm text-gray-900 dark:text-white">Nouvelle évaluation</p>

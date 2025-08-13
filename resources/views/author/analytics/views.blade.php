@@ -23,8 +23,8 @@
     <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
             <div class="flex items-center">
-                <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                    <i class="fas fa-eye text-purple-600 dark:text-purple-400"></i>
+                <div class="p-2 bg-teal-100 dark:bg-purple-900 rounded-lg">
+                    <i class="fas fa-eye text-teal-600 dark:text-purple-400"></i>
                 </div>
                 <div class="ml-3">
                     <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Total</p>
@@ -99,7 +99,7 @@
                 @forelse($bookViews->take(5) as $index => $book)
                 <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div class="flex items-center">
-                        <span class="w-6 h-6 bg-purple-100 text-purple-800 text-xs rounded-full flex items-center justify-center mr-3">
+                        <span class="w-6 h-6 bg-teal-100 text-purple-800 text-xs rounded-full flex items-center justify-center mr-3">
                             {{ $index + 1 }}
                         </span>
                         <div>
@@ -107,7 +107,7 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <p class="font-bold text-purple-600">{{ number_format($book->views) }}</p>
+                        <p class="font-bold text-teal-600">{{ number_format($book->views) }}</p>
                         <p class="text-xs text-gray-500">vues</p>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 text-center">
-                            <span class="text-lg font-bold text-purple-600">{{ number_format($book->views) }}</span>
+                            <span class="text-lg font-bold text-teal-600">{{ number_format($book->views) }}</span>
                         </td>
                         <td class="px-6 py-4 text-center">
                             <span class="font-medium text-gray-900 dark:text-white">{{ rand(15, 45) }}</span>

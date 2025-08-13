@@ -4,47 +4,77 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\User;
+use App\Models\Category;
 use App\Models\ActivityLog;
 use App\Http\Traits\BookFilterTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 
 class HomeController extends Controller
 {
     use BookFilterTrait;
+    
     /**
      * Display the home page with real data
      */
     public function index(Request $request)
     {
-        // Statistiques générales
-        $stats = $this->getGeneralStats();
+        // Statistiques générales avec cache
+        $stats = Cache::remember('homepage_stats', 300, function() {
+            return $this->getGeneralStats();
+        });
 
-        // Livres populaires/récents avec filtrage
-        $featuredBooks = $this->getFeaturedBooks($request);
+        // Catégories éducatives ivoiriennes
+        $ivorianEducationCategories = $this->getIvorianEducationCategories();
+        
+        // Langues et régions
+        $languageStats = $this->getLanguageStats();
+        $regionStats = $this->getRegionStats();
+        
+        // Livres avec filtrage appliqué
+        $filteredBooks = $this->getFilteredBooks($request);
+
+        // Livres en vedette (populaires, récents, plus vus)
+        $featuredBooks = Cache::remember('featured_books', 300, function() {
+            return $this->getFeaturedBooks();
+        });
+
+        // Suggestions IA (simulé pour l'instant)
+        $aiSuggestions = $this->getAISuggestions($request);
 
         // Auteurs en vedette
-        $featuredAuthors = $this->getFeaturedAuthors();
+        $featuredAuthors = Cache::remember('featured_authors', 600, function() {
+            return $this->getFeaturedAuthors();
+        });
+
+        // Options de filtres avancés
+        $filterOptions = $this->getAdvancedFilterOptions();
 
         // Catégories populaires
-        $popularCategories = $this->getPopularCategories();
+        $popularCategories = Cache::remember('popular_categories', 600, function() {
+            return $this->getPopularCategories();
+        });
 
         // Activité récente
-        $recentActivity = $this->getRecentActivity();
-
-        // Obtenir les options de filtres en utilisant le trait
-        $filterOptions = $this->getFilterOptions();
+        $recentActivity = Cache::remember('recent_activity', 120, function() {
+            return $this->getRecentActivity();
+        });
 
         return view('home', [
             'stats' => $stats,
+            'ivorianEducationCategories' => $ivorianEducationCategories,
+            'languageStats' => $languageStats,
+            'regionStats' => $regionStats,
+            'filteredBooks' => $filteredBooks,
             'featuredBooks' => $featuredBooks,
+            'aiSuggestions' => $aiSuggestions,
             'featuredAuthors' => $featuredAuthors,
+            'filterOptions' => $filterOptions,
             'popularCategories' => $popularCategories,
             'recentActivity' => $recentActivity,
-            'categories' => $filterOptions['categories'],
-            'languages' => $filterOptions['languages'],
-            'authors' => $filterOptions['authors'],
+            'appliedFilters' => $request->all(),
         ]);
     }
 
@@ -90,44 +120,28 @@ class HomeController extends Controller
      */
     private function getFeaturedBooks(Request $request = null)
     {
-        $baseQuery = Book::where('status', 'approved')->with('uploader');
+        // Nombre fixe de livres à afficher par section
+        $booksPerSection = 24; // 4 colonnes x 6 lignes
 
-        // Apply filters if provided using the trait
-        if ($request) {
-            $baseQuery = $this->applyBookFilters($baseQuery, $request);
-        }
-
-        // Vérifier le nombre total de livres disponibles
-        $totalBooks = (clone $baseQuery)->count();
-
-        // Ajuster le nombre de livres par section selon le total disponible
-        $booksPerSection = min(8, max(1, floor($totalBooks / 3)));
-
-        // Si on a moins de 6 livres, on limite à 2 par section pour éviter trop de répétitions
-        if ($totalBooks < 6) {
-            $booksPerSection = min(2, $totalBooks);
-        }
-
-        // Livres les plus populaires (par téléchargements)
-        $popularBooks = (clone $baseQuery)
-            ->orderBy('downloads', 'desc')
-            ->take($booksPerSection)
-            ->get();
-
-        // Livres récents (exclure les populaires déjà sélectionnés)
-        $popularIds = $popularBooks->pluck('id')->toArray();
-        $recentBooks = (clone $baseQuery)
-            ->whereNotIn('id', $popularIds)
+        // Livres récents
+        $recentBooks = Book::where('status', 'approved')
+            ->with(['uploader'])
             ->latest()
-            ->take($booksPerSection)
+            ->limit($booksPerSection)
             ->get();
 
-        // Livres les plus vus (exclure les déjà sélectionnés)
-        $usedIds = array_merge($popularIds, $recentBooks->pluck('id')->toArray());
-        $mostViewedBooks = (clone $baseQuery)
-            ->whereNotIn('id', $usedIds)
+        // Livres populaires (par téléchargements)
+        $popularBooks = Book::where('status', 'approved')
+            ->with(['uploader'])
+            ->orderBy('downloads', 'desc')
+            ->limit($booksPerSection)
+            ->get();
+
+        // Livres les plus vus
+        $mostViewedBooks = Book::where('status', 'approved')
+            ->with(['uploader'])
             ->orderBy('views', 'desc')
-            ->take($booksPerSection)
+            ->limit($booksPerSection)
             ->get();
 
         return [
@@ -252,6 +266,312 @@ class HomeController extends Controller
     }
 
     /**
+     * Get Ivorian education categories
+     */
+    private function getIvorianEducationCategories()
+    {
+        return [
+            'prescolaire' => [
+                'name' => 'Préscolaire (3-5 ans)',
+                'subjects' => ['Éveil', 'Comptines', 'Dessins', 'Jeux éducatifs'],
+                'languages' => ['Français', 'Dioula', 'Baoulé'],
+                'books_count' => Book::where('category', 'LIKE', '%préscolaire%')->count(),
+                'icon' => 'fas fa-baby',
+                'color' => 'pink'
+            ],
+            
+            'primaire' => [
+                'name' => 'Primaire (CP1-CM2)',
+                'levels' => [
+                    'cp1' => ['Lecture', 'Écriture', 'Calcul', 'Éveil scientifique'],
+                    'cp2' => ['Français', 'Mathématiques', 'Éveil', 'Éducation civique'],
+                    'ce1' => ['Français', 'Mathématiques', 'Histoire-Géo', 'Sciences'],
+                    'ce2' => ['Français', 'Mathématiques', 'Histoire-Géo', 'Sciences', 'Anglais'],
+                    'cm1' => ['Français', 'Mathématiques', 'Histoire-Géo', 'Sciences', 'Anglais', 'EPS'],
+                    'cm2' => ['Français', 'Mathématiques', 'Histoire-Géo', 'Sciences', 'Anglais', 'Éducation civique'],
+                ],
+                'books_count' => Book::where('category', 'LIKE', '%primaire%')->count(),
+                'icon' => 'fas fa-child',
+                'color' => 'yellow'
+            ],
+            
+            'college' => [
+                'name' => 'Collège (6ème-3ème)',
+                'levels' => [
+                    '6eme' => ['Français', 'Maths', 'Anglais', 'Histoire-Géo', 'SVT', 'Technologie'],
+                    '5eme' => ['Français', 'Maths', 'Anglais', 'Histoire-Géo', 'SVT', 'Physique-Chimie'],
+                    '4eme' => ['Français', 'Maths', 'Anglais', 'Histoire-Géo', 'SVT', 'Physique-Chimie', 'Espagnol'],
+                    '3eme' => ['Français', 'Maths', 'Anglais', 'Histoire-Géo', 'SVT', 'Physique-Chimie', 'BEPC'],
+                ],
+                'books_count' => Book::where('category', 'LIKE', '%collège%')->orWhere('category', 'LIKE', '%college%')->count(),
+                'icon' => 'fas fa-school',
+                'color' => 'green'
+            ],
+            
+            'lycee' => [
+                'name' => 'Lycée (2nde-Terminale)',
+                'series' => ['A (Littéraire)', 'C (Scientifique)', 'D (Sciences Naturelles)', 'G (Économique)'],
+                'levels' => [
+                    '2nde' => ['Français', 'Maths', 'Anglais', 'Histoire-Géo', 'SVT', 'Physique-Chimie'],
+                    '1ere' => ['Philosophie', 'Français', 'Maths', 'Anglais', 'Spécialités selon série'],
+                    'terminale' => ['Philosophie', 'Matières spécialisées', 'Préparation BAC'],
+                ],
+                'books_count' => Book::where('category', 'LIKE', '%lycée%')->orWhere('category', 'LIKE', '%lycee%')->count(),
+                'icon' => 'fas fa-graduation-cap',
+                'color' => 'blue'
+            ],
+            
+            'superieur' => [
+                'name' => 'Enseignement Supérieur',
+                'types' => [
+                    'university' => ['Lettres', 'Sciences', 'Médecine', 'Droit', 'Économie'],
+                    'grandes_ecoles' => ['ENS', 'INPHB', 'ESC', 'ESATIC', 'ENSEA'],
+                    'professional' => ['BTS', 'DUT', 'Licence Pro', 'Masters'],
+                ],
+                'books_count' => Book::where('category', 'LIKE', '%supérieur%')->orWhere('category', 'LIKE', '%universitaire%')->count(),
+                'icon' => 'fas fa-university',
+                'color' => 'purple'
+            ],
+            
+            'formation_professionnelle' => [
+                'name' => 'Formation Professionnelle',
+                'sectors' => ['Agriculture', 'Artisanat', 'Commerce', 'Tourisme', 'Informatique'],
+                'certifications' => ['CAP', 'BEP', 'Brevet de Maîtrise'],
+                'books_count' => Book::where('category', 'LIKE', '%formation%')->orWhere('category', 'LIKE', '%professionnel%')->count(),
+                'icon' => 'fas fa-tools',
+                'color' => 'orange'
+            ],
+            
+            'langues_nationales' => [
+                'name' => 'Langues et Cultures Nationales',
+                'languages' => [
+                    'dioula' => ['Grammaire', 'Littérature', 'Contes', 'Chants traditionnels'],
+                    'baoule' => ['Grammaire', 'Proverbes', 'Histoires', 'Traditions'],
+                    'bete' => ['Langue', 'Culture', 'Traditions orales'],
+                    'senoufo' => ['Langue', 'Artisanat traditionnel', 'Musique'],
+                    'dan' => ['Langue', 'Masques', 'Danses traditionnelles'],
+                    'malinke' => ['Langue', 'Épopées', 'Musique traditionnelle']
+                ],
+                'books_count' => Book::where('language', '!=', 'Français')->count(),
+                'icon' => 'fas fa-language',
+                'color' => 'amber'
+            ],
+            
+            'economie_locale' => [
+                'name' => 'Économie et Développement Ivoirien',
+                'topics' => [
+                    'agriculture' => ['Cacao', 'Café', 'Hévéa', 'Coton', 'Palmier à huile'],
+                    'industrie' => ['Agroalimentaire', 'Textile', 'BTP', 'Mines'],
+                    'services' => ['Banque', 'Assurance', 'Transport', 'Télécoms'],
+                    'entrepreneuriat' => ['Création entreprise', 'Microfinance', 'Commerce']
+                ],
+                'books_count' => Book::where('category', 'LIKE', '%économie%')->orWhere('category', 'LIKE', '%business%')->count(),
+                'icon' => 'fas fa-chart-line',
+                'color' => 'emerald'
+            ]
+        ];
+    }
+    
+    /**
+     * Get language statistics
+     */
+    private function getLanguageStats()
+    {
+        return [
+            'fr' => [
+                'name' => 'Français',
+                'flag' => '🇫🇷',
+                'users_count' => 85,
+                'books_count' => Book::where('language', 'Français')->count()
+            ],
+            'dyu' => [
+                'name' => 'Dioula',
+                'flag' => '🇨🇮',
+                'users_count' => 17,
+                'books_count' => Book::where('language', 'Dioula')->count()
+            ],
+            'bci' => [
+                'name' => 'Baoulé',
+                'flag' => '🇨🇮',
+                'users_count' => 15,
+                'books_count' => Book::where('language', 'Baoulé')->count()
+            ],
+            'en' => [
+                'name' => 'Anglais',
+                'flag' => '🇬🇧',
+                'users_count' => 12,
+                'books_count' => Book::where('language', 'Anglais')->count()
+            ]
+        ];
+    }
+    
+    /**
+     * Get region statistics
+     */
+    private function getRegionStats()
+    {
+        $regions = [
+            'Abidjan', 'Bouaké', 'Yamoussoukro', 'Daloa', 'San-Pédro', 
+            'Korhogo', 'Man', 'Gagnoa', 'Divo', 'Anyama'
+        ];
+        
+        $stats = [];
+        foreach ($regions as $region) {
+            $stats[strtolower(str_replace('-', '_', $region))] = [
+                'name' => $region,
+                'users_count' => rand(500, 15000), // TODO: Remplacer par vraies données
+                'books_count' => Book::where('description', 'LIKE', "%$region%")->count()
+            ];
+        }
+        
+        return $stats;
+    }
+    
+    /**
+     * Get filtered books based on request parameters
+     */
+    private function getFilteredBooks(Request $request)
+    {
+        $query = Book::where('status', 'approved')->with(['uploader']);
+        
+        // Filtrage par niveau
+        if ($request->filled('level')) {
+            $query->where('category', 'LIKE', '%' . $request->level . '%');
+        }
+        
+        // Filtrage par matière
+        if ($request->filled('subject')) {
+            $query->where('title', 'LIKE', '%' . $request->subject . '%')
+                  ->orWhere('description', 'LIKE', '%' . $request->subject . '%');
+        }
+        
+        // Filtrage par langue
+        if ($request->filled('language')) {
+            $query->where('language', $request->language);
+        }
+        
+        // Filtrage par prix
+        if ($request->filled('price_range')) {
+            switch ($request->price_range) {
+                case 'gratuit':
+                    $query->where('price', 0);
+                    break;
+                case '0-500':
+                    $query->whereBetween('price', [0, 500]);
+                    break;
+                case '500-1000':
+                    $query->whereBetween('price', [500, 1000]);
+                    break;
+                case '1000-2000':
+                    $query->whereBetween('price', [1000, 2000]);
+                    break;
+                case '2000+':
+                    $query->where('price', '>', 2000);
+                    break;
+            }
+        }
+        
+        // Recherche textuelle
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'LIKE', "%$search%")
+                  ->orWhere('description', 'LIKE', "%$search%")
+                  ->orWhere('author', 'LIKE', "%$search%");
+            });
+        }
+        
+        // Tri
+        $sortBy = $request->get('sort', 'relevance');
+        switch ($sortBy) {
+            case 'date':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'popular':
+                $query->orderBy('downloads', 'desc');
+                break;
+            case 'rating':
+                $query->orderBy('views', 'desc'); // TODO: Remplacer par rating réel
+                break;
+            case 'price_low':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('price', 'desc');
+                break;
+            default:
+                $query->orderBy('views', 'desc');
+        }
+        
+        return $query->paginate(24);
+    }
+    
+    /**
+     * Get AI suggestions (simulated for now)
+     */
+    private function getAISuggestions(Request $request)
+    {
+        return [
+            [
+                'type' => 'question',
+                'text' => 'Comment réviser mon bac en 2 mois?',
+                'category' => 'study_tips',
+                'icon' => 'fas fa-lightbulb',
+                'color' => 'purple'
+            ],
+            [
+                'type' => 'contextual',
+                'text' => 'Mathématiques avec exemples ivoiriens',
+                'category' => 'local_context',
+                'icon' => 'fas fa-map-marked-alt',
+                'color' => 'emerald'
+            ],
+            [
+                'type' => 'social',
+                'text' => 'Trouve-moi un parrain pour mes études',
+                'category' => 'solidarity',
+                'icon' => 'fas fa-handshake',
+                'color' => 'yellow'
+            ]
+        ];
+    }
+    
+    /**
+     * Get advanced filter options
+     */
+    private function getAdvancedFilterOptions()
+    {
+        return [
+            'subjects' => [
+                'francais' => 'Français',
+                'mathematiques' => 'Mathématiques',
+                'anglais' => 'Anglais',
+                'histoire-geo' => 'Histoire-Géographie',
+                'sciences' => 'Sciences',
+                'philosophie' => 'Philosophie',
+                'economie' => 'Économie'
+            ],
+            'languages' => $this->getLanguageStats(),
+            'regions' => array_keys($this->getRegionStats()),
+            'content_types' => [
+                'manuel' => '📘 Manuels scolaires',
+                'exercices' => '✏️ Exercices & Corrigés',
+                'resume' => '📝 Résumés de cours',
+                'annales' => '📋 Annales d\'examens',
+                'audio' => '🎵 Livres audio',
+                'video' => '🎥 Cours vidéo'
+            ],
+            'price_ranges' => [
+                'gratuit' => '🆓 Gratuit',
+                '0-500' => '💰 0 - 500 FCFA',
+                '500-1000' => '💰 500 - 1000 FCFA',
+                '1000-2000' => '💰 1000 - 2000 FCFA',
+                '2000+' => '💰 Plus de 2000 FCFA'
+            ]
+        ];
+    }
+
+    /**
      * Get trending data for AJAX requests
      */
     public function getTrendingData()
@@ -280,6 +600,57 @@ class HomeController extends Controller
             'trending_books' => $trendingBooks,
             'trending_authors' => $trendingAuthors,
             'timestamp' => now()->format('H:i:s'),
+        ]);
+    }
+    
+    /**
+     * API endpoint for search suggestions
+     */
+    public function getSearchSuggestions(Request $request)
+    {
+        $query = $request->get('q', '');
+        
+        if (strlen($query) < 2) {
+            return response()->json(['books' => [], 'subjects' => [], 'authors' => []]);
+        }
+        
+        // Suggestions de livres
+        $books = Book::where('status', 'approved')
+            ->where(function($q) use ($query) {
+                $q->where('title', 'LIKE', "%$query%")
+                  ->orWhere('author', 'LIKE', "%$query%");
+            })
+            ->select('id', 'title', 'author', 'category', 'cover_path')
+            ->take(5)
+            ->get()
+            ->map(function($book) {
+                return [
+                    'id' => $book->id,
+                    'title' => $book->title,
+                    'author' => $book->author,
+                    'subject' => $book->category,
+                    'cover' => $book->cover_path
+                ];
+            });
+            
+        // Suggestions de matières
+        $subjects = Book::where('status', 'approved')
+            ->where('category', 'LIKE', "%$query%")
+            ->select('category')
+            ->groupBy('category')
+            ->get()
+            ->map(function($item) {
+                return [
+                    'name' => $item->category,
+                    'count' => Book::where('category', $item->category)->count()
+                ];
+            })
+            ->take(3);
+            
+        return response()->json([
+            'books' => $books,
+            'subjects' => $subjects,
+            'authors' => []
         ]);
     }
 }

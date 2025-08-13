@@ -74,7 +74,7 @@
                     <div class="text-sm text-gray-600 dark:text-gray-400">Caractères</div>
                 </div>
                 <div class="text-center p-3 bg-purple-50 dark:bg-purple-900 rounded-lg">
-                    <div class="text-2xl font-bold text-purple-600 dark:text-purple-400" id="paragraph-count">0</div>
+                    <div class="text-2xl font-bold text-teal-600 dark:text-purple-400" id="paragraph-count">0</div>
                     <div class="text-sm text-gray-600 dark:text-gray-400">Paragraphes</div>
                 </div>
                 <div class="text-center p-3 bg-orange-50 dark:bg-orange-900 rounded-lg">
@@ -88,7 +88,7 @@
     <!-- Text Formatter -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            <i class="fas fa-text-height mr-2 text-purple-600"></i>Formateur de texte
+            <i class="fas fa-text-height mr-2 text-teal-600"></i>Formateur de texte
         </h3>
         <div class="space-y-4">
             <textarea 
@@ -104,7 +104,7 @@
                 <button onclick="formatText('lowercase')" class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">
                     minuscules
                 </button>
-                <button onclick="formatText('capitalize')" class="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700">
+                <button onclick="formatText('capitalize')" class="px-3 py-1 bg-teal-600 text-white rounded text-sm hover:bg-purple-700">
                     Première Lettre
                 </button>
                 <button onclick="formatText('sentence')" class="px-3 py-1 bg-orange-600 text-white rounded text-sm hover:bg-orange-700">

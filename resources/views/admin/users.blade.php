@@ -31,8 +31,8 @@
                                         <td class="px-3 py-3 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-8 w-8">
-                                                    <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                                                        <span class="text-sm font-medium text-indigo-600">
+                                                    <div class="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                                                        <span class="text-sm font-medium text-emerald-600">
                                                             {{ strtoupper(substr($user->name, 0, 1)) }}
                                                         </span>
                                                     </div>
@@ -44,7 +44,7 @@
                                             </div>
                                         </td>
                                         <td class="px-3 py-3 whitespace-nowrap">
-                                            <form action="{{ route('admin.users.update-role', $user) }}" method="POST" class="flex items-center space-x-2">
+                                            <form action="{{ admin_route('users.update-role', $user) }}" method="POST" class="flex items-center space-x-2">
                                                 @csrf
                                                 @method('PATCH')
                                                 <select name="role" class="text-xs rounded border-gray-300 py-1 px-2 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
@@ -52,7 +52,7 @@
                                                     <option value="author" {{ $user->role === 'author' ? 'selected' : '' }}>Auteur</option>
                                                     <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
                                                 </select>
-                                                <button type="submit" class="text-indigo-600 hover:text-indigo-900 text-xs font-medium px-2 py-1 rounded hover:bg-indigo-50">
+                                                <button type="submit" class="text-emerald-600 hover:text-indigo-900 text-xs font-medium px-2 py-1 rounded hover:bg-emerald-50">
                                                     ✓
                                                 </button>
                                             </form>
@@ -62,13 +62,13 @@
                                         </td>
                                         <td class="px-3 py-3 whitespace-nowrap text-center">
                                             <div class="flex justify-center space-x-2">
-                                                <a href="{{ route('admin.users.show', $user) }}" class="text-indigo-600 hover:text-indigo-900 text-xs font-medium px-2 py-1 rounded hover:bg-indigo-50">
+                                                <a href="{{ admin_route('users.show', $user) }}" class="text-emerald-600 hover:text-indigo-900 text-xs font-medium px-2 py-1 rounded hover:bg-emerald-50">
                                                     👁️ Voir
                                                 </a>
                                                 @if($user->id !== auth()->id())
                                                 <button
                                                     type="button"
-                                                    onclick="showDeleteConfirmation('{{ $user->name }}', '{{ route('admin.users.delete', $user) }}')"
+                                                    onclick="showDeleteConfirmation('{{ $user->name }}', '{{ admin_route('users.delete', $user) }}')"
                                                     class="text-red-600 hover:text-red-900 text-xs font-medium px-2 py-1 rounded hover:bg-red-50"
                                                 >
                                                     🗑️ Suppr.

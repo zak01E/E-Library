@@ -42,8 +42,8 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div class="flex items-center">
-                <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                    <i class="fas fa-eye text-purple-600 dark:text-purple-400"></i>
+                <div class="p-2 bg-teal-100 dark:bg-purple-900 rounded-lg">
+                    <i class="fas fa-eye text-teal-600 dark:text-purple-400"></i>
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Vues totales</p>
@@ -122,7 +122,7 @@
 
             <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition-colors">
                 <div class="flex items-center mb-3">
-                    <i class="fas fa-users text-purple-600 text-xl mr-3"></i>
+                    <i class="fas fa-users text-teal-600 text-xl mr-3"></i>
                     <h4 class="font-medium text-gray-900 dark:text-white">Par Personnage</h4>
                 </div>
                 <p class="text-sm text-gray-600 dark:text-gray-400">Regroupez les livres autour d'un personnage principal</p>
@@ -169,8 +169,8 @@
                 </div>
             </div>
             <div class="flex items-start">
-                <div class="p-2 bg-purple-100 dark:bg-purple-800 rounded-lg mr-4">
-                    <i class="fas fa-bookmark text-purple-600 dark:text-purple-400"></i>
+                <div class="p-2 bg-teal-100 dark:bg-purple-800 rounded-lg mr-4">
+                    <i class="fas fa-bookmark text-teal-600 dark:text-purple-400"></i>
                 </div>
                 <div>
                     <h4 class="font-medium text-gray-900 dark:text-white mb-1">Organisation claire</h4>

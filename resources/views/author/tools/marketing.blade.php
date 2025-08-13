@@ -119,7 +119,7 @@
     <!-- Keyword Research -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            <i class="fas fa-search mr-2 text-purple-600"></i>Recherche de mots-clés
+            <i class="fas fa-search mr-2 text-teal-600"></i>Recherche de mots-clés
         </h3>
         <div class="space-y-4">
             <div>
@@ -129,7 +129,7 @@
                        placeholder="Ex: romance contemporaine">
             </div>
             <button onclick="searchKeywords()" 
-                    class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                    class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                 <i class="fas fa-search mr-2"></i>Rechercher
             </button>
             <div id="keywords-output" class="hidden">
@@ -278,7 +278,7 @@ function searchKeywords() {
     
     keywords.forEach(keyword => {
         const span = document.createElement('span');
-        span.className = 'px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm';
+        span.className = 'px-3 py-1 bg-teal-100 text-purple-800 rounded-full text-sm';
         span.textContent = keyword;
         keywordsList.appendChild(span);
     });

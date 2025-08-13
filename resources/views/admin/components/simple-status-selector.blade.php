@@ -26,7 +26,7 @@
     </span>
 
     <!-- Quick Change Form -->
-    <form method="POST" action="{{ route('admin.books.change-status', $book) }}" class="inline-flex items-center space-x-1">
+    <form method="POST" action="{{ admin_route('books.change-status', $book) }}" class="inline-flex items-center space-x-1">
         @csrf
         @method('PATCH')
         
@@ -54,7 +54,7 @@
     </form>
 
     <!-- History Link -->
-    <a href="{{ route('admin.books.status-history', $book) }}"
+    <a href="{{ admin_route('books.status-history', $book) }}"
        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
        title="Voir l'historique des statuts">
         <i class="fas fa-history text-xs"></i>

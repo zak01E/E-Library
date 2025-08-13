@@ -206,7 +206,7 @@
                     <div class="text-sm text-gray-600">Note moyenne</div>
                 </div>
                 <div class="bg-white rounded-lg p-4 text-center">
-                    <div class="text-3xl font-bold text-purple-600">Gratuit</div>
+                    <div class="text-3xl font-bold text-teal-600">Gratuit</div>
                     <div class="text-sm text-gray-600">Accès illimité</div>
                 </div>
             </div>

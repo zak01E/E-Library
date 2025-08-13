@@ -2,8 +2,8 @@
     <div class="mb-6 text-center">
         <div class="mb-4">
             <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}"
-                     alt="{{ $siteSettings['site_name'] ?? 'E-Library' }}"
+                <img src="{{ site_logo() }}"
+                     alt="{{ site_name() }}"
                      class="max-w-full max-h-full object-contain">
             </div>
         </div>

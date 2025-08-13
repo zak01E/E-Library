@@ -1,4 +1,4 @@
-@extends(auth()->user()->role === 'admin' ? 'layouts.admin-dashboard' : 'layouts.author-dashboard')
+@extends(auth()->check() && auth()->user()->role === 'admin' ? 'layouts.admin-dashboard' : 'layouts.author-dashboard')
 
 @section('page-title', $book->title)
 @section('page-description', 'Détails du livre par ' . $book->author_name)
@@ -8,12 +8,12 @@
         <div class="p-6">
                     <!-- Back Button -->
                     <div class="mb-6">
-                        <a href="{{ auth()->user()->role === 'admin' ? route('admin.books') : route('author.books') }}"
+                        <a href="{{ auth()->check() && auth()->user()->role === 'admin' ? admin_route('books') : route('author.books') }}"
                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                             </svg>
-                            Retour à {{ auth()->user()->role === 'admin' ? 'la liste admin' : 'mes livres' }}
+                            Retour à {{ auth()->check() && auth()->user()->role === 'admin' ? 'la liste admin' : 'mes livres' }}
                         </a>
                     </div>
 
@@ -179,7 +179,7 @@
                                             @endif
                                         </div>
 
-                                        @if(auth()->user()->role === 'admin' && !$book->is_approved)
+                                        @if(auth()->check() && auth()->user()->role === 'admin' && !$book->is_approved)
                                             <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
                                                 <button type="button"
                                                         onclick="showApprovalModal()"
@@ -190,9 +190,9 @@
                                             </div>
                                         @endif
 
-                                        @if(auth()->id() === $book->uploaded_by || auth()->user()->role === 'admin')
+                                        @if(auth()->check() && (auth()->id() === $book->uploaded_by || auth()->user()->role === 'admin'))
                                             <div class="mt-4">
-                                                <form action="{{ auth()->user()->role === 'admin' ? route('admin.books.delete', $book) : route('author.books.delete', $book) }}" method="POST"
+                                                <form action="{{ auth()->check() && auth()->user()->role === 'admin' ? admin_route('books.delete', $book) : route('author.books.delete', $book) }}" method="POST"
                                                       onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">
                                                     @csrf
                                                     @method('DELETE')
@@ -250,7 +250,7 @@
     </div>
 
     <!-- Formulaire caché pour l'approbation -->
-    <form id="approvalForm" action="{{ route('admin.books.approve', $book) }}" method="POST" style="display: none;">
+    <form id="approvalForm" action="{{ admin_route('books.approve', $book) }}" method="POST" style="display: none;">
         @csrf
         @method('PATCH')
     </form>

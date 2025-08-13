@@ -2,8 +2,8 @@
     <div class="mb-6 text-center">
         <div class="mb-4">
             <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}"
-                     alt="{{ $siteSettings['site_name'] ?? 'E-Library' }}"
+                <img src="{{ site_logo() }}"
+                     alt="{{ site_name() }}"
                      class="max-w-full max-h-full object-contain">
             </div>
         </div>
@@ -64,7 +64,7 @@
         <div class="text-center mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
             <p class="text-sm text-gray-600 dark:text-gray-400">
                 Vous vous souvenez de votre mot de passe ?
-                <a href="{{ route('login') }}" class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors">
+                <a href="{{ route('login') }}" class="font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-indigo-300 transition-colors">
                     Retour à la connexion
                 </a>
             </p>

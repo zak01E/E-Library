@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_reading_lists', function (Blueprint $table) {
+        if (!Schema::hasTable('user_reading_lists')) {
+            Schema::create('user_reading_lists', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
@@ -29,7 +30,8 @@ return new class extends Migration
             $table->index(['user_id', 'status']);
             $table->index(['user_id', 'priority']);
             $table->index(['book_id', 'status']);
-        });
+            });
+        }
     }
 
     /**

@@ -59,6 +59,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\SiteSettingsServiceProvider::class,
+        App\Providers\MamaEcoleServiceProvider::class,
     ],
 
     'aliases' => [

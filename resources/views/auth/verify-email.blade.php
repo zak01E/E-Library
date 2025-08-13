@@ -2,8 +2,8 @@
     <div class="mb-6 text-center">
         <div class="mb-4">
             <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}"
-                     alt="{{ $siteSettings['site_name'] ?? 'E-Library' }}"
+                <img src="{{ site_logo() }}"
+                     alt="{{ site_name() }}"
                      class="max-w-full max-h-full object-contain">
             </div>
         </div>
@@ -69,10 +69,10 @@
     <div class="text-center mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
         <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Besoin d'aide ?</p>
         <div class="flex justify-center space-x-4 text-xs">
-            <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors">
+            <a href="#" class="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-indigo-300 transition-colors">
                 Contacter le support
             </a>
-            <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors">
+            <a href="#" class="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-indigo-300 transition-colors">
                 FAQ
             </a>
         </div>

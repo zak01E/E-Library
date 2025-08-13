@@ -43,7 +43,7 @@
         <div class="p-3">
             <h4 class="text-sm font-medium text-gray-900 mb-2">Changer le statut</h4>
             
-            <form action="{{ route('admin.books.change-status', $book) }}" method="POST" class="space-y-3">
+            <form action="{{ admin_route('books.change-status', $book) }}" method="POST" class="space-y-3">
                 @csrf
                 @method('PATCH')
                 
@@ -112,7 +112,7 @@
             <div class="text-xs text-gray-500 mb-1">Actions rapides :</div>
             <div class="flex space-x-1">
                 @if($book->status === 'pending')
-                    <form action="{{ route('admin.books.approve', $book) }}" method="POST" class="inline">
+                    <form action="{{ admin_route('books.approve', $book) }}" method="POST" class="inline">
                         @csrf
                         <button type="submit" class="text-xs bg-green-100 hover:bg-green-200 text-green-800 px-2 py-1 rounded">
                             ✅ Approuver
@@ -121,7 +121,7 @@
                 @endif
                 
                 @if(in_array($book->status, ['approved', 'under_review']))
-                    <form action="{{ route('admin.books.suspend', $book) }}" method="POST" class="inline">
+                    <form action="{{ admin_route('books.suspend', $book) }}" method="POST" class="inline">
                         @csrf
                         <button type="submit" class="text-xs bg-orange-100 hover:bg-orange-200 text-orange-800 px-2 py-1 rounded">
                             ⚠️ Suspendre

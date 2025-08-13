@@ -16,7 +16,7 @@
                         Modifiez les informations du livre ci-dessous
                     </p>
                 </div>
-                <a href="{{ route('admin.books') }}"
+                <a href="{{ admin_route('books') }}"
                    class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -43,7 +43,7 @@
             @endif
 
             <!-- Formulaire -->
-            <form method="POST" action="{{ route('admin.books.update', $book) }}" enctype="multipart/form-data" class="space-y-6">
+            <form method="POST" action="{{ admin_route('books.update', $book) }}" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
 
@@ -232,7 +232,7 @@
 
                 <!-- Boutons d'action -->
                 <div class="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
-                    <a href="{{ route('admin.books') }}"
+                    <a href="{{ admin_route('books') }}"
                        class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg transition-colors">
                         Annuler
                     </a>

@@ -121,10 +121,10 @@
                             </div>
                             
                             <div class="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                                <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                                <div class="text-2xl font-bold text-teal-600 dark:text-purple-400">
                                     {{ $book->downloads > 0 ? number_format(($book->downloads / $book->views) * 100, 1) : 0 }}%
                                 </div>
-                                <div class="text-sm text-purple-600 dark:text-purple-400">Taux de conversion</div>
+                                <div class="text-sm text-teal-600 dark:text-purple-400">Taux de conversion</div>
                             </div>
                             
                             <div class="text-center p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">

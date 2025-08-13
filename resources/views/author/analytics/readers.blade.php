@@ -47,8 +47,8 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
             <div class="flex items-center">
-                <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                    <i class="fas fa-user-plus text-purple-600 dark:text-purple-400"></i>
+                <div class="p-2 bg-teal-100 dark:bg-purple-900 rounded-lg">
+                    <i class="fas fa-user-plus text-teal-600 dark:text-purple-400"></i>
                 </div>
                 <div class="ml-3">
                     <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Nouveaux</p>
@@ -144,11 +144,11 @@
             </div>
 
             <div class="text-center">
-                <div class="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i class="fas fa-star text-purple-600 dark:text-purple-400 text-xl"></i>
+                <div class="w-16 h-16 bg-teal-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-star text-teal-600 dark:text-purple-400 text-xl"></i>
                 </div>
                 <h4 class="font-medium text-gray-900 dark:text-white mb-2">Évaluateurs</h4>
-                <p class="text-2xl font-bold text-purple-600 mb-1">12%</p>
+                <p class="text-2xl font-bold text-teal-600 mb-1">12%</p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">Laissent des avis</p>
             </div>
         </div>

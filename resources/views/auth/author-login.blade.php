@@ -2,14 +2,14 @@
     <div class="mb-6 text-center">
         <div class="mb-4">
             <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}"
-                     alt="{{ $siteSettings['site_name'] ?? 'E-Library' }}"
+                <img src="{{ site_logo() }}"
+                     alt="{{ site_name() }}"
                      class="max-w-full max-h-full object-contain">
             </div>
         </div>
         <h2 class="text-3xl font-bold text-gray-900">Espace Auteur</h2>
         <p class="text-sm text-gray-600 mt-2">
-            Connectez-vous pour accéder à votre espace de création sur {{ $siteSettings['site_name'] ?? 'E-Library' }}
+            Connectez-vous pour accéder à votre espace de création sur {{ site_name() }}
         </p>
         <div class="mt-3 flex items-center justify-center space-x-2 text-xs text-gray-500">
             <span class="flex items-center">
@@ -70,12 +70,12 @@
         <!-- Remember Me -->
         <div class="flex items-center justify-between">
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-purple-600 shadow-sm focus:ring-purple-500" name="remember">
+                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-teal-600 shadow-sm focus:ring-purple-500" name="remember">
                 <span class="ms-2 text-sm text-gray-600">{{ __('Se souvenir de moi') }}</span>
             </label>
 
             @if (Route::has('password.request'))
-                <a class="text-sm text-purple-600 hover:text-purple-700 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" href="{{ route('password.request') }}">
+                <a class="text-sm text-teal-600 hover:text-purple-700 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" href="{{ route('password.request') }}">
                     {{ __('Mot de passe oublié ?') }}
                 </a>
             @endif
@@ -116,7 +116,7 @@
         <div class="text-center mt-4">
             <p class="text-sm text-gray-600">
                 Pas encore auteur ? 
-                <a href="{{ route('register') }}" class="font-medium text-purple-600 hover:text-purple-500">
+                <a href="{{ route('register') }}" class="font-medium text-teal-600 hover:text-teal-500">
                     Créer un compte
                 </a>
             </p>

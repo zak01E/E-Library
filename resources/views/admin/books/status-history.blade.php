@@ -31,7 +31,7 @@
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $book->status_badge_class }}">
                     {{ $book->status_label }}
                 </span>
-                <a href="{{ route('admin.books.show', $book) }}" class="text-emerald-600 hover:text-emerald-700 font-medium">
+                <a href="{{ admin_route('books.show', $book) }}" class="text-emerald-600 hover:text-emerald-700 font-medium">
                     <i class="fas fa-arrow-left mr-1"></i>
                     Retour au livre
                 </a>

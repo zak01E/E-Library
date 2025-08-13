@@ -39,14 +39,14 @@
 
                         <div>
                             <x-input-label for="description" :value="__('Description')" />
-                            <textarea id="description" name="description" rows="4" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('description', $book->description) }}</textarea>
+                            <textarea id="description" name="description" rows="4" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:border-emerald-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('description', $book->description) }}</textarea>
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <x-input-label for="category" :value="__('Catégorie')" />
-                                <select id="category" name="category" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                                <select id="category" name="category" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:border-emerald-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                                     <option value="">Sélectionner une catégorie</option>
                                     <option value="Fiction" {{ old('category', $book->category) == 'Fiction' ? 'selected' : '' }}>Fiction</option>
                                     <option value="Non-fiction" {{ old('category', $book->category) == 'Non-fiction' ? 'selected' : '' }}>Non-fiction</option>
@@ -62,7 +62,7 @@
 
                             <div>
                                 <x-input-label for="language" :value="__('Langue')" />
-                                <select id="language" name="language" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                                <select id="language" name="language" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:border-emerald-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                                     <option value="">Sélectionner une langue</option>
                                     <option value="Français" {{ old('language', $book->language) == 'Français' ? 'selected' : '' }}>Français</option>
                                     <option value="Anglais" {{ old('language', $book->language) == 'Anglais' ? 'selected' : '' }}>Anglais</option>
@@ -138,7 +138,7 @@
                                            type="file"
                                            name="cover_image"
                                            accept="image/jpeg,image/png,image/jpg"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
                                     @error('cover_image')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror

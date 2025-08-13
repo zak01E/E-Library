@@ -115,12 +115,12 @@
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm p-6 text-center">
-                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-highlighter text-purple-600 text-xl"></i>
+                    <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-highlighter text-teal-600 text-xl"></i>
                     </div>
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Surlignages</h3>
                     <p class="text-gray-600 text-sm mb-4">Mettez en évidence les passages importants</p>
-                    <button class="text-purple-600 hover:text-purple-700 font-medium">
+                    <button class="text-teal-600 hover:text-purple-700 font-medium">
                         Mes surlignages ({{ $highlightsCount ?? 15 }})
                     </button>
                 </div>
@@ -166,8 +166,8 @@
                                 <i class="fas fa-sticky-note text-yellow-600"></i>
                             </div>
                         @else
-                            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                                <i class="fas fa-highlighter text-purple-600"></i>
+                            <div class="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-highlighter text-teal-600"></i>
                             </div>
                         @endif
                     </div>

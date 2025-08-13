@@ -59,13 +59,13 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
-                    <i class="fas fa-clock text-purple-600 dark:text-purple-400 text-xl"></i>
+                <div class="p-3 rounded-full bg-teal-100 dark:bg-purple-900">
+                    <i class="fas fa-clock text-teal-600 dark:text-purple-400 text-xl"></i>
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Prochaine sauvegarde</p>
                     <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $stats['next_backup']->diffForHumans() }}</p>
-                    <p class="text-xs text-purple-600 dark:text-purple-400">Automatique</p>
+                    <p class="text-xs text-teal-600 dark:text-purple-400">Automatique</p>
                 </div>
             </div>
         </div>
@@ -79,12 +79,12 @@
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Créer une Sauvegarde</h3>
             </div>
             <div class="p-6">
-                <form action="{{ route('admin.backup.create') }}" method="POST">
+                <form action="{{ admin_route('backup.create') }}" method="POST">
                     @csrf
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type de sauvegarde</label>
-                            <select name="type" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            <select name="type" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                                 <option value="full">Sauvegarde complète (Base de données + Fichiers)</option>
                                 <option value="database">Base de données uniquement</option>
                                 <option value="files">Fichiers uniquement</option>
@@ -94,15 +94,15 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description (optionnel)</label>
                             <input type="text" name="description" placeholder="Ex: Sauvegarde avant mise à jour..."
-                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                         </div>
 
                         <div class="flex items-center">
-                            <input type="checkbox" name="compress" id="compress" value="1" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <input type="checkbox" name="compress" id="compress" value="1" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                             <label for="compress" class="ml-2 text-sm text-gray-700 dark:text-gray-300">Compresser la sauvegarde</label>
                         </div>
 
-                        <button type="submit" class="w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors flex items-center justify-center">
+                        <button type="submit" class="w-full px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors flex items-center justify-center">
                             <i class="fas fa-download mr-2"></i>
                             Créer la sauvegarde
                         </button>
@@ -125,13 +125,13 @@
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" checked class="sr-only peer">
-                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600"></div>
                         </label>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fréquence</label>
-                        <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                        <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                             <option>Quotidienne</option>
                             <option>Hebdomadaire</option>
                             <option>Mensuelle</option>
@@ -140,7 +140,7 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Conserver</label>
-                        <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                        <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                             <option>7 dernières sauvegardes</option>
                             <option>15 dernières sauvegardes</option>
                             <option>30 dernières sauvegardes</option>
@@ -161,7 +161,7 @@
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Historique des Sauvegardes</h3>
-                <form action="{{ route('admin.backup.cleanup') }}" method="POST" class="inline">
+                <form action="{{ admin_route('backup.cleanup') }}" method="POST" class="inline">
                     @csrf
                     <button type="submit" class="px-4 py-2 text-red-600 hover:text-red-700 text-sm" onclick="return confirm('Êtes-vous sûr de vouloir nettoyer les anciennes sauvegardes ?')">
                         <i class="fas fa-trash mr-2"></i>Nettoyer les anciennes
@@ -200,7 +200,7 @@
                                 </td>
                                 <td class="py-3">
                                     <div class="flex space-x-2">
-                                        <a href="{{ route('admin.backup.download', $backup['filename']) }}"
+                                        <a href="{{ admin_route('backup.download', $backup['filename']) }}"
                                            class="text-blue-600 hover:text-blue-700 text-sm"
                                            title="Télécharger">
                                             <i class="fas fa-download"></i>
@@ -210,7 +210,7 @@
                                                 onclick="alert('Fonctionnalité de restauration à venir')">
                                             <i class="fas fa-undo"></i>
                                         </button>
-                                        <form action="{{ route('admin.backup.delete', $backup['filename']) }}"
+                                        <form action="{{ admin_route('backup.delete', $backup['filename']) }}"
                                               method="POST"
                                               class="inline"
                                               onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette sauvegarde ?')">

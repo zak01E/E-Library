@@ -90,69 +90,12 @@
     transition: background 0.3s ease;
 }
 
-/* Force grid layout for books */
+/* Force grid layout for books - REMOVED RESTRICTIONS */
 .books-grid-container {
     width: 100%;
 }
 
-.books-grid-container > div {
-    display: grid !important;
-    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-    gap: 1.5rem !important;
-}
-
-/* Responsive grid breakpoints */
-@media (min-width: 768px) {
-    .books-grid-container > div {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    }
-}
-
-@media (min-width: 1024px) {
-    .books-grid-container > div {
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    }
-}
-
-@media (min-width: 1280px) {
-    .books-grid-container > div {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    }
-}
-
-/* Additional specific selectors for book grids */
-.books-grid-container div[class*="grid"],
-div[class*="grid-cols-1"] {
-    display: grid !important;
-    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-    gap: 1.5rem !important;
-}
-
-@media (min-width: 768px) {
-    .books-grid-container div[class*="grid"],
-    div[class*="md:grid-cols-2"] {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    }
-}
-
-@media (min-width: 1024px) {
-    .books-grid-container div[class*="grid"],
-    div[class*="lg:grid-cols-3"] {
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    }
-
-    .books-grid-container div[class*="grid"],
-    div[class*="lg:grid-cols-4"] {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    }
-}
-
-@media (min-width: 1280px) {
-    .books-grid-container div[class*="grid"],
-    div[class*="xl:grid-cols-4"] {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    }
-}
+/* Let Tailwind classes handle the grid layout */
 
 /* Force grid display for all book containers */
 .books-grid-container,

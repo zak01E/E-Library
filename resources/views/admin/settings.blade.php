@@ -47,7 +47,7 @@
         <div class="px-4 py-5 sm:p-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900 mb-6">Paramètres généraux</h3>
 
-            <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data" class="space-y-6">
+            <form method="POST" action="{{ admin_route('settings.update') }}" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 
                 <!-- Site Information -->
@@ -58,7 +58,7 @@
                                name="site_name" 
                                id="site_name" 
                                value="{{ old('site_name', $settings['site_name'] ?? 'E-Library') }}"
-                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
                                required>
                     </div>
                     
@@ -68,7 +68,7 @@
                                name="site_description" 
                                id="site_description" 
                                value="{{ old('site_description', $settings['site_description'] ?? '') }}"
-                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                     </div>
                 </div>
 
@@ -80,7 +80,7 @@
                                name="contact_email" 
                                id="contact_email" 
                                value="{{ old('contact_email', $settings['contact_email'] ?? '') }}"
-                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                     </div>
                     
                     <div>
@@ -89,7 +89,7 @@
                                name="support_phone" 
                                id="support_phone" 
                                value="{{ old('support_phone', $settings['support_phone'] ?? '') }}"
-                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                     </div>
                 </div>
 
@@ -99,7 +99,7 @@
                         <label for="default_language" class="block text-sm font-medium text-gray-700">Langue par défaut</label>
                         <select name="default_language" 
                                 id="default_language"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                             <option value="fr" {{ ($settings['default_language'] ?? 'fr') == 'fr' ? 'selected' : '' }}>Français</option>
                             <option value="en" {{ ($settings['default_language'] ?? 'fr') == 'en' ? 'selected' : '' }}>English</option>
                             <option value="es" {{ ($settings['default_language'] ?? 'fr') == 'es' ? 'selected' : '' }}>Español</option>
@@ -111,7 +111,7 @@
                         <label for="timezone" class="block text-sm font-medium text-gray-700">Fuseau horaire</label>
                         <select name="timezone" 
                                 id="timezone"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                             <option value="Europe/Paris" {{ ($settings['timezone'] ?? 'Europe/Paris') == 'Europe/Paris' ? 'selected' : '' }}>Europe/Paris (UTC+1)</option>
                             <option value="Europe/London" {{ ($settings['timezone'] ?? 'Europe/Paris') == 'Europe/London' ? 'selected' : '' }}>Europe/London (UTC+0)</option>
                             <option value="America/New_York" {{ ($settings['timezone'] ?? 'Europe/Paris') == 'America/New_York' ? 'selected' : '' }}>America/New_York (UTC-5)</option>
@@ -129,7 +129,7 @@
                                    id="maintenance_mode" 
                                    value="1"
                                    {{ ($settings['maintenance_mode'] ?? false) ? 'checked' : '' }}
-                                   class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                   class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
                             <label for="maintenance_mode" class="ml-2 block text-sm text-gray-900">
                                 Activer le mode maintenance
                             </label>
@@ -139,7 +139,7 @@
                             <textarea name="maintenance_message" 
                                       id="maintenance_message" 
                                       rows="3"
-                                      class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('maintenance_message', $settings['maintenance_message'] ?? 'Le site est actuellement en maintenance. Nous serons de retour bientôt.') }}</textarea>
+                                      class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">{{ old('maintenance_message', $settings['maintenance_message'] ?? 'Le site est actuellement en maintenance. Nous serons de retour bientôt.') }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -147,7 +147,7 @@
                 <!-- Submit Button -->
                 <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
                     <!-- Test Button -->
-                    <a href="{{ route('admin.test.settings.update') }}"
+                    <a href="{{ admin_route('test.settings.update') }}"
                        class="inline-flex justify-center py-2 px-4 border border-yellow-300 shadow-sm text-sm font-medium rounded-md text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
@@ -158,7 +158,7 @@
                     <!-- Normal Submit Button -->
                     <button type="submit"
                             onclick="console.log('Form submission clicked'); return true;"
-                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
@@ -174,7 +174,7 @@
         <div class="px-4 py-5 sm:p-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900 mb-6">Logos et icônes</h3>
 
-            <form method="POST" action="{{ route('admin.settings.logos.update') }}" enctype="multipart/form-data" class="space-y-6">
+            <form method="POST" action="{{ admin_route('settings.logos.update') }}" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 
                 <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
@@ -194,7 +194,7 @@
                             </div>
                         @endif
                         <input type="file" name="site_logo" accept="image/*"
-                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
                         <p class="text-xs text-gray-500 mt-1">PNG, JPG, SVG jusqu'à 2MB. Recommandé : 200x60px</p>
                     </div>
 
@@ -214,7 +214,7 @@
                             </div>
                         @endif
                         <input type="file" name="site_favicon" accept="image/x-icon,image/png"
-                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
                         <p class="text-xs text-gray-500 mt-1">ICO ou PNG jusqu'à 512KB. Recommandé : 32x32px</p>
                     </div>
                 </div>
@@ -222,7 +222,7 @@
                 <!-- Submit Button -->
                 <div class="flex justify-end pt-6 border-t border-gray-200">
                     <button type="submit" 
-                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>

@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $book->title }} - {{ site_name() }}</title>
     <link rel="icon" type="image/x-icon" href="{{ site_favicon() }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
         .glass-effect {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -20,7 +25,15 @@
         }
 
         .gradient-bg {
-            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+        }
+        
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
         .book-cover {
@@ -120,80 +133,13 @@
             100% { background-position: -200% 0; }
         }
     </style>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
-<body class="bg-gray-50 overflow-x-hidden">
-    <!-- Navigation Header (same as home page) -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50" x-data="{ mobileMenuOpen: false }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center">
-                        @if(site_logo())
-                            <img src="{{ site_logo() }}" alt="{{ site_name() }}" class="h-10 w-auto">
-                        @else
-                            <div class="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-book-open text-white text-lg"></i>
-                            </div>
-                        @endif
-                        <span class="ml-3 text-xl font-heading font-bold text-gray-900">{{ site_name() }}</span>
-                    </div>
-                </div>
-
-                <!-- Desktop Navigation -->
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="{{ route('home') }}" class="text-gray-500 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Accueil</a>
-                        <a href="{{ route('books.public.index') }}" class="text-gray-900 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Bibliothèque</a>
-                        <a href="#auteurs" class="text-gray-500 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Auteurs</a>
-                        <a href="#a-propos" class="text-gray-500 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">À propos</a>
-                    </div>
-                </div>
-
-                <!-- Auth Buttons -->
-                <div class="hidden md:flex items-center space-x-4">
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                            Dashboard
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-500 hover:text-emerald-600 px-3 py-2 text-sm font-medium transition-colors">
-                            Connexion
-                        </a>
-                        <a href="{{ route('register') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                            Inscription
-                        </a>
-                    @endauth
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="md:hidden">
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-500 hover:text-gray-700 focus:outline-none">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Mobile Navigation -->
-            <div x-show="mobileMenuOpen" x-transition class="md:hidden">
-                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
-                    <a href="{{ route('home') }}" class="text-gray-500 hover:text-emerald-600 block px-3 py-2 text-sm font-medium">Accueil</a>
-                    <a href="{{ route('books.public.index') }}" class="text-gray-900 hover:text-emerald-600 block px-3 py-2 text-sm font-medium">Bibliothèque</a>
-                    <a href="#auteurs" class="text-gray-500 hover:text-emerald-600 block px-3 py-2 text-sm font-medium">Auteurs</a>
-                    <a href="#a-propos" class="text-gray-500 hover:text-emerald-600 block px-3 py-2 text-sm font-medium">À propos</a>
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="bg-emerald-600 text-white block px-3 py-2 text-sm font-medium rounded-lg mx-3 mt-4">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-500 hover:text-emerald-600 block px-3 py-2 text-sm font-medium">Connexion</a>
-                        <a href="{{ route('register') }}" class="bg-emerald-600 text-white block px-3 py-2 text-sm font-medium rounded-lg mx-3 mt-2">Inscription</a>
-                    @endauth
-                </div>
-            </div>
-        </div>
-    </nav>
+<body class="bg-gray-50 overflow-x-hidden" x-data="{ mobileMenuOpen: false }">
+    @include('partials.public-header')
 
     <!-- Hero Section with Book Details -->
-    <section class="bg-gradient-to-br from-emerald-600 to-emerald-800 py-12">
+    <section class="relative py-16 bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Breadcrumb -->
             <nav class="flex mb-6" aria-label="Breadcrumb">
@@ -226,9 +172,9 @@
                         @if($book->cover_image)
                             <img src="{{ Storage::url($book->cover_image) }}"
                                  alt="{{ $book->title }}"
-                                 class="w-64 h-80 object-cover rounded-xl shadow-xl">
+                                 class="w-64 h-80 object-cover rounded-xl shadow-xl card-hover">
                         @else
-                            <div class="w-64 h-80 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl shadow-xl flex items-center justify-center">
+                            <div class="w-64 h-80 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-xl flex items-center justify-center card-hover">
                                 <div class="text-center text-white p-4 max-w-full">
                                     <i class="fas fa-book text-4xl mb-3"></i>
                                     <div class="font-bold text-sm leading-tight break-words line-clamp-4">{{ Str::limit($book->title, 40) }}</div>
@@ -293,23 +239,23 @@
                         @auth
                             @if($book->pdf_path)
                                 <a href="{{ route('books.public.download', $book) }}"
-                                   class="bg-white text-emerald-600 px-6 py-3 rounded-lg font-semibold text-base transition-all duration-300 hover:bg-emerald-50 shadow-lg flex items-center justify-center">
+                                   class="bg-white text-emerald-600 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300 hover:bg-emerald-50 shadow-md hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center">
                                     <i class="fas fa-download mr-2"></i>
                                     Télécharger Gratuitement
                                 </a>
                             @endif
 
-                            <button class="bg-emerald-500/20 text-white px-6 py-3 rounded-lg font-semibold text-base hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-400/30 flex items-center justify-center">
+                            <button class="bg-emerald-500/20 text-white px-6 py-3 rounded-xl font-semibold text-base hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-400/30 flex items-center justify-center">
                                 <i class="fas fa-heart mr-2"></i>
                                 Favoris
                             </button>
                         @else
-                            <button onclick="showPreview()" class="bg-white text-emerald-600 px-6 py-3 rounded-lg font-semibold text-base transition-all duration-300 hover:bg-emerald-50 shadow-lg flex items-center justify-center">
+                            <button onclick="showPreview()" class="bg-white text-emerald-600 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300 hover:bg-emerald-50 shadow-md hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center">
                                 <i class="fas fa-eye mr-2"></i>
                                 Aperçu Gratuit
                             </button>
 
-                            <a href="{{ route('login') }}" class="bg-emerald-500/20 text-white px-6 py-3 rounded-lg font-semibold text-base hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-400/30 flex items-center justify-center">
+                            <a href="{{ route('login') }}" class="bg-emerald-500/20 text-white px-6 py-3 rounded-xl font-semibold text-base hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-400/30 flex items-center justify-center">
                                 <i class="fas fa-lock mr-2"></i>
                                 Se connecter pour télécharger
                             </a>
@@ -385,7 +331,7 @@
                                      alt="{{ $similarBook->title }}"
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                             @else
-                                <div class="w-full h-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center group-hover:from-emerald-600 group-hover:to-emerald-700 transition-all duration-300">
+                                <div class="w-full h-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center group-hover:from-emerald-600 group-hover:to-teal-700 transition-all duration-300">
                                     <div class="text-white text-center p-3 max-w-full">
                                         <i class="fas fa-book text-2xl mb-2"></i>
                                         <div class="font-bold text-xs leading-tight break-words line-clamp-3">{{ Str::limit($similarBook->title, 30) }}</div>
@@ -431,7 +377,7 @@
             <!-- Back to Library Button -->
             <div class="text-center mt-10">
                 <a href="{{ route('books.public.index') }}"
-                   class="inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-semibold text-base transition-all duration-300 hover:shadow-md">
+                   class="inline-flex items-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-3 rounded-xl font-semibold text-base transition-all duration-200 shadow-md hover:shadow-xl transform hover:-translate-y-0.5">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Retour à la Bibliothèque
                 </a>
@@ -484,11 +430,11 @@
             </div>
 
             <!-- Call to Action -->
-            <div class="bg-emerald-50 rounded-xl p-6 text-center">
+            <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-6 text-center border border-emerald-100 card-hover">
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Accédez au contenu complet</h3>
                 <p class="text-gray-600 mb-4">Créez un compte gratuit pour télécharger ce livre et accéder à notre bibliothèque complète</p>
                 <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                    <a href="{{ route('register') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                    <a href="{{ route('register') }}" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-xl transform hover:-translate-y-0.5">
                         <i class="fas fa-user-plus mr-2"></i>
                         Créer un compte gratuit
                     </a>
@@ -531,15 +477,15 @@
             </div>
 
             <!-- Bottom Call to Action - Always visible -->
-            <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 p-4 flex-shrink-0">
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-4 flex-shrink-0">
                 <div class="text-center text-white">
                     <h4 class="text-lg font-semibold mb-2">Vous lisez un aperçu limité</h4>
                     <p class="text-sm mb-4 opacity-90">Connectez-vous pour accéder au livre complet et le télécharger gratuitement</p>
                     <div class="flex gap-3 justify-center">
-                        <a href="{{ route('login') }}" class="bg-white text-emerald-700 hover:bg-gray-100 px-6 py-2 rounded-lg font-semibold transition-colors">
+                        <a href="{{ route('login') }}" class="bg-white text-emerald-600 hover:bg-gray-100 px-6 py-2 rounded-lg font-semibold transition-colors">
                             <i class="fas fa-sign-in-alt mr-2"></i>Se connecter
                         </a>
-                        <a href="{{ route('register') }}" class="bg-emerald-800 hover:bg-emerald-900 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                        <a href="{{ route('register') }}" class="bg-gradient-to-r from-teal-600 to-emerald-700 hover:from-teal-700 hover:to-emerald-800 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-xl">
                             <i class="fas fa-user-plus mr-2"></i>Créer un compte
                         </a>
                     </div>

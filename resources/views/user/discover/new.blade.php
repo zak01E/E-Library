@@ -246,7 +246,7 @@
             <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
                 <input type="email" placeholder="Votre adresse email" 
                        class="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white">
-                <button class="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors">
+                <button class="bg-white text-teal-600 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors">
                     S'abonner
                 </button>
             </div>

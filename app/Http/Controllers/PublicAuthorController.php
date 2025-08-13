@@ -51,7 +51,7 @@ class PublicAuthorController extends Controller
 
         $authors = $query->paginate(12)->withQueryString();
 
-        return view('authors.public-index', compact('authors'));
+        return view('authors.public', compact('authors'));
     }
 
     /**

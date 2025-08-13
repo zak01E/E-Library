@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $siteSettings['site_name'] ?? config('app.name', 'E-Library') }} - @yield('title', 'Dashboard')</title>
+    <title>{{ site_name() }} - @yield('title', 'Dashboard')</title>
 
     <!-- Favicon -->
-    @if(isset($siteSettings['site_favicon']) && $siteSettings['site_favicon'])
-        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $siteSettings['site_favicon']) }}">
+    @if(site_favicon())
+        <link rel="icon" type="image/x-icon" href="{{ site_favicon() }}">
     @endif
 
     <!-- Fonts -->
@@ -39,7 +39,7 @@
                class="fixed inset-y-0 left-0 z-50 bg-white dark:bg-gray-800 shadow-xl transition-all duration-300 ease-in-out border-r border-gray-200 dark:border-gray-700">
             
             <!-- Logo & Toggle -->
-            <div class="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-indigo-600 to-purple-600">
+            <div class="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-emerald-500 to-teal-600">
                 <div class="flex items-center">
                     <i class="fas fa-book-open text-white text-2xl"></i>
                     <span x-show="sidebarOpen" x-transition class="ml-3 text-xl font-bold text-white">E-Library</span>
@@ -56,7 +56,7 @@
                 <!-- Dashboard -->
                 <div class="mb-6">
                     <a href="{{ route('dashboard') }}" 
-                       class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('dashboard') ? 'bg-indigo-100 dark:bg-gray-700 text-indigo-700 dark:text-indigo-300' : '' }}">
+                       class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-emerald-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('dashboard') ? 'bg-emerald-100 dark:bg-gray-700 text-emerald-700 dark:text-indigo-300' : '' }}">
                         <i class="fas fa-tachometer-alt w-5 h-5"></i>
                         <span x-show="sidebarOpen" x-transition class="ml-3 font-medium">Dashboard</span>
                     </a>
@@ -290,10 +290,16 @@
             <!-- User Profile -->
             <div class="border-t border-gray-200 dark:border-gray-700 p-4">
                 <div class="flex items-center">
-                    <img class="w-10 h-10 rounded-full object-cover" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}">
+                    @if(auth()->check() && auth()->user()->profile_photo_url)
+                        <img class="w-10 h-10 rounded-full object-cover" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}">
+                    @else
+                        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+                            {{ auth()->check() ? strtoupper(substr(auth()->user()->name, 0, 1)) : 'G' }}
+                        </div>
+                    @endif
                     <div x-show="sidebarOpen" x-transition class="ml-3">
-                        <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ auth()->user()->name }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ ucfirst(auth()->user()->role) }}</p>
+                        <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ auth()->check() ? auth()->user()->name : 'Guest' }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ auth()->check() ? ucfirst(auth()->user()->role) : '' }}</p>
                     </div>
                 </div>
             </div>
@@ -314,7 +320,7 @@
                             <!-- Search -->
                             <div class="relative">
                                 <input type="text" placeholder="Rechercher..." 
-                                       class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                                       class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                                 <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             </div>
                             
@@ -334,7 +340,13 @@
                             <!-- User Menu -->
                             <div class="relative" x-data="{ open: false }">
                                 <button @click="open = !open" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <img class="w-8 h-8 rounded-full object-cover" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}">
+                                    @if(auth()->check() && auth()->user()->profile_photo_url)
+                                        <img class="w-8 h-8 rounded-full object-cover" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}">
+                                    @else
+                                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+                                            {{ auth()->check() ? strtoupper(substr(auth()->user()->name, 0, 1)) : 'G' }}
+                                        </div>
+                                    @endif
                                     <i class="fas fa-chevron-down text-xs"></i>
                                 </button>
                                 

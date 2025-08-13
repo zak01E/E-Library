@@ -17,11 +17,11 @@
                 </div>
             </div>
             <div class="flex items-center space-x-3">
-                <button id="refresh-btn" class="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700 transition-colors">
+                <button id="refresh-btn" class="px-3 py-1 bg-emerald-600 text-white text-sm rounded hover:bg-emerald-700 transition-colors">
                     <i class="fas fa-sync-alt mr-1"></i> Actualiser
                 </button>
                 <label class="flex items-center">
-                    <input type="checkbox" id="auto-refresh" checked class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                    <input type="checkbox" id="auto-refresh" checked class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                     <span class="ml-2 text-sm text-gray-600">Auto-refresh (30s)</span>
                 </label>
             </div>
@@ -32,11 +32,11 @@
     <div class="bg-white rounded-lg shadow mb-6 p-6">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
             <h3 class="text-lg font-semibold text-gray-900">Période d'analyse</h3>
-            <form method="GET" action="{{ route('admin.reports') }}" class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <input type="date" name="start_date" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" value="{{ $startDate }}">
+            <form method="GET" action="{{ admin_route('reports') }}" class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                <input type="date" name="start_date" class="rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" value="{{ $startDate }}">
                 <span class="text-gray-500 self-center">au</span>
-                <input type="date" name="end_date" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" value="{{ $endDate }}">
-                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="date" name="end_date" class="rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" value="{{ $endDate }}">
+                <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     Appliquer
                 </button>
             </form>
@@ -88,8 +88,8 @@
                         {{ $stats['download_growth'] >= 0 ? '+' : '' }}{{ $stats['download_growth'] }}% vs mois précédent
                     </p>
                 </div>
-                <div class="p-3 bg-purple-100 rounded-full">
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-3 bg-teal-100 rounded-full">
+                    <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
                     </svg>
                 </div>
@@ -142,22 +142,22 @@
         <div class="border-b border-gray-200">
             <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
                 <button @click="activeTab = 'users'"
-                        :class="{ 'border-indigo-500 text-indigo-600': activeTab === 'users', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'users' }"
+                        :class="{ 'border-emerald-500 text-emerald-600': activeTab === 'users', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'users' }"
                         class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                     Utilisateurs
                 </button>
                 <button @click="activeTab = 'books'"
-                        :class="{ 'border-indigo-500 text-indigo-600': activeTab === 'books', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'books' }"
+                        :class="{ 'border-emerald-500 text-emerald-600': activeTab === 'books', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'books' }"
                         class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                     Livres
                 </button>
                 <button @click="activeTab = 'authors'"
-                        :class="{ 'border-indigo-500 text-indigo-600': activeTab === 'authors', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'authors' }"
+                        :class="{ 'border-emerald-500 text-emerald-600': activeTab === 'authors', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'authors' }"
                         class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                     Auteurs
                 </button>
                 <button @click="activeTab = 'revenue'"
-                        :class="{ 'border-indigo-500 text-indigo-600': activeTab === 'revenue', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'revenue' }"
+                        :class="{ 'border-emerald-500 text-emerald-600': activeTab === 'revenue', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'revenue' }"
                         class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                     Revenus
                 </button>
@@ -284,7 +284,7 @@
                             <div class="flex items-center">
                                 <div class="w-32 text-sm text-gray-600">{{ $genre['name'] }}</div>
                                 <div class="flex-1 bg-gray-200 rounded-full h-4 ml-4">
-                                    <div class="bg-indigo-600 h-4 rounded-full" style="width: {{ $percentage }}%"></div>
+                                    <div class="bg-emerald-600 h-4 rounded-full" style="width: {{ $percentage }}%"></div>
                                 </div>
                                 <span class="ml-4 text-sm text-gray-600">{{ $percentage }}%</span>
                             </div>
@@ -349,21 +349,21 @@
 
         <!-- Export Actions -->
         <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
-            <form method="POST" action="{{ route('admin.reports.export-csv') }}" class="inline">
+            <form method="POST" action="{{ admin_route('reports.export-csv') }}" class="inline">
                 @csrf
-                <button type="submit" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     Exporter CSV
                 </button>
             </form>
-            <form method="POST" action="{{ route('admin.reports.export-pdf') }}" class="inline">
+            <form method="POST" action="{{ admin_route('reports.export-pdf') }}" class="inline">
                 @csrf
-                <button type="submit" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     Exporter PDF
                 </button>
             </form>
-            <form method="POST" action="{{ route('admin.reports.generate-full') }}" class="inline">
+            <form method="POST" action="{{ admin_route('reports.generate-full') }}" class="inline">
                 @csrf
-                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     Générer rapport complet
                 </button>
             </form>
@@ -469,7 +469,7 @@
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 urlParams.set('simulate', 'true'); // Activer la simulation pour les mises à jour temps réel
-                const response = await fetch(`{{ route('admin.reports.realtime-data') }}?${urlParams.toString()}`);
+                const response = await fetch(`{{ admin_route('reports.realtime-data') }}?${urlParams.toString()}`);
                 const data = await response.json();
 
                 // Mettre à jour les statistiques

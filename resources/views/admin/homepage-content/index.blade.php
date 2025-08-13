@@ -35,7 +35,7 @@
     @endif
 
     <!-- Form -->
-    <form method="POST" action="{{ route('admin.homepage-content.update') }}" class="space-y-6">
+    <form method="POST" action="{{ admin_route('homepage-content.update') }}" class="space-y-6">
         @csrf
         @method('PUT')
 

@@ -99,11 +99,11 @@
                         </tr>
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                             <td class="px-4 py-2 flex items-center">
-                                <i class="fas fa-eye text-purple-500 mr-2"></i>
+                                <i class="fas fa-eye text-teal-500 mr-2"></i>
                                 <span class="text-gray-900 dark:text-white">Vues totales</span>
                             </td>
                             <td class="px-4 py-2 text-center">
-                                <span class="text-lg font-bold text-purple-600">{{ number_format(auth()->user()->books()->sum('views')) }}</span>
+                                <span class="text-lg font-bold text-teal-600">{{ number_format(auth()->user()->books()->sum('views')) }}</span>
                             </td>
                             <td class="px-4 py-2 text-center">
                                 <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">

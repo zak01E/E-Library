@@ -274,8 +274,8 @@
                 </div>
                 
                 <div class="flex items-center p-3 bg-purple-50 rounded-lg">
-                    <div class="p-2 bg-purple-100 rounded-full mr-3">
-                        <i class="fas fa-layer-group text-purple-600"></i>
+                    <div class="p-2 bg-teal-100 rounded-full mr-3">
+                        <i class="fas fa-layer-group text-teal-600"></i>
                     </div>
                     <div class="flex-1">
                         <h4 class="text-sm font-medium text-purple-900">Explorateur</h4>

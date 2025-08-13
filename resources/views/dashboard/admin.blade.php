@@ -14,7 +14,7 @@
         <!-- Sidebar -->
         <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform lg:translate-x-0 transition-transform duration-300 ease-in-out" x-data="{ open: false }">
             <!-- Logo -->
-            <div class="flex items-center justify-center h-16 bg-indigo-600">
+            <div class="flex items-center justify-center h-16 bg-emerald-600">
                 <h1 class="text-white text-xl font-bold">eLibrary Admin</h1>
             </div>
 
@@ -22,8 +22,8 @@
             <nav class="mt-5 px-2 overflow-y-auto h-full pb-20">
                 <!-- Dashboard -->
                 <div class="space-y-1">
-                    <a href="{{ route('admin.dashboard') }}" class="bg-indigo-50 border-indigo-500 text-indigo-700 hover:bg-indigo-100 group flex items-center px-2 py-2 text-sm font-medium rounded-md border-l-4">
-                        <svg class="text-indigo-500 mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <a href="/admin/dashboard" class="bg-emerald-50 border-emerald-500 text-emerald-700 hover:bg-emerald-100 group flex items-center px-2 py-2 text-sm font-medium rounded-md border-l-4">
+                        <svg class="text-emerald-500 mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
                         </svg>
@@ -47,7 +47,7 @@
                         <a href="{{ route('books.index') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             Tous les livres
                         </a>
-                        <a href="{{ route('admin.books') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="/admin/books" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             En attente d'approbation
                         </a>
                         <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
@@ -75,7 +75,7 @@
                         </svg>
                     </button>
                     <div x-show="expanded" class="space-y-1 pl-6">
-                        <a href="{{ route('admin.users') }}" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="/admin/users" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             Tous les utilisateurs
                         </a>
                         <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
@@ -161,9 +161,9 @@
                     <div class="flex items-center space-x-4">
                         <!-- User Menu -->
                         <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <button @click="open = !open" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                                 <span class="sr-only">Open user menu</span>
-                                <div class="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center">
+                                <div class="h-8 w-8 rounded-full bg-emerald-600 flex items-center justify-center">
                                     <span class="text-sm font-medium text-white">{{ substr(auth()->user()->name, 0, 1) }}</span>
                                 </div>
                                 <span class="ml-3 text-gray-700">{{ auth()->user()->name }}</span>
@@ -272,7 +272,7 @@
                                     @foreach($pending_books as $book)
                                     <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                                         <div>
-                                            <a href="{{ route('books.show', $book) }}" class="text-sm font-medium text-gray-900 hover:text-indigo-600">
+                                            <a href="{{ route('books.show', $book) }}" class="text-sm font-medium text-gray-900 hover:text-emerald-600">
                                                 {{ $book->title }}
                                             </a>
                                             <p class="text-sm text-gray-500">par {{ $book->author_name }} • Ajouté par {{ $book->uploader->name }}</p>
@@ -299,7 +299,7 @@
                                 <div class="space-y-3">
                                     @foreach($recent_books as $book)
                                     <div class="p-4 border border-gray-200 rounded-lg">
-                                        <a href="{{ route('books.show', $book) }}" class="text-sm font-medium text-gray-900 hover:text-indigo-600">
+                                        <a href="{{ route('books.show', $book) }}" class="text-sm font-medium text-gray-900 hover:text-emerald-600">
                                             {{ $book->title }}
                                         </a>
                                         <p class="text-sm text-gray-500">
@@ -326,7 +326,7 @@
                                     @foreach($top_books as $book)
                                     <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                                         <div>
-                                            <a href="{{ route('books.show', $book) }}" class="text-sm font-medium text-gray-900 hover:text-indigo-600">
+                                            <a href="{{ route('books.show', $book) }}" class="text-sm font-medium text-gray-900 hover:text-emerald-600">
                                                 {{ $book->title }}
                                             </a>
                                             <p class="text-sm text-gray-500">par {{ $book->author_name }}</p>

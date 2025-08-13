@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\SiteSetting;
+use Illuminate\Support\Facades\Route;
 
 if (!function_exists('site_setting')) {
     /**
@@ -51,5 +52,38 @@ if (!function_exists('site_name')) {
     function site_name()
     {
         return SiteSetting::get('site_name', config('app.name', 'E-Library'));
+    }
+}
+
+if (!function_exists('admin_route')) {
+    /**
+     * Generate admin route with fallback
+     *
+     * @param string $name
+     * @param mixed $parameters
+     * @return string
+     */
+    function admin_route($name, $parameters = [])
+    {
+        $routeName = 'admin.' . $name;
+        
+        if (Route::has($routeName)) {
+            return route($routeName, $parameters);
+        }
+        
+        // Generate fallback URL
+        $url = '/admin/' . str_replace('.', '/', $name);
+        
+        if (!empty($parameters)) {
+            if (is_array($parameters)) {
+                $url .= '/' . implode('/', $parameters);
+            } elseif (is_object($parameters) && method_exists($parameters, 'getKey')) {
+                $url .= '/' . $parameters->getKey();
+            } else {
+                $url .= '/' . $parameters;
+            }
+        }
+        
+        return $url;
     }
 }

@@ -12,7 +12,7 @@
                     <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Modifier la catégorie</h1>
                     <p class="text-gray-600 dark:text-gray-400">Modifiez les informations de la catégorie "{{ $category->name }}"</p>
                 </div>
-                <a href="{{ route('admin.categories') }}" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-200">
+                <a href="{{ admin_route('categories') }}" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-200">
                     Retour
                 </a>
             </div>
@@ -21,7 +21,7 @@
         <!-- Formulaire d'édition -->
         <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg">
             <div class="p-6">
-                <form method="POST" action="{{ route('admin.categories.update', $category) }}" class="space-y-6">
+                <form method="POST" action="{{ admin_route('categories.update', $category) }}" class="space-y-6">
                     @csrf
                     @method('PUT')
 
@@ -59,7 +59,7 @@
                             id="description" 
                             name="description" 
                             rows="4"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             placeholder="Description de la catégorie..."
                         >{{ old('description', $category->description) }}</textarea>
                         <x-input-error :messages="$errors->get('description')" class="mt-2" />
@@ -71,7 +71,7 @@
                             name="is_active" 
                             type="checkbox" 
                             value="1"
-                            class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800"
+                            class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-emerald-600 shadow-sm focus:ring-emerald-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800"
                             {{ old('is_active', $category->is_active) ? 'checked' : '' }}
                         >
                         <label for="is_active" class="ml-2 text-sm text-gray-600 dark:text-gray-400">
@@ -80,7 +80,7 @@
                     </div>
 
                     <div class="flex justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
-                        <a href="{{ route('admin.categories') }}" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-200">
+                        <a href="{{ admin_route('categories') }}" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-200">
                             Annuler
                         </a>
                         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
@@ -105,7 +105,7 @@
                         <div class="text-sm text-gray-600 dark:text-gray-400">Statut</div>
                     </div>
                     <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                        <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ $category->created_at->format('d/m/Y') }}</div>
+                        <div class="text-2xl font-bold text-teal-600 dark:text-purple-400">{{ $category->created_at->format('d/m/Y') }}</div>
                         <div class="text-sm text-gray-600 dark:text-gray-400">Date de création</div>
                     </div>
                 </div>

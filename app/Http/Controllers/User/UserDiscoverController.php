@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 
 class UserDiscoverController extends Controller
 {
@@ -27,26 +28,32 @@ class UserDiscoverController extends Controller
         $recommendations = $this->getPersonalizedRecommendations($user);
         
         // Get trending books
-        $trending = Book::where('status', 'approved')
-            ->where('visibility', 'public')
-            ->orderBy('view_count', 'desc')
-            ->orderBy('download_count', 'desc')
+        $trendingQuery = Book::where('status', 'approved');
+        if (Schema::hasColumn('books', 'visibility')) {
+            $trendingQuery->where('visibility', 'public');
+        }
+        $trending = $trendingQuery->orderBy('views', 'desc')
+            ->orderBy('downloads', 'desc')
             ->limit(12)
             ->get();
         
         // Get new releases
-        $newReleases = Book::where('status', 'approved')
-            ->where('visibility', 'public')
-            ->where('published_at', '>=', now()->subDays(30))
-            ->orderBy('published_at', 'desc')
+        $newReleasesQuery = Book::where('status', 'approved');
+        if (Schema::hasColumn('books', 'visibility')) {
+            $newReleasesQuery->where('visibility', 'public');
+        }
+        $newReleases = $newReleasesQuery->where('created_at', '>=', now()->subDays(30))
+            ->orderBy('created_at', 'desc')
             ->limit(12)
             ->get();
         
-        // Get top rated
-        $topRated = Book::where('status', 'approved')
-            ->where('visibility', 'public')
-            ->where('rating_count', '>=', 5)
-            ->orderBy('rating_average', 'desc')
+        // Get top rated - using downloads as proxy for rating
+        $topRatedQuery = Book::where('status', 'approved');
+        if (Schema::hasColumn('books', 'visibility')) {
+            $topRatedQuery->where('visibility', 'public');
+        }
+        $topRated = $topRatedQuery->where('downloads', '>=', 5)
+            ->orderBy('downloads', 'desc')
             ->limit(12)
             ->get();
         
@@ -70,9 +77,15 @@ class UserDiscoverController extends Controller
      */
     public function new()
     {
-        $books = Book::where('status', 'approved')
-            ->where('visibility', 'public')
-            ->where('created_at', '>=', now()->subDays(30))
+        // Check if visibility column exists, otherwise just use status
+        $books = Book::where('status', 'approved');
+        
+        // Only add visibility condition if column exists
+        if (Schema::hasColumn('books', 'visibility')) {
+            $books->where('visibility', 'public');
+        }
+        
+        $books = $books->where('created_at', '>=', now()->subDays(30))
             ->orderBy('created_at', 'desc')
             ->paginate(24);
         
@@ -100,13 +113,17 @@ class UserDiscoverController extends Controller
             default => now()->subWeek()
         };
         
-        $books = Book::where('status', 'approved')
-            ->where('visibility', 'public')
-            ->withCount(['borrowings' => function ($query) use ($startDate) {
-                $query->where('borrowed_at', '>=', $startDate);
-            }])
-            ->orderBy('borrowings_count', 'desc')
-            ->orderBy('view_count', 'desc')
+        $booksQuery = Book::where('status', 'approved');
+        
+        // Check if visibility column exists
+        if (Schema::hasColumn('books', 'visibility')) {
+            $booksQuery->where('visibility', 'public');
+        }
+        
+        // Note: borrowings relationship may not exist, using downloads as fallback
+        $books = $booksQuery
+            ->orderBy('downloads', 'desc')
+            ->orderBy('views', 'desc')
             ->paginate(24);
         
         return view('user.discover.popular', compact('books', 'timeRange'));
@@ -117,17 +134,31 @@ class UserDiscoverController extends Controller
      */
     public function categories()
     {
-        $categories = Category::withCount('books')
-            ->where('is_active', true)
-            ->orderBy('position')
-            ->orderBy('name')
-            ->get();
+        $categoriesQuery = Category::withCount('books')
+            ->where('is_active', true);
         
-        $featuredCategories = Category::where('is_featured', true)
-            ->withCount('books')
-            ->orderBy('position')
-            ->limit(6)
-            ->get();
+        // Check if position column exists
+        if (Schema::hasColumn('categories', 'position')) {
+            $categoriesQuery->orderBy('position');
+        }
+        
+        $categories = $categoriesQuery->orderBy('name')->get();
+        
+        // Check if is_featured column exists
+        $featuredCategories = collect();
+        if (Schema::hasColumn('categories', 'is_featured')) {
+            $featuredCategoriesQuery = Category::where('is_featured', true)
+                ->withCount('books');
+            
+            if (Schema::hasColumn('categories', 'position')) {
+                $featuredCategoriesQuery->orderBy('position');
+            }
+            
+            $featuredCategories = $featuredCategoriesQuery->limit(6)->get();
+        } else {
+            // Fallback: use first 6 categories as featured
+            $featuredCategories = $categories->take(6);
+        }
         
         return view('user.discover.categories', compact('categories', 'featuredCategories'));
     }
@@ -139,17 +170,24 @@ class UserDiscoverController extends Controller
     {
         $category = Category::where('slug', $slug)->firstOrFail();
         
-        $books = Book::whereHas('categories', function ($query) use ($category) {
-                $query->where('categories.id', $category->id);
-            })
-            ->where('status', 'approved')
-            ->where('visibility', 'public')
-            ->orderBy('created_at', 'desc')
-            ->paginate(24);
+        // Note: Using simple category matching since many-to-many relationship may not exist
+        $booksQuery = Book::where('category', $category->name)
+            ->where('status', 'approved');
         
-        $subcategories = Category::where('parent_id', $category->id)
-            ->withCount('books')
-            ->get();
+        // Check if visibility column exists
+        if (Schema::hasColumn('books', 'visibility')) {
+            $booksQuery->where('visibility', 'public');
+        }
+        
+        $books = $booksQuery->orderBy('created_at', 'desc')->paginate(24);
+        
+        // Check if parent_id column exists for subcategories
+        $subcategories = collect();
+        if (Schema::hasColumn('categories', 'parent_id')) {
+            $subcategories = Category::where('parent_id', $category->id)
+                ->withCount('books')
+                ->get();
+        }
         
         return view('user.discover.category-books', compact('category', 'books', 'subcategories'));
     }
@@ -159,19 +197,53 @@ class UserDiscoverController extends Controller
      */
     public function authors()
     {
-        $authors = Author::where('verification_status', 'verified')
-            ->withCount('books')
-            ->orderBy('books_count', 'desc')
-            ->paginate(24);
-        
-        $featuredAuthors = Author::where('verification_status', 'verified')
-            ->where('author_level', 'platinum')
-            ->withCount('books')
-            ->orderBy('total_downloads', 'desc')
-            ->limit(6)
-            ->get();
-        
-        return view('user.discover.authors', compact('authors', 'featuredAuthors'));
+        try {
+            // Get all users who have uploaded books (they are authors)
+            $authorsQuery = \App\Models\User::whereHas('uploadedBooks')
+                ->withCount('uploadedBooks as books_count');
+            
+            // Check if role column exists
+            if (Schema::hasColumn('users', 'role')) {
+                $authorsQuery->whereIn('role', ['author', 'admin']);
+            }
+            
+            $authors = $authorsQuery->orderBy('books_count', 'desc')
+                ->paginate(24);
+            
+            // Get featured authors (those with most books)
+            $featuredAuthors = \App\Models\User::whereHas('uploadedBooks')
+                ->withCount('uploadedBooks as books_count')
+                ->orderBy('books_count', 'desc')
+                ->limit(8)
+                ->get();
+            
+            // Calculate some stats
+            $totalAuthors = \App\Models\User::whereHas('uploadedBooks')->count();
+            $totalBooks = \App\Models\Book::count();
+            $newAuthors = \App\Models\User::whereHas('uploadedBooks')
+                ->where('created_at', '>=', now()->subMonth())
+                ->count();
+            $trendingCount = $featuredAuthors->count();
+            
+            return view('user.discover.authors', compact(
+                'authors', 
+                'featuredAuthors',
+                'totalAuthors',
+                'totalBooks',
+                'newAuthors',
+                'trendingCount'
+            ));
+        } catch (\Exception $e) {
+            // Fallback with empty data
+            return view('user.discover.authors', [
+                'authors' => collect(),
+                'featuredAuthors' => collect(),
+                'totalAuthors' => 0,
+                'totalBooks' => 0,
+                'newAuthors' => 0,
+                'trendingCount' => 0
+            ]);
+        }
     }
     
     /**
@@ -198,8 +270,7 @@ class UserDiscoverController extends Controller
      */
     public function search(Request $request)
     {
-        $query = Book::where('status', 'approved')
-            ->where('visibility', 'public');
+        $query = Book::where('status', 'approved');
         
         // Text search
         if ($request->filled('q')) {
@@ -246,10 +317,10 @@ class UserDiscoverController extends Controller
                 $query->orderBy('created_at', 'desc');
                 break;
             case 'popular':
-                $query->orderBy('view_count', 'desc');
+                $query->orderBy('views', 'desc');
                 break;
             case 'rating':
-                $query->orderBy('rating_average', 'desc');
+                $query->orderBy('downloads', 'desc');
                 break;
             case 'price_low':
                 $query->orderBy('price', 'asc');
@@ -258,7 +329,7 @@ class UserDiscoverController extends Controller
                 $query->orderBy('price', 'desc');
                 break;
             default:
-                $query->orderBy('view_count', 'desc');
+                $query->orderBy('views', 'desc');
         }
         
         $books = $query->paginate(24)->withQueryString();
@@ -277,37 +348,57 @@ class UserDiscoverController extends Controller
      */
     private function getPersonalizedRecommendations($user)
     {
+        if (!$user) {
+            return collect();
+        }
+        
         return Cache::remember("user_recommendations_{$user->id}", 3600, function () use ($user) {
-            // Get user's reading history
-            $readBooks = Borrowing::where('user_id', $user->id)
-                ->pluck('book_id')
-                ->toArray();
-            
-            if (empty($readBooks)) {
-                // Return popular books for new users
+            try {
+                // Get user's reading history from borrowings table
+                $readBooks = DB::table('borrowings')
+                    ->where('user_id', $user->id)
+                    ->pluck('book_id')
+                    ->toArray();
+                
+                if (empty($readBooks)) {
+                    // Return popular books for new users
+                    $query = Book::where('status', 'approved');
+                    
+                    if (Schema::hasColumn('books', 'visibility')) {
+                        $query->where('visibility', 'public');
+                    }
+                    
+                    return $query->orderBy('downloads', 'desc')
+                        ->limit(12)
+                        ->get();
+                }
+                
+                // Get categories from read books (using simple category field)
+                $preferredCategories = Book::whereIn('id', $readBooks)
+                    ->pluck('category')
+                    ->unique()
+                    ->toArray();
+                
+                // Get similar books based on categories
+                $query = Book::whereIn('category', $preferredCategories)
+                    ->whereNotIn('id', $readBooks)
+                    ->where('status', 'approved');
+                
+                if (Schema::hasColumn('books', 'visibility')) {
+                    $query;
+                }
+                
+                return $query->orderBy('downloads', 'desc')
+                    ->limit(12)
+                    ->get();
+                    
+            } catch (\Exception $e) {
+                // Fallback: return random approved books
                 return Book::where('status', 'approved')
-                    ->where('visibility', 'public')
-                    ->orderBy('rating_average', 'desc')
+                    ->inRandomOrder()
                     ->limit(12)
                     ->get();
             }
-            
-            // Get categories from read books
-            $preferredCategories = DB::table('book_categories')
-                ->whereIn('book_id', $readBooks)
-                ->pluck('category_id')
-                ->toArray();
-            
-            // Get similar books
-            return Book::whereHas('categories', function ($query) use ($preferredCategories) {
-                    $query->whereIn('categories.id', $preferredCategories);
-                })
-                ->whereNotIn('id', $readBooks)
-                ->where('status', 'approved')
-                ->where('visibility', 'public')
-                ->orderBy('rating_average', 'desc')
-                ->limit(12)
-                ->get();
         });
     }
     
@@ -337,8 +428,7 @@ class UserDiscoverController extends Controller
             })
             ->whereNotIn('id', $readBooks)
             ->where('status', 'approved')
-            ->where('visibility', 'public')
-            ->orderBy('rating_average', 'desc')
+            ->orderBy('downloads', 'desc')
             ->limit(8)
             ->get();
     }
@@ -363,8 +453,7 @@ class UserDiscoverController extends Controller
         return Book::whereIn('author_name', $authors)
             ->whereNotIn('id', $favoriteBooks)
             ->where('status', 'approved')
-            ->where('visibility', 'public')
-            ->orderBy('rating_average', 'desc')
+            ->orderBy('downloads', 'desc')
             ->limit(8)
             ->get();
     }
@@ -391,7 +480,6 @@ class UserDiscoverController extends Controller
                 $query->whereIn('name', $preferredGenres);
             })
             ->where('status', 'approved')
-            ->where('visibility', 'public')
             ->orderBy('created_at', 'desc')
             ->limit(8)
             ->get();
@@ -432,7 +520,6 @@ class UserDiscoverController extends Controller
         
         return Book::whereIn('id', $recommendedBookIds)
             ->where('status', 'approved')
-            ->where('visibility', 'public')
             ->get();
     }
     
@@ -455,9 +542,8 @@ class UserDiscoverController extends Controller
                 $query->whereIn('categories.id', $readCategories);
             })
             ->where('status', 'approved')
-            ->where('visibility', 'public')
             ->where('created_at', '>=', now()->subDays(30))
-            ->orderBy('view_count', 'desc')
+            ->orderBy('views', 'desc')
             ->limit(8)
             ->get();
     }

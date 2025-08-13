@@ -19,6 +19,90 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/trending-data', [App\Http\Controllers\HomeController::class, 'getTrendingData'])->name('home.trending');
 
+// Educational News Routes
+Route::prefix('actualites')->name('news.')->group(function () {
+    Route::get('/', [App\Http\Controllers\NewsController::class, 'index'])->name('index');
+    Route::get('/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('show');
+    Route::get('/api/widget', [App\Http\Controllers\NewsController::class, 'widget'])->name('widget');
+    Route::get('/api/ticker', [App\Http\Controllers\NewsController::class, 'ticker'])->name('ticker');
+});
+
+// School Calendar Routes
+Route::prefix('calendrier')->name('calendar.')->group(function () {
+    Route::get('/', [App\Http\Controllers\CalendarController::class, 'index'])->name('index');
+    Route::get('/evenement/{id}', [App\Http\Controllers\CalendarController::class, 'showEvent'])->name('event');
+    Route::get('/api/events', [App\Http\Controllers\CalendarController::class, 'events'])->name('events');
+    Route::get('/api/widget', [App\Http\Controllers\CalendarController::class, 'widget'])->name('widget');
+    Route::get('/api/important-dates', [App\Http\Controllers\CalendarController::class, 'importantDates'])->name('important-dates');
+    Route::get('/export/ics', [App\Http\Controllers\CalendarController::class, 'export'])->name('export');
+});
+
+// Mentorship Routes
+Route::prefix('parrainage')->name('mentorship.')->group(function () {
+    Route::get('/', [App\Http\Controllers\MentorshipController::class, 'index'])->name('index');
+    Route::get('/mentors', [App\Http\Controllers\MentorshipController::class, 'browseMentors'])->name('browse');
+    Route::get('/mentor/{id}', [App\Http\Controllers\MentorshipController::class, 'showMentor'])->name('mentor.show');
+    
+    // Protected routes (require authentication)
+    Route::middleware('auth')->group(function () {
+        Route::get('/devenir-mentor', [App\Http\Controllers\MentorshipController::class, 'becomeMentor'])->name('become');
+        Route::post('/devenir-mentor', [App\Http\Controllers\MentorshipController::class, 'storeMentorApplication'])->name('apply');
+        Route::post('/mentor/{id}/demande', [App\Http\Controllers\MentorshipController::class, 'requestMentorship'])->name('request');
+    });
+});
+
+// MAMA ÉCOLE Routes - Système d'inclusion des parents illettrés
+Route::prefix('mama-ecole')->name('mama-ecole.')->group(function () {
+    // Public routes
+    Route::get('/', [App\Http\Controllers\MamaEcoleController::class, 'index'])->name('index');
+    Route::get('/demo', [App\Http\Controllers\MamaEcoleController::class, 'demo'])->name('demo');
+    Route::get('/info', [App\Http\Controllers\MamaEcoleController::class, 'info'])->name('info');
+    
+    // Webhook routes for Twilio/Orange
+    Route::post('/webhook/voice', [App\Http\Controllers\MamaEcoleController::class, 'handleCallback'])->name('callback');
+    Route::post('/webhook/twiml/{id}', [App\Http\Controllers\MamaEcoleController::class, 'generateTwiml'])->name('twiml');
+    Route::post('/webhook/input', [App\Http\Controllers\MamaEcoleController::class, 'handleInput'])->name('handle-input');
+    Route::post('/webhook/recording', [App\Http\Controllers\MamaEcoleController::class, 'handleRecording'])->name('handle-recording');
+    
+    // Protected admin routes
+    Route::middleware('auth')->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\MamaEcoleController::class, 'dashboard'])->name('dashboard');
+        Route::get('/analytics', [App\Http\Controllers\MamaEcoleController::class, 'analytics'])->name('analytics');
+        Route::get('/parents', [App\Http\Controllers\MamaEcoleController::class, 'parents'])->name('parents');
+        Route::post('/notify', [App\Http\Controllers\MamaEcoleController::class, 'sendNotification'])->name('notify');
+        Route::post('/configure-parent', [App\Http\Controllers\MamaEcoleController::class, 'configureParent'])->name('configure-parent');
+        Route::get('/templates', [App\Http\Controllers\MamaEcoleController::class, 'templates'])->name('templates');
+        Route::get('/campaigns', [App\Http\Controllers\MamaEcoleController::class, 'campaigns'])->name('campaigns');
+    });
+    
+    // Routes Orange CI SMS
+    Route::post('/sms/send', [App\Http\Controllers\MamaEcoleController::class, 'sendSMS'])->name('sms.send');
+    Route::post('/sms/callback', [App\Http\Controllers\MamaEcoleController::class, 'smsCallback'])->name('sms-callback');
+    Route::post('/sms/incoming', [App\Http\Controllers\MamaEcoleController::class, 'handleIncomingSMS'])->name('sms.incoming');
+    Route::post('/ussd/handle', [App\Http\Controllers\MamaEcoleController::class, 'handleUSSD'])->name('ussd.handle');
+    
+    // Routes de test Twilio
+    Route::get('/test-twilio', [App\Http\Controllers\MamaEcoleController::class, 'testTwilio'])->name('test.twilio');
+    Route::post('/test/call', [App\Http\Controllers\MamaEcoleController::class, 'testCall'])->name('test.call');
+    Route::post('/test/sms', [App\Http\Controllers\MamaEcoleController::class, 'testSMS'])->name('test.sms');
+    
+    // Routes de test simple (qui fonctionne vraiment)
+    Route::get('/test-simple', [App\Http\Controllers\MamaEcoleController::class, 'testSimple'])->name('test.simple');
+    Route::post('/test-simple', [App\Http\Controllers\MamaEcoleController::class, 'testSMSSimple'])->name('test.sms.simple');
+    
+    // Routes de test d'appel
+    Route::get('/test-appel', [App\Http\Controllers\MamaEcoleController::class, 'testAppel'])->name('test.appel');
+    Route::post('/test-appel', [App\Http\Controllers\MamaEcoleController::class, 'testCallSimple'])->name('test.call.simple');
+});
+
+// API routes pour les fonctionnalités avancées
+Route::prefix('api')->name('api.')->group(function () {
+    Route::get('/search-suggestions', [App\Http\Controllers\HomeController::class, 'getSearchSuggestions'])->name('search.suggestions');
+    Route::get('/search/suggestions', [App\Http\Controllers\Api\SearchController::class, 'suggestions'])->name('search.suggestions.advanced');
+    Route::get('/search/advanced', [App\Http\Controllers\Api\SearchController::class, 'advanced'])->name('search.advanced');
+    Route::get('/search/autocomplete', [App\Http\Controllers\Api\SearchController::class, 'autocomplete'])->name('search.autocomplete');
+});
+
 // Design showcase route (for development/demo purposes)
 Route::get('/design-showcase', function () {
     return view('design-showcase');
@@ -38,6 +122,11 @@ Route::get('/authors/{author}', [App\Http\Controllers\PublicAuthorController::cl
 // Protected download route (requires authentication)
 Route::middleware('auth')->group(function () {
     Route::get('/library/{book}/download', [BookController::class, 'download'])->name('books.public.download');
+    
+    // Admin book approval route (accessible from public book listings)
+    Route::middleware('is-admin')->group(function () {
+        Route::patch('/books/{book}/approve', [App\Http\Controllers\AdminController::class, 'approveBook'])->name('books.approve');
+    });
 });
 
 // Admin login route

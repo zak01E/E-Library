@@ -162,7 +162,7 @@
             <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 cursor-pointer hover:border-blue-500 transition-colors"
                  onclick="useTemplate('question')">
                 <h4 class="font-medium text-gray-900 dark:text-white mb-2">
-                    <i class="fas fa-question-circle text-purple-500 mr-2"></i>Question du lecteur
+                    <i class="fas fa-question-circle text-teal-500 mr-2"></i>Question du lecteur
                 </h4>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                     "Merci pour votre question ! Je serais ravi de vous répondre..."

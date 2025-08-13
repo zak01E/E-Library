@@ -10,7 +10,7 @@
         <div class="flex items-center space-x-4">
             <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Vue d'ensemble</h2>
             <div class="flex items-center space-x-2">
-                <button class="px-3 py-1 text-sm bg-indigo-100 text-indigo-700 rounded-full">7 jours</button>
+                <button class="px-3 py-1 text-sm bg-emerald-100 text-emerald-700 rounded-full">7 jours</button>
                 <button class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200">30 jours</button>
                 <button class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200">90 jours</button>
                 <button class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200">1 an</button>
@@ -21,7 +21,7 @@
                 <i class="fas fa-download"></i>
                 <span>Exporter</span>
             </button>
-            <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
+            <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
                 <i class="fas fa-chart-line"></i>
                 <span>Rapport Détaillé</span>
             </button>
@@ -68,8 +68,8 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
-                    <i class="fas fa-download text-purple-600 dark:text-purple-400 text-xl"></i>
+                <div class="p-3 rounded-full bg-teal-100 dark:bg-purple-900">
+                    <i class="fas fa-download text-teal-600 dark:text-purple-400 text-xl"></i>
                 </div>
                 <div class="text-right">
                     <div class="text-2xl font-bold text-gray-900 dark:text-white">94.3k</div>
@@ -170,8 +170,8 @@
                 
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                            <i class="fas fa-tablet-alt text-purple-600 dark:text-purple-400"></i>
+                        <div class="p-2 bg-teal-100 dark:bg-purple-900 rounded-lg">
+                            <i class="fas fa-tablet-alt text-teal-600 dark:text-purple-400"></i>
                         </div>
                         <div>
                             <p class="font-medium text-gray-900 dark:text-white">Tablette</p>
@@ -181,7 +181,7 @@
                     <div class="text-right">
                         <p class="font-medium text-gray-900 dark:text-white">8.9%</p>
                         <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-purple-500 h-2 rounded-full" style="width: 8.9%"></div>
+                            <div class="bg-teal-500 h-2 rounded-full" style="width: 8.9%"></div>
                         </div>
                     </div>
                 </div>
@@ -211,7 +211,7 @@
                 </div>
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-2">
-                        <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
+                        <div class="w-3 h-3 bg-teal-500 rounded-full"></div>
                         <span class="text-sm text-gray-700 dark:text-gray-300">Technologie</span>
                     </div>
                     <span class="text-sm font-medium text-gray-900 dark:text-white">19.4%</span>
@@ -281,7 +281,7 @@
                     <div class="text-sm text-gray-600 dark:text-gray-400">Pages par session</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">68.7%</div>
+                    <div class="text-2xl font-bold text-teal-600 dark:text-purple-400 mb-1">68.7%</div>
                     <div class="text-sm text-gray-600 dark:text-gray-400">Taux de conversion</div>
                 </div>
             </div>
@@ -292,7 +292,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Activité Récente</h3>
-            <button class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">Voir tout</button>
+            <button class="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Voir tout</button>
         </div>
         
         <div class="space-y-4">
@@ -319,14 +319,14 @@
             </div>
             
             <div class="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
-                    <i class="fas fa-star text-purple-600 dark:text-purple-400"></i>
+                <div class="w-10 h-10 bg-teal-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
+                    <i class="fas fa-star text-teal-600 dark:text-purple-400"></i>
                 </div>
                 <div class="flex-1">
                     <p class="text-sm font-medium text-gray-900 dark:text-white">Évaluation exceptionnelle</p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">"Design Patterns" a reçu une note de 5/5</p>
                 </div>
-                <div class="text-sm text-purple-600 dark:text-purple-400">Note moyenne: 4.9</div>
+                <div class="text-sm text-teal-600 dark:text-purple-400">Note moyenne: 4.9</div>
             </div>
         </div>
     </div>

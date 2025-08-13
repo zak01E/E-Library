@@ -47,7 +47,7 @@ class AdminController extends Controller
             ->groupBy('category')
             ->get();
 
-        return view('admin.dashboard', compact(
+        return view('admin.dashboard.index', compact(
             'stats',
             'recent_books',
             'pending_books',
@@ -219,7 +219,7 @@ class AdminController extends Controller
 
         Category::create($data);
 
-        return redirect()->route('admin.categories')->with('success', 'Catégorie créée avec succès.');
+        return redirect('/admin/categories')->with('success', 'Catégorie créée avec succès.');
     }
 
     public function editCategory(Category $category)
@@ -248,7 +248,7 @@ class AdminController extends Controller
 
         $category->update($data);
 
-        return redirect()->route('admin.categories')->with('success', 'Catégorie mise à jour avec succès.');
+        return redirect('/admin/categories')->with('success', 'Catégorie mise à jour avec succès.');
     }
 
     public function deleteCategory(Category $category)
@@ -257,13 +257,13 @@ class AdminController extends Controller
         $bookCount = Book::where('category', $category->name)->count();
 
         if ($bookCount > 0) {
-            return redirect()->route('admin.categories')->with('error',
+            return redirect('/admin/categories')->with('error',
                 "Impossible de supprimer cette catégorie car elle contient {$bookCount} livre(s).");
         }
 
         $category->delete();
 
-        return redirect()->route('admin.categories')->with('success', 'Catégorie supprimée avec succès.');
+        return redirect('/admin/categories')->with('success', 'Catégorie supprimée avec succès.');
     }
 
     public function updateBook(Request $request, Book $book)
@@ -309,16 +309,8 @@ class AdminController extends Controller
             $updateData['cover_image'] = $coverPath;
         }
 
-        // Handle PDF removal
-        if ($request->has('remove_pdf') && $book->pdf_path) {
-            // Delete old PDF file
-            if (\Storage::disk('public')->exists($book->pdf_path)) {
-                \Storage::disk('public')->delete($book->pdf_path);
-            }
-            $updateData['pdf_path'] = null;
-        }
         // Handle new PDF upload
-        elseif ($request->hasFile('pdf_file')) {
+        if ($request->hasFile('pdf_file')) {
             // Delete old PDF file if exists
             if ($book->pdf_path && \Storage::disk('public')->exists($book->pdf_path)) {
                 \Storage::disk('public')->delete($book->pdf_path);
@@ -328,10 +320,15 @@ class AdminController extends Controller
             $pdfPath = $request->file('pdf_file')->store('books/pdfs', 'public');
             $updateData['pdf_path'] = $pdfPath;
         }
+        // If no new PDF is uploaded, keep the existing pdf_path
+        else {
+            // Don't update pdf_path if no new file is uploaded
+            // This prevents setting it to null which would violate the NOT NULL constraint
+        }
 
         $book->update($updateData);
 
-        return redirect()->route('admin.books')->with('success', 'Livre mis à jour avec succès.');
+        return redirect('/admin/books')->with('success', 'Livre mis à jour avec succès.');
     }
 
     public function settings()
@@ -363,7 +360,7 @@ class AdminController extends Controller
         SiteSetting::set('maintenance_mode', $request->has('maintenance_mode') ? '1' : '0', 'boolean');
         SiteSetting::set('maintenance_message', $request->maintenance_message);
 
-        return redirect()->route('admin.settings')->with('success', 'Paramètres mis à jour avec succès.');
+        return redirect('/admin/settings')->with('success', 'Paramètres mis à jour avec succès.');
     }
 
     public function updateLogos(Request $request)
@@ -414,9 +411,9 @@ class AdminController extends Controller
                 };
             }
             $message = '✅ ' . implode(', ', $fileNames) . ' mis à jour avec succès.';
-            return redirect()->route('admin.settings')->with('success', $message);
+            return redirect('/admin/settings')->with('success', $message);
         } else {
-            return redirect()->route('admin.settings')->with('warning', '⚠️ Aucun fichier sélectionné pour l\'upload.');
+            return redirect('/admin/settings')->with('warning', '⚠️ Aucun fichier sélectionné pour l\'upload.');
         }
     }
 
@@ -468,9 +465,140 @@ class AdminController extends Controller
             }
 
             SiteSetting::set($type, null);
-            return redirect()->route('admin.settings')->with('success', "🗑️ {$logoName} supprimé avec succès.");
+            return redirect('/admin/settings')->with('success', "🗑️ {$logoName} supprimé avec succès.");
         } else {
-            return redirect()->route('admin.settings')->with('warning', "⚠️ Aucun {$logoName} à supprimer.");
+            return redirect('/admin/settings')->with('warning', "⚠️ Aucun {$logoName} à supprimer.");
         }
     }
+
+    // Additional methods for routes that don't have implementations
+    public function createBook()
+    {
+        $categories = Category::all();
+        return view('admin.books.create', compact('categories'));
+    }
+
+    public function storeBook(Request $request)
+    {
+        // Implementation for storing a new book
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'author_name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'category' => 'required|string',
+            'file' => 'required|file|mimes:pdf|max:20480',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        $book = new Book();
+        $book->title = $request->title;
+        $book->author_name = $request->author_name;
+        $book->description = $request->description;
+        $book->category = $request->category;
+        $book->uploaded_by = auth()->id();
+        $book->status = 'pending';
+
+        // Handle file uploads
+        if ($request->hasFile('file')) {
+            $book->file_path = $request->file('file')->store('books', 'public');
+        }
+        if ($request->hasFile('cover_image')) {
+            $book->cover_image = $request->file('cover_image')->store('covers', 'public');
+        }
+
+        $book->save();
+        return redirect('/admin/books')->with('success', 'Livre ajouté avec succès.');
+    }
+
+    public function featureBook(Book $book)
+    {
+        $book->update(['is_featured' => true]);
+        return redirect()->back()->with('success', 'Livre mis en avant avec succès.');
+    }
+
+    public function unfeatureBook(Book $book)
+    {
+        $book->update(['is_featured' => false]);
+        return redirect()->back()->with('success', 'Livre retiré de la mise en avant.');
+    }
+
+    public function bulkBookAction(Request $request)
+    {
+        $action = $request->input('action');
+        $bookIds = $request->input('book_ids', []);
+
+        if (empty($bookIds)) {
+            return redirect()->back()->with('error', 'Aucun livre sélectionné.');
+        }
+
+        switch ($action) {
+            case 'approve':
+                Book::whereIn('id', $bookIds)->update(['status' => 'approved']);
+                $message = 'Livres approuvés avec succès.';
+                break;
+            case 'reject':
+                Book::whereIn('id', $bookIds)->update(['status' => 'rejected']);
+                $message = 'Livres rejetés avec succès.';
+                break;
+            case 'delete':
+                Book::whereIn('id', $bookIds)->delete();
+                $message = 'Livres supprimés avec succès.';
+                break;
+            default:
+                return redirect()->back()->with('error', 'Action invalide.');
+        }
+
+        return redirect()->back()->with('success', $message);
+    }
+
+    public function exportBooks()
+    {
+        // Implementation for exporting books
+        $books = Book::all();
+        $csvData = "ID,Title,Author,Category,Status,Created At\n";
+        
+        foreach ($books as $book) {
+            $csvData .= "{$book->id},{$book->title},{$book->author_name},{$book->category},{$book->status},{$book->created_at}\n";
+        }
+
+        return response($csvData)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', 'attachment; filename="books.csv"');
+    }
+
+    public function importBooks(Request $request)
+    {
+        // Implementation for importing books
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt'
+        ]);
+
+        // Process CSV file
+        $file = $request->file('file');
+        $data = array_map('str_getcsv', file($file->getRealPath()));
+        
+        // Skip header row and process data
+        foreach (array_slice($data, 1) as $row) {
+            if (count($row) >= 4) {
+                Book::create([
+                    'title' => $row[0],
+                    'author_name' => $row[1],
+                    'category' => $row[2],
+                    'description' => $row[3] ?? '',
+                    'uploaded_by' => auth()->id(),
+                    'status' => 'pending'
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Livres importés avec succès.');
+    }
+
+    // Method aliases for consistency
+    public function bookDetails(Book $book) { return $this->showBook($book); }
+    public function createCategory() { 
+        return view('admin.categories.create'); 
+    }
+    public function activeUsers() { return $this->usersActive(); }
+    public function userDetails(User $user) { return $this->showUser($user); }
 }

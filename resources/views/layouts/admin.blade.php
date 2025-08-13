@@ -115,7 +115,7 @@
 
                             <!-- Profile dropdown -->
                             <div class="relative" x-data="{ open: false }">
-                                <button @click="open = !open" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <button @click="open = !open" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                                     <div class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
                                         <span class="text-white font-medium">{{ substr(Auth::user()->name, 0, 1) }}</span>
                                     </div>

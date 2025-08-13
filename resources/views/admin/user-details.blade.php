@@ -7,7 +7,7 @@
     <div class="space-y-6">
         <!-- Bouton retour -->
         <div class="flex items-center justify-between">
-            <a href="{{ route('admin.users') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-md transition-colors">
+            <a href="{{ admin_route('users') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-md transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
@@ -21,8 +21,8 @@
                 <div class="flex items-center space-x-6">
                     <!-- Avatar -->
                     <div class="flex-shrink-0">
-                        <div class="h-20 w-20 rounded-full bg-indigo-100 flex items-center justify-center">
-                            <span class="text-2xl font-bold text-indigo-600">
+                        <div class="h-20 w-20 rounded-full bg-emerald-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-emerald-600">
                                 {{ strtoupper(substr($user->name, 0, 1)) }}
                             </span>
                         </div>
@@ -101,8 +101,8 @@
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <span class="text-purple-600 text-sm">📥</span>
+                        <div class="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
+                            <span class="text-teal-600 text-sm">📥</span>
                         </div>
                     </div>
                     <div class="ml-4">
@@ -153,7 +153,7 @@
                                     {{ $book->created_at->format('d/m/Y') }}
                                 </td>
                                 <td class="px-3 py-3 whitespace-nowrap text-center">
-                                    <a href="{{ route('admin.books.edit', $book) }}" class="text-indigo-600 hover:text-indigo-900 text-xs font-medium px-2 py-1 rounded hover:bg-indigo-50">
+                                    <a href="{{ admin_route('books.edit', $book) }}" class="text-emerald-600 hover:text-indigo-900 text-xs font-medium px-2 py-1 rounded hover:bg-emerald-50">
                                         ✏️ Éditer
                                     </a>
                                 </td>
@@ -173,7 +173,7 @@
                 
                 <div class="flex space-x-4">
                     <!-- Changer le rôle -->
-                    <form action="{{ route('admin.users.update-role', $user) }}" method="POST" class="flex items-center space-x-2">
+                    <form action="{{ admin_route('users.update-role', $user) }}" method="POST" class="flex items-center space-x-2">
                         @csrf
                         @method('PATCH')
                         <select name="role" class="text-sm rounded border-gray-300 py-2 px-3 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
@@ -181,7 +181,7 @@
                             <option value="author" {{ $user->role === 'author' ? 'selected' : '' }}>Auteur</option>
                             <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
                         </select>
-                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-700 transition-colors">
+                        <button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded hover:bg-emerald-700 transition-colors">
                             Changer le rôle
                         </button>
                     </form>
@@ -190,7 +190,7 @@
                     @if($user->id !== auth()->id())
                     <button 
                         type="button"
-                        onclick="showDeleteConfirmation('{{ $user->name }}', '{{ route('admin.users.delete', $user) }}')"
+                        onclick="showDeleteConfirmation('{{ $user->name }}', '{{ admin_route('users.delete', $user) }}')"
                         class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700 transition-colors"
                     >
                         🗑️ Supprimer l'utilisateur

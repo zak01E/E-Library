@@ -6,10 +6,10 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="flex items-center">
-                        @if(isset($siteSettings['site_logo']) && $siteSettings['site_logo'])
-                            <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}" alt="{{ $siteSettings['site_name'] ?? 'E-Library' }}" class="h-10 w-auto">
+                        @if(site_logo())
+                            <img src="{{ site_logo() }}" alt="{{ site_name() }}" class="h-10 w-auto">
                         @else
-                            <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">{{ $siteSettings['site_name'] ?? 'E-Library' }}</h2>
+                            <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">{{ site_name() }}</h2>
                         @endif
                     </a>
                 </div>

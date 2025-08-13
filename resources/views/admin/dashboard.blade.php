@@ -24,7 +24,7 @@
                 Actualiser
             </button>
             <label class="flex items-center">
-                <input type="checkbox" id="auto-refresh" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked>
+                <input type="checkbox" id="auto-refresh" class="rounded border-gray-300 text-emerald-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked>
                 <span class="ml-2 text-sm text-gray-600">Auto-refresh (30s)</span>
             </label>
         </div>
@@ -64,8 +64,8 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
-                    <i class="fas fa-user-edit text-purple-600 dark:text-purple-400 text-xl"></i>
+                <div class="p-3 rounded-full bg-teal-100 dark:bg-purple-900">
+                    <i class="fas fa-user-edit text-teal-600 dark:text-purple-400 text-xl"></i>
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Auteurs</p>
@@ -153,7 +153,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Livres en attente</h3>
-                <a href="{{ route('admin.books') }}?status=pending" class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">Voir tout</a>
+                <a href="{{ admin_route('books') }}?status=pending" class="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Voir tout</a>
             </div>
             <div id="pending-books-container" class="space-y-4">
                 <!-- Dynamic content will be loaded here -->
@@ -164,7 +164,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Nouveaux utilisateurs</h3>
-                <a href="{{ route('admin.users') }}" class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">Voir tout</a>
+                <a href="{{ admin_route('users') }}" class="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Voir tout</a>
             </div>
             <div id="recent-users-container" class="space-y-4">
                 <!-- Dynamic content will be loaded here -->
@@ -177,7 +177,7 @@
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Actions Rapides</h3>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <a href="{{ route('admin.books') }}" class="flex items-center p-4 bg-blue-50 dark:bg-blue-900 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors">
+            <a href="{{ admin_route('books') }}" class="flex items-center p-4 bg-blue-50 dark:bg-blue-900 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors">
                 <div class="p-2 bg-blue-100 dark:bg-blue-800 rounded-lg mr-3">
                     <i class="fas fa-book text-blue-600 dark:text-blue-400"></i>
                 </div>
@@ -187,7 +187,7 @@
                 </div>
             </a>
 
-            <a href="{{ route('admin.users') }}" class="flex items-center p-4 bg-green-50 dark:bg-green-900 rounded-lg hover:bg-green-100 dark:hover:bg-green-800 transition-colors">
+            <a href="{{ admin_route('users') }}" class="flex items-center p-4 bg-green-50 dark:bg-green-900 rounded-lg hover:bg-green-100 dark:hover:bg-green-800 transition-colors">
                 <div class="p-2 bg-green-100 dark:bg-green-800 rounded-lg mr-3">
                     <i class="fas fa-users text-green-600 dark:text-green-400"></i>
                 </div>
@@ -197,17 +197,17 @@
                 </div>
             </a>
 
-            <a href="{{ route('books.create') }}" class="flex items-center p-4 bg-purple-50 dark:bg-purple-900 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-800 transition-colors">
-                <div class="p-2 bg-purple-100 dark:bg-purple-800 rounded-lg mr-3">
-                    <i class="fas fa-plus text-purple-600 dark:text-purple-400"></i>
+            <a href="{{ route('books.create') }}" class="flex items-center p-4 bg-purple-50 dark:bg-purple-900 rounded-lg hover:bg-teal-100 dark:hover:bg-purple-800 transition-colors">
+                <div class="p-2 bg-teal-100 dark:bg-purple-800 rounded-lg mr-3">
+                    <i class="fas fa-plus text-teal-600 dark:text-purple-400"></i>
                 </div>
                 <div>
                     <p class="font-medium text-purple-900 dark:text-purple-100">Ajouter un livre</p>
-                    <p class="text-xs text-purple-600 dark:text-purple-400">Nouveau livre</p>
+                    <p class="text-xs text-teal-600 dark:text-purple-400">Nouveau livre</p>
                 </div>
             </a>
 
-            <a href="{{ route('admin.reports') }}" class="flex items-center p-4 bg-orange-50 dark:bg-orange-900 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-800 transition-colors">
+            <a href="{{ admin_route('reports') }}" class="flex items-center p-4 bg-orange-50 dark:bg-orange-900 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-800 transition-colors">
                 <div class="p-2 bg-orange-100 dark:bg-orange-800 rounded-lg mr-3">
                     <i class="fas fa-chart-line text-orange-600 dark:text-orange-400"></i>
                 </div>
@@ -297,7 +297,7 @@
         statusIndicator.className = 'w-3 h-3 bg-yellow-500 rounded-full animate-pulse';
 
         try {
-            const response = await fetch('{{ route('admin.dashboard.realtime-data') }}');
+            const response = await fetch('{{ admin_route('dashboard.realtime-data') }}');
             const data = await response.json();
 
             // Mettre à jour le dashboard

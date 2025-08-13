@@ -60,8 +60,8 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div class="flex items-center">
-                <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                    <i class="fas fa-heart text-purple-600 dark:text-purple-400"></i>
+                <div class="p-2 bg-teal-100 dark:bg-purple-900 rounded-lg">
+                    <i class="fas fa-heart text-teal-600 dark:text-purple-400"></i>
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Satisfaction</p>
@@ -99,8 +99,8 @@
 
             <a href="#" 
                class="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-purple-500 transition-colors">
-                <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg mr-4">
-                    <i class="fas fa-book text-purple-600 dark:text-purple-400"></i>
+                <div class="p-2 bg-teal-100 dark:bg-purple-900 rounded-lg mr-4">
+                    <i class="fas fa-book text-teal-600 dark:text-purple-400"></i>
                 </div>
                 <div>
                     <h4 class="font-medium text-gray-900 dark:text-white">Guide d'utilisation</h4>
@@ -176,8 +176,8 @@
             </div>
             
             <div class="flex items-center">
-                <div class="p-2 bg-purple-100 dark:bg-purple-800 rounded-lg mr-4">
-                    <i class="fas fa-phone text-purple-600 dark:text-purple-400"></i>
+                <div class="p-2 bg-teal-100 dark:bg-purple-800 rounded-lg mr-4">
+                    <i class="fas fa-phone text-teal-600 dark:text-purple-400"></i>
                 </div>
                 <div>
                     <h4 class="font-medium text-gray-900 dark:text-white">Téléphone</h4>

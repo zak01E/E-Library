@@ -5,21 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $siteSettings['site_name'] ?? config('app.name', 'eLibrary') }} - Tableau de bord Auteur</title>
+    <title>{{ site_name() }} - Tableau de bord Auteur</title>
 
     <!-- Favicon -->
-    @if(isset($siteSettings['site_favicon']) && $siteSettings['site_favicon'])
-        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $siteSettings['site_favicon']) }}">
+    @if(site_favicon())
+        <link rel="icon" type="image/x-icon" href="{{ site_favicon() }}">
     @endif
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Fonts (même police que home.blade.php) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <style>
+        /* Styles uniformes avec home.blade.php */
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
-<body class="font-sans antialiased bg-gray-50 dark:bg-gray-900">
+<body class="font-sans antialiased bg-white">
     <div class="min-h-screen">
 
 
@@ -304,7 +319,7 @@
                             >
                                 <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                                     <span class="text-white text-sm font-medium">
-                                        {{ substr(auth()->user()->name, 0, 1) }}
+                                        {{ auth()->check() ? substr(auth()->user()->name, 0, 1) : 'G' }}
                                     </span>
                                 </div>
                                 <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -330,15 +345,15 @@
                                         <div class="flex items-center">
                                             <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                                                 <span class="text-white font-medium">
-                                                    {{ substr(auth()->user()->name, 0, 1) }}
+                                                    {{ auth()->check() ? substr(auth()->user()->name, 0, 1) : 'G' }}
                                                 </span>
                                             </div>
                                             <div class="ml-3">
                                                 <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                                    {{ auth()->user()->name }}
+                                                    {{ auth()->check() ? auth()->user()->name : 'Guest' }}
                                                 </div>
                                                 <div class="text-xs text-gray-500 dark:text-gray-400">
-                                                    {{ auth()->user()->email }}
+                                                    {{ auth()->check() ? auth()->user()->email : '' }}
                                                 </div>
                                             </div>
                                         </div>

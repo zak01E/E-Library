@@ -156,8 +156,8 @@
         <!-- Empty State -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
             <div class="max-w-md mx-auto">
-                <div class="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-folder-plus text-3xl text-purple-600"></i>
+                <div class="w-24 h-24 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-folder-plus text-3xl text-teal-600"></i>
                 </div>
                 <h3 class="text-xl font-semibold text-gray-900 mb-3">Aucune collection créée</h3>
                 <p class="text-gray-600 mb-6">
@@ -192,8 +192,8 @@
                 <span class="text-sm font-medium text-green-900">Importer</span>
             </button>
             
-            <button class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-                <i class="fas fa-share text-2xl text-purple-600 mb-2"></i>
+            <button class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-teal-100 transition-colors">
+                <i class="fas fa-share text-2xl text-teal-600 mb-2"></i>
                 <span class="text-sm font-medium text-purple-900">Partager</span>
             </button>
             
@@ -236,7 +236,7 @@
                     <div class="flex space-x-2">
                         <button type="button" class="w-8 h-8 bg-blue-500 rounded-full border-2 border-blue-600"></button>
                         <button type="button" class="w-8 h-8 bg-green-500 rounded-full border-2 border-transparent hover:border-green-600"></button>
-                        <button type="button" class="w-8 h-8 bg-purple-500 rounded-full border-2 border-transparent hover:border-purple-600"></button>
+                        <button type="button" class="w-8 h-8 bg-teal-500 rounded-full border-2 border-transparent hover:border-teal-600"></button>
                         <button type="button" class="w-8 h-8 bg-red-500 rounded-full border-2 border-transparent hover:border-red-600"></button>
                     </div>
                 </div>

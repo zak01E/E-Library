@@ -73,8 +73,8 @@
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
             <div class="flex items-center">
-                <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                    <i class="fas fa-download text-purple-600 dark:text-purple-400"></i>
+                <div class="p-2 bg-teal-100 dark:bg-purple-900 rounded-lg">
+                    <i class="fas fa-download text-teal-600 dark:text-purple-400"></i>
                 </div>
                 <div class="ml-3">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Téléchargements</p>
@@ -141,7 +141,7 @@
                     @if(request('search') || request('status'))
                         <div class="flex items-center space-x-2 mt-1">
                             @if(request('search'))
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
                                     <i class="fas fa-search mr-1"></i>
                                     "{{ request('search') }}"
                                 </span>
@@ -155,19 +155,19 @@
                                     }}
                                 </span>
                             @endif
-                            <a href="{{ route('admin.books') }}" class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                            <a href="{{ admin_route('books') }}" class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                                 <i class="fas fa-times mr-1"></i>Effacer les filtres
                             </a>
                         </div>
                     @endif
                 </div>
-                <form method="GET" action="{{ route('admin.books') }}" class="mt-3 sm:mt-0 flex items-center space-x-3" id="filterForm">
+                <form method="GET" action="{{ admin_route('books') }}" class="mt-3 sm:mt-0 flex items-center space-x-3" id="filterForm">
                     <div class="relative">
                         <input type="text"
                                name="search"
                                value="{{ request('search') }}"
                                placeholder="Rechercher..."
-                               class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm">
+                               class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm">
                         <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
                     </div>
                     <select name="status"
@@ -276,24 +276,24 @@
 
                                                 <!-- Quick Actions -->
                                                 <div class="flex items-center space-x-1">
-                                                    <a href="{{ route('admin.books.show', $book) }}"
+                                                    <a href="{{ admin_route('books.show', $book) }}"
                                                        class="action-btn text-gray-600 hover:text-blue-600 hover:bg-blue-50"
                                                        title="Voir">
                                                         <i class="fas fa-eye text-xs"></i>
                                                     </a>
-                                                    <a href="{{ route('admin.books.edit', $book) }}"
-                                                       class="action-btn text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50"
+                                                    <a href="{{ admin_route('books.edit', $book) }}"
+                                                       class="action-btn text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
                                                        title="Éditer">
                                                         <i class="fas fa-edit text-xs"></i>
                                                     </a>
-                                                    <a href="{{ route('admin.books.status-history', $book) }}"
-                                                       class="action-btn text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                                                    <a href="{{ admin_route('books.status-history', $book) }}"
+                                                       class="action-btn text-teal-600 hover:text-purple-700 hover:bg-purple-50"
                                                        title="Historique">
                                                         <i class="fas fa-history text-xs"></i>
                                                     </a>
                                                     <!-- Bouton Supprimer -->
                                                     <button type="button"
-                                                            onclick="showDeleteConfirmation('{{ $book->title }}', '{{ $book->author_name }}', '{{ route('admin.books.delete', $book) }}')"
+                                                            onclick="showDeleteConfirmation('{{ $book->title }}', '{{ $book->author_name }}', '{{ admin_route('books.delete', $book) }}')"
                                                             class="action-btn text-red-600 hover:text-red-700 hover:bg-red-50 border-0 bg-transparent cursor-pointer"
                                                             title="Supprimer définitivement">
                                                         <i class="fas fa-trash text-xs"></i>

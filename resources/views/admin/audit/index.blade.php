@@ -218,7 +218,7 @@
                                 </div>
                             </td>
                             <td class="py-3 px-4">
-                                <span class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-700">Téléchargement</span>
+                                <span class="px-2 py-1 text-xs rounded-full bg-teal-100 text-purple-700">Téléchargement</span>
                             </td>
                             <td class="py-3 px-4 text-sm">Livre: "JavaScript Moderne"</td>
                             <td class="py-3 px-4 text-sm">192.168.1.78</td>
