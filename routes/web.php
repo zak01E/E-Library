@@ -55,7 +55,7 @@ Route::prefix('parrainage')->name('mentorship.')->group(function () {
 Route::prefix('mama-ecole')->name('mama-ecole.')->group(function () {
     // Public routes
     Route::get('/', [App\Http\Controllers\MamaEcoleController::class, 'index'])->name('index');
-    Route::get('/demo', [App\Http\Controllers\MamaEcoleController::class, 'demo'])->name('demo');
+    // Route::get('/demo', [App\Http\Controllers\MamaEcoleController::class, 'demo'])->name('demo'); // Page demo supprimée - non pertinente
     Route::get('/info', [App\Http\Controllers\MamaEcoleController::class, 'info'])->name('info');
     
     // Webhook routes for Twilio/Orange
@@ -111,7 +111,10 @@ Route::get('/design-showcase', function () {
 Route::get('/search', [SearchController::class, 'index'])->name('books.search');
 
 // Public book routes (accessible without authentication)
-Route::get('/library', [BookController::class, 'publicIndex'])->name('books.public.index');
+// Redirect /library to /search for consistency
+Route::get('/library', function (Illuminate\Http\Request $request) {
+    return redirect()->route('books.search', $request->all());
+})->name('books.public.index');
 Route::get('/library/{book}', [BookController::class, 'publicShow'])->name('books.public.show');
 Route::get('/library/{book}/preview', [BookController::class, 'preview'])->name('books.public.preview');
 
@@ -237,7 +240,9 @@ Route::post('/admin/simple-login', function(\Illuminate\Http\Request $request) {
 })->name('admin.simple.login.submit');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->middleware('ensure-correct-dashboard')
+        ->name('dashboard');
 
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -317,6 +322,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/roles/{role}', [App\Http\Controllers\Admin\PermissionController::class, 'deleteRole'])->name('roles.delete');
         Route::post('/assign-role', [App\Http\Controllers\Admin\PermissionController::class, 'assignRole'])->name('assign-role');
         Route::post('/permissions', [App\Http\Controllers\Admin\PermissionController::class, 'createPermission'])->name('permissions.create');
+        Route::post('/users/create', [AdminController::class, 'storeUser'])->name('users.store');
         Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('users.show');
         Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('users.delete');
         Route::patch('/users/{user}/role', [AdminController::class, 'updateUserRole'])->name('users.update-role');
@@ -465,6 +471,10 @@ Route::middleware(['guest', 'author.guest'])->group(function () {
         ->name('author.login');
     Route::post('/author/login', [App\Http\Controllers\Auth\AuthorAuthController::class, 'store'])
         ->name('author.login.submit');
+    Route::get('/author/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])
+        ->name('author.register');
+    Route::post('/author/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'store'])
+        ->name('author.register.submit');
 });
 
 Route::middleware('auth')->group(function () {

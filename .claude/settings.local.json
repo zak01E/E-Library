@@ -37,7 +37,9 @@
       "Bash(composer:*)",
       "Bash(php.exe:*)",
       "Bash(wget:*)",
-      "Bash(php:*)"
+      "Bash(php:*)",
+      "Bash(timeout:*)",
+      "Bash(cd:*)"
     ],
     "deny": []
   }

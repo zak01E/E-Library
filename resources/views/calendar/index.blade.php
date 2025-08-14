@@ -43,105 +43,98 @@
 
     @include('partials.public-header')
 
-    <!-- Hero Section -->
-    <section class="relative py-16 overflow-hidden">
+    <!-- Hero Section Compact -->
+    <section class="relative py-8 overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-r from-emerald-100 to-teal-100 opacity-30"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <h1 class="text-5xl font-bold text-gray-900 mb-4">
-                    Calendrier Scolaire 2024-2025
-                </h1>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Toutes les dates importantes de l'année académique ivoirienne en un coup d'œil
-                </p>
-            </div>
-
-            <!-- Quick Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 max-w-4xl mx-auto">
-                <div class="glass rounded-xl p-4 text-center card-hover">
-                    <div class="text-3xl font-bold text-emerald-700">180</div>
-                    <div class="text-sm text-gray-600">Jours de cours</div>
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">
+                        Calendrier Scolaire 2024-2025
+                    </h1>
+                    <p class="text-sm text-gray-600 mt-1">
+                        Année académique ivoirienne
+                    </p>
                 </div>
-                <div class="glass rounded-xl p-4 text-center card-hover">
-                    <div class="text-3xl font-bold text-teal-700">3</div>
-                    <div class="text-sm text-gray-600">Trimestres</div>
-                </div>
-                <div class="glass rounded-xl p-4 text-center card-hover">
-                    <div class="text-3xl font-bold text-emerald-600">12</div>
-                    <div class="text-sm text-gray-600">Jours fériés</div>
-                </div>
-                <div class="glass rounded-xl p-4 text-center card-hover">
-                    <div class="text-3xl font-bold text-teal-600">4</div>
-                    <div class="text-sm text-gray-600">Examens nationaux</div>
+                <!-- Quick Stats Inline -->
+                <div class="hidden md:flex gap-6">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-emerald-700">180</div>
+                        <div class="text-xs text-gray-600">Jours cours</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-teal-700">3</div>
+                        <div class="text-xs text-gray-600">Trimestres</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-emerald-600">12</div>
+                        <div class="text-xs text-gray-600">Jours fériés</div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Month View -->
-    <section class="py-8">
+    <section class="py-4" x-data="calendarApp()">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Month Navigation -->
-            <div class="flex justify-between items-center mb-8">
-                <button onclick="previousMonth()" class="glass px-4 py-2 rounded-lg hover:bg-white transition">
-                    <i class="fas fa-chevron-left mr-2"></i>Précédent
+            <div class="flex justify-between items-center mb-4">
+                <button @click="previousMonth()" class="glass px-3 py-1.5 rounded-lg hover:bg-white transition text-sm">
+                    <i class="fas fa-chevron-left mr-1"></i>Précédent
                 </button>
-                <h2 class="text-3xl font-bold text-gray-900">{{ $startDate->format('F Y') ?? 'Janvier 2025' }}</h2>
-                <button onclick="nextMonth()" class="glass px-4 py-2 rounded-lg hover:bg-white transition">
-                    Suivant<i class="fas fa-chevron-right ml-2"></i>
+                <h2 class="text-2xl font-bold text-gray-900" x-text="currentMonthYear"></h2>
+                <button @click="nextMonth()" class="glass px-3 py-1.5 rounded-lg hover:bg-white transition text-sm">
+                    Suivant<i class="fas fa-chevron-right ml-1"></i>
                 </button>
             </div>
 
-            <!-- Calendar Grid -->
-            <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
-                <div class="grid grid-cols-7 gap-4 mb-4">
-                    @foreach(['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'] as $day)
-                    <div class="text-center font-semibold text-gray-600 text-sm">{{ $day }}</div>
-                    @endforeach
+            <!-- Calendar Grid Compact -->
+            <div class="bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+                <div class="grid grid-cols-7 gap-1 mb-2">
+                    <template x-for="day in ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']">
+                        <div class="text-center font-semibold text-gray-600 text-xs py-1" x-text="day"></div>
+                    </template>
                 </div>
 
-                <div class="grid grid-cols-7 gap-2">
-                    @for($i = 1; $i <= 31; $i++)
-                    <div class="aspect-square p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition relative group">
-                        <div class="text-sm font-semibold text-gray-700">{{ $i }}</div>
+                <div class="grid grid-cols-7 gap-1">
+                    <template x-for="day in calendarDays" :key="day.date">
+                        <div class="p-1 border border-gray-200 rounded hover:bg-gray-50 transition relative group min-h-[60px]" 
+                             :class="{'bg-gray-100': !day.currentMonth, 'bg-emerald-50': day.isToday}">
+                            <div class="text-xs font-semibold" :class="day.currentMonth ? 'text-gray-700' : 'text-gray-400'" x-text="day.day"></div>
                         
-                        @if($i == 1)
-                        <div class="mt-1">
-                            <span class="inline-block w-full bg-red-100 text-red-700 text-xs px-1 py-0.5 rounded">
-                                Nouvel An
-                            </span>
-                        </div>
-                        @elseif($i == 6)
-                        <div class="mt-1">
-                            <span class="inline-block w-full bg-emerald-100 text-emerald-700 text-xs px-1 py-0.5 rounded">
-                                Rentrée
-                            </span>
-                        </div>
-                        @elseif($i == 15)
-                        <div class="mt-1">
-                            <span class="inline-block w-full bg-teal-100 text-teal-700 text-xs px-1 py-0.5 rounded">
-                                Réunion
-                            </span>
-                        </div>
-                        @endif
+                            <template x-if="day.event">
+                                <div class="mt-0.5">
+                                    <span class="inline-block w-full text-[10px] px-0.5 py-0.5 rounded truncate"
+                                          :class="{
+                                              'bg-red-100 text-red-700': day.event.type === 'holiday',
+                                              'bg-emerald-100 text-emerald-700': day.event.type === 'school',
+                                              'bg-teal-100 text-teal-700': day.event.type === 'meeting'
+                                          }" 
+                                          x-text="day.event.title"></span>
+                                </div>
+                            </template>
 
-                        <!-- Hover Tooltip -->
-                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block z-10">
-                            <div class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 whitespace-nowrap">
-                                {{ $i }} Janvier 2025
+                            <!-- Hover Tooltip -->
+                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block z-10">
+                                <div class="bg-gray-900 text-white text-xs rounded-lg py-1 px-2 whitespace-nowrap">
+                                    <span x-text="day.fullDate"></span>
+                                    <template x-if="day.event">
+                                        <div x-text="': ' + day.event.title"></div>
+                                    </template>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    @endfor
+                    </template>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Upcoming Events -->
-    <section class="py-8">
+    <section class="py-4">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Événements à venir</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Événements à venir</h2>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Event Card 1 -->
@@ -221,20 +214,103 @@
     </footer>
 
     <script>
-        function previousMonth() {
-            console.log('Navigation vers le mois précédent');
-        }
-
-        function nextMonth() {
-            console.log('Navigation vers le mois suivant');
-        }
-
-        function exportCalendar() {
-            alert('Téléchargement du calendrier au format .ics');
-        }
-
-        function printCalendar() {
-            window.print();
+        function calendarApp() {
+            return {
+                currentDate: new Date(),
+                currentMonth: new Date().getMonth(),
+                currentYear: new Date().getFullYear(),
+                calendarDays: [],
+                events: {
+                    '2025-01-01': { title: 'Nouvel An', type: 'holiday' },
+                    '2025-01-06': { title: 'Rentrée', type: 'school' },
+                    '2025-01-15': { title: 'Réunion', type: 'meeting' },
+                    '2025-02-03': { title: 'Examens', type: 'school' },
+                    '2025-02-14': { title: 'St-Valentin', type: 'holiday' },
+                    '2025-03-08': { title: 'Fête Femmes', type: 'holiday' },
+                    '2025-04-21': { title: 'Pâques', type: 'holiday' },
+                    '2025-05-01': { title: 'Fête Travail', type: 'holiday' },
+                    '2025-06-15': { title: 'Fin Année', type: 'school' },
+                    '2025-08-07': { title: 'Indépendance', type: 'holiday' },
+                    '2025-09-15': { title: 'Rentrée', type: 'school' },
+                    '2025-12-25': { title: 'Noël', type: 'holiday' }
+                },
+                
+                get currentMonthYear() {
+                    const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 
+                                   'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+                    return months[this.currentMonth] + ' ' + this.currentYear;
+                },
+                
+                init() {
+                    this.generateCalendar();
+                },
+                
+                generateCalendar() {
+                    this.calendarDays = [];
+                    const firstDay = new Date(this.currentYear, this.currentMonth, 1);
+                    const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
+                    const prevLastDay = new Date(this.currentYear, this.currentMonth, 0);
+                    
+                    // Ajuster pour commencer par lundi (0 = dimanche, 1 = lundi)
+                    let startDay = firstDay.getDay();
+                    startDay = startDay === 0 ? 6 : startDay - 1;
+                    
+                    // Jours du mois précédent
+                    for (let i = startDay; i > 0; i--) {
+                        const day = prevLastDay.getDate() - i + 1;
+                        const date = new Date(this.currentYear, this.currentMonth - 1, day);
+                        this.calendarDays.push(this.createDayObject(date, false));
+                    }
+                    
+                    // Jours du mois actuel
+                    for (let day = 1; day <= lastDay.getDate(); day++) {
+                        const date = new Date(this.currentYear, this.currentMonth, day);
+                        this.calendarDays.push(this.createDayObject(date, true));
+                    }
+                    
+                    // Jours du mois suivant pour compléter la grille
+                    const remainingDays = 42 - this.calendarDays.length;
+                    for (let day = 1; day <= remainingDays; day++) {
+                        const date = new Date(this.currentYear, this.currentMonth + 1, day);
+                        this.calendarDays.push(this.createDayObject(date, false));
+                    }
+                },
+                
+                createDayObject(date, currentMonth) {
+                    const dateStr = date.toISOString().split('T')[0];
+                    const today = new Date();
+                    const isToday = date.toDateString() === today.toDateString();
+                    
+                    return {
+                        date: dateStr,
+                        day: date.getDate(),
+                        fullDate: date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+                        currentMonth: currentMonth,
+                        isToday: isToday,
+                        event: this.events[dateStr] || null
+                    };
+                },
+                
+                previousMonth() {
+                    if (this.currentMonth === 0) {
+                        this.currentMonth = 11;
+                        this.currentYear--;
+                    } else {
+                        this.currentMonth--;
+                    }
+                    this.generateCalendar();
+                },
+                
+                nextMonth() {
+                    if (this.currentMonth === 11) {
+                        this.currentMonth = 0;
+                        this.currentYear++;
+                    } else {
+                        this.currentMonth++;
+                    }
+                    this.generateCalendar();
+                }
+            }
         }
     </script>
 </body>

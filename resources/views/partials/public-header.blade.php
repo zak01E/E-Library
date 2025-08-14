@@ -66,7 +66,7 @@
                         <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-t-xl px-4 py-2 border-b border-emerald-100">
                             <span class="text-xs font-semibold text-emerald-700">CONTENUS ÉDUCATIFS</span>
                         </div>
-                        <a href="/library" class="block px-4 py-3 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition group">
+                        <a href="{{ route('books.search') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition group">
                             <i class="fas fa-book-open mr-2 w-4 text-emerald-500"></i>Bibliothèque numérique
                             <span class="text-xs text-gray-500 block ml-6">50,000+ livres</span>
                         </a>
@@ -111,13 +111,13 @@
                 </div>
 
                 <!-- Examens -->
-                <a href="/search?category=examens" class="text-gray-700 hover:text-orange-600 px-4 py-2 font-medium transition flex items-center group">
+                <a href="/search?category=Examens" class="text-gray-700 hover:text-orange-600 px-4 py-2 font-medium transition flex items-center group">
                     <i class="fas fa-medal mr-2 text-sm text-orange-500"></i>
                     <span class="group-hover:text-orange-600">Examens</span>
                 </a>
 
                 <!-- Auteurs -->
-                <a href="/authors" class="text-gray-700 hover:text-amber-600 px-4 py-2 font-medium transition flex items-center group">
+                <a href="{{ route('authors.index') }}" class="text-gray-700 hover:text-amber-600 px-4 py-2 font-medium transition flex items-center group">
                     <i class="fas fa-pen-fancy mr-2 text-sm text-amber-500"></i>
                     <span class="group-hover:text-amber-600">Auteurs</span>
                 </a>
@@ -139,14 +139,15 @@
                         </button>
                     </div>
 
-                    <!-- User Menu -->
+                    <!-- User Menu avec Avatar -->
                     <div class="relative group" x-data="{ open: false }">
                         <button @click="open = !open" class="flex items-center space-x-2 text-gray-700 hover:text-emerald-600 transition">
-                            <div class="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                                {{ substr(auth()->user()->name, 0, 1) }}
-                            </div>
-                            <span class="font-medium hidden lg:block">{{ auth()->user()->name }}</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
+                            <img src="{{ auth()->user()->profile_photo_url }}" 
+                                 alt="{{ auth()->user()->name }}" 
+                                 class="w-10 h-10 rounded-full object-cover ring-2 ring-emerald-400 shadow-md hover:ring-emerald-500 transition-all"
+                                 style="min-width: 40px; min-height: 40px;">
+                            <span class="font-medium text-gray-800">{{ auth()->user()->name }}</span>
+                            <i class="fas fa-chevron-down text-xs text-gray-400"></i>
                         </button>
                         <div x-show="open" @click.away="open = false" x-transition x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-2xl border border-gray-100">
                             <a href="{{ url('/dashboard') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition rounded-t-xl">
@@ -165,12 +166,63 @@
                         </div>
                     </div>
                 @else
-                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-emerald-600 font-medium transition">
-                        Connexion
-                    </a>
-                    <a href="{{ route('register') }}" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-xl transform hover:-translate-y-0.5">
-                        Créer un compte
-                    </a>
+                    <!-- Dropdown Connexion -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" @click.away="open = false" 
+                                class="text-gray-700 hover:text-emerald-600 font-medium transition flex items-center gap-1">
+                            <i class="fas fa-sign-in-alt mr-1"></i>
+                            Connexion
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div x-show="open" x-transition x-cloak 
+                             class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden">
+                            <div class="bg-gradient-to-r from-emerald-50 to-teal-50 px-4 py-2 border-b border-emerald-100">
+                                <span class="text-xs font-semibold text-emerald-700">CHOISIR VOTRE ESPACE</span>
+                            </div>
+                            <a href="{{ route('login') }}" 
+                               class="block px-4 py-3 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition group">
+                                <i class="fas fa-user mr-2 w-4 text-emerald-500"></i>Espace Lecteur
+                                <span class="text-xs text-gray-500 block ml-6">Accéder à votre bibliothèque</span>
+                            </a>
+                            <a href="{{ route('author.login') }}" 
+                               class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition">
+                                <i class="fas fa-pen-fancy mr-2 w-4 text-amber-500"></i>Espace Auteur
+                                <span class="text-xs text-gray-500 block ml-6">Publier et gérer vos livres</span>
+                            </a>
+                            <div class="border-t border-gray-100"></div>
+                            <a href="{{ route('admin.login') }}" 
+                               class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition">
+                                <i class="fas fa-shield-alt mr-2 w-4 text-purple-500"></i>Administration
+                                <span class="text-xs text-gray-500 block ml-6">Réservé aux administrateurs</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Dropdown Inscription -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" @click.away="open = false"
+                                class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-xl transform hover:-translate-y-0.5 flex items-center gap-1">
+                            <i class="fas fa-user-plus mr-1"></i>
+                            Créer un compte
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div x-show="open" x-transition x-cloak 
+                             class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden">
+                            <div class="bg-gradient-to-r from-emerald-50 to-teal-50 px-4 py-2 border-b border-emerald-100">
+                                <span class="text-xs font-semibold text-emerald-700">S'INSCRIRE COMME</span>
+                            </div>
+                            <a href="{{ route('register') }}" 
+                               class="block px-4 py-3 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition">
+                                <i class="fas fa-book-reader mr-2 w-4 text-emerald-500"></i>Lecteur
+                                <span class="text-xs text-gray-500 block ml-6">Lire et télécharger des livres</span>
+                            </a>
+                            <a href="{{ route('author.register') }}" 
+                               class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition">
+                                <i class="fas fa-feather-alt mr-2 w-4 text-amber-500"></i>Auteur
+                                <span class="text-xs text-gray-500 block ml-6">Publier vos œuvres</span>
+                            </a>
+                        </div>
+                    </div>
                 @endauth
             </div>
 

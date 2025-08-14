@@ -24,6 +24,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\LogUserActivity::class,
         ],
 
         'api' => [
@@ -51,5 +52,6 @@ class Kernel extends HttpKernel
         'admin.guest' => \App\Http\Middleware\AdminGuest::class,
         'author.guest' => \App\Http\Middleware\AuthorGuest::class,
         'check-role' => \App\Http\Middleware\CheckUserRole::class,
+        'ensure-correct-dashboard' => \App\Http\Middleware\EnsureCorrectDashboard::class,
     ];
 }

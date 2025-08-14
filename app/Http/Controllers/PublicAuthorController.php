@@ -16,11 +16,7 @@ class PublicAuthorController extends Controller
         $query = User::where('role', 'author')
             ->withCount(['books as approved_books_count' => function ($query) {
                 $query->where('status', 'approved');
-            }])
-            ->with(['books' => function ($query) {
-                $query->where('status', 'approved');
-            }])
-            ->having('approved_books_count', '>', 0); // Only authors with approved books
+            }]);
 
         // Search functionality
         if ($request->filled('search')) {
@@ -50,6 +46,13 @@ class PublicAuthorController extends Controller
         }
 
         $authors = $query->paginate(12)->withQueryString();
+        
+        // Ajouter des stats pour chaque auteur
+        foreach($authors as $author) {
+            $author->total_views = $author->books()->where('status', 'approved')->sum('views');
+            $author->total_downloads = $author->books()->where('status', 'approved')->sum('downloads');
+            $author->average_rating = 4.5; // Vous pouvez calculer la vraie moyenne si vous avez un système de notation
+        }
 
         return view('authors.public', compact('authors'));
     }

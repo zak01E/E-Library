@@ -1,310 +1,519 @@
-@extends(auth()->check() && auth()->user()->role === 'admin' ? 'layouts.admin-dashboard' : 'layouts.author-dashboard')
+@extends('layouts.admin-dashboard')
 
 @section('page-title', $book->title)
-@section('page-description', 'Détails du livre par ' . $book->author_name)
+@section('page-description', 'Détails complets du livre')
+
 
 @section('content')
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-        <div class="p-6">
-                    <!-- Back Button -->
-                    <div class="mb-6">
-                        <a href="{{ auth()->check() && auth()->user()->role === 'admin' ? admin_route('books') : route('author.books') }}"
-                           class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                            </svg>
-                            Retour à {{ auth()->check() && auth()->user()->role === 'admin' ? 'la liste admin' : 'mes livres' }}
+    @php
+        // Déterminer le chemin du PDF une fois pour toute la vue
+        $pdfPath = null;
+        if($book->pdf_path) {
+            $pdfPath = $book->pdf_path;
+            if (!Storage::disk('public')->exists($pdfPath)) {
+                // Essayer avec le dossier pdfs
+                $filename = basename($pdfPath);
+                if (Storage::disk('public')->exists('books/pdfs/' . $filename)) {
+                    $pdfPath = 'books/pdfs/' . $filename;
+                }
+            }
+            // Vérifier que le fichier existe vraiment
+            if (!Storage::disk('public')->exists($pdfPath)) {
+                $pdfPath = null;
+            }
+        }
+    @endphp
+
+    <!-- Breadcrumb -->
+    <div class="mb-6">
+        <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="{{ admin_route('dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                        <i class="fas fa-home mr-2"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+                        <a href="{{ admin_route('books') }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
+                            Livres
                         </a>
                     </div>
-
-                    <!-- Header Section -->
-                    <div class="mb-8">
-                        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">{{ $book->title }}</h1>
-
-                        <div class="mb-6">
-                            <p class="text-lg text-gray-700 dark:text-gray-300">
-                                <span class="font-semibold">Auteur:</span> {{ $book->author_name }}
-                            </p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                Publié le {{ $book->created_at->format('d F Y') }}
-                            </p>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="mb-6" x-data="{ showReader: false }">
-                            <button @click="showReader = !showReader"
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                                </svg>
-                                <span x-text="showReader ? 'Masquer le lecteur' : 'Lire en ligne'"></span>
-                            </button>
-
-                            <a href="{{ route('books.download', $book) }}"
-                               class="ml-3 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
-                                </svg>
-                                Télécharger PDF
-                            </a>
-
-                            <div x-show="showReader" x-transition class="mt-6">
-                                <iframe src="{{ asset('storage/' . $book->pdf_path) }}"
-                                        class="w-full h-96 lg:h-[600px] border-2 border-gray-300 rounded-lg"
-                                        title="Lecteur PDF">
-                                </iframe>
-                            </div>
-                        </div>
+                </li>
+                <li aria-current="page">
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+                        <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">{{ Str::limit($book->title, 30) }}</span>
                     </div>
+                </li>
+            </ol>
+        </nav>
+    </div>
 
-                    <!-- Main Content Grid: Cover, Description, and Information side by side -->
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                        <!-- Book Cover -->
-                        <div class="lg:col-span-3 order-2 lg:order-1">
-                            <div class="sticky top-6">
-                                @if($book->cover_image)
-                                    <img src="{{ asset('storage/' . $book->cover_image) }}"
-                                         alt="Couverture de {{ $book->title }}"
-                                         class="w-full max-w-64 mx-auto lg:max-w-full rounded-xl shadow-lg">
-                                @else
-                                    <div class="w-full max-w-64 mx-auto lg:max-w-full aspect-[3/4] bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-xl shadow-lg flex items-center justify-center">
-                                        <div class="text-center text-white p-4">
-                                            <i class="fas fa-book text-3xl mb-3"></i>
-                                            <h3 class="text-sm font-semibold mb-1">{{ Str::limit($book->title, 20) }}</h3>
-                                            <p class="text-xs opacity-90">{{ Str::limit($book->author_name, 15) }}</p>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Description and Information side by side -->
-                        <div class="lg:col-span-9 order-1 lg:order-2">
-                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                <!-- Description -->
-                                <div class="lg:col-span-1">
-                                    @if($book->description)
-                                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 h-full">
-                                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-                                                <i class="fas fa-align-left text-blue-500 mr-3"></i>
-                                                Description
-                                            </h2>
-                                            <div class="prose prose-gray dark:prose-invert max-w-none">
-                                                <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-base">{{ $book->description }}</p>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-
-                                <!-- Book Information -->
-                                <div class="lg:col-span-1">
-                                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 h-full">
-                                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                                            <i class="fas fa-info-circle text-green-500 mr-3"></i>
-                                            Informations
-                                        </h3>
-
-                                        <div class="space-y-5">
-                                            <div class="flex justify-between items-start py-2 border-b border-gray-100 dark:border-gray-700">
-                                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Statut</span>
-                                                <span class="font-semibold">
-                                                    @if($book->is_approved)
-                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                                            <i class="fas fa-check-circle mr-1"></i>
-                                                            Approuvé
-                                                        </span>
-                                                    @else
-                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                                                            <i class="fas fa-clock mr-1"></i>
-                                                            En attente
-                                                        </span>
-                                                    @endif
-                                                </span>
-                                            </div>
-
-                                            <div class="flex justify-between items-start py-2 border-b border-gray-100 dark:border-gray-700">
-                                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Téléchargé par</span>
-                                                <span class="font-semibold text-gray-900 dark:text-white">{{ $book->uploader->name }}</span>
-                                            </div>
-
-                                            @if($book->pages)
-                                                <div class="flex justify-between items-start py-2 border-b border-gray-100 dark:border-gray-700">
-                                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Nombre de pages</span>
-                                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $book->pages }} pages</span>
-                                                </div>
-                                            @endif
-
-                                            @if($book->category)
-                                                <div class="flex justify-between items-start py-2 border-b border-gray-100 dark:border-gray-700">
-                                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Catégorie</span>
-                                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $book->category }}</span>
-                                                </div>
-                                            @endif
-
-                                            @if($book->language)
-                                                <div class="flex justify-between items-start py-2 border-b border-gray-100 dark:border-gray-700">
-                                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Langue</span>
-                                                    <span class="font-semibold text-gray-900 dark:text-white">
-                                                        @switch($book->language)
-                                                            @case('fr') Français @break
-                                                            @case('en') English @break
-                                                            @case('ar') العربية @break
-                                                            @default {{ $book->language }}
-                                                        @endswitch
-                                                    </span>
-                                                </div>
-                                            @endif
-
-                                            @if($book->publication_year)
-                                                <div class="flex justify-between items-start py-2 border-b border-gray-100 dark:border-gray-700">
-                                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Année de publication</span>
-                                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $book->publication_year }}</span>
-                                                </div>
-                                            @endif
-
-                                            @if($book->isbn)
-                                                <div class="flex justify-between items-start py-2 border-b border-gray-100 dark:border-gray-700">
-                                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">ISBN</span>
-                                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $book->isbn }}</span>
-                                                </div>
-                                            @endif
-
-                                            @if($book->publisher)
-                                                <div class="flex justify-between items-start py-2">
-                                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Éditeur</span>
-                                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $book->publisher }}</span>
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        @if(auth()->check() && auth()->user()->role === 'admin' && !$book->is_approved)
-                                            <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
-                                                <button type="button"
-                                                        onclick="showApprovalModal()"
-                                                        class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-[1.02]">
-                                                    <i class="fas fa-check mr-2"></i>
-                                                    Approuver ce livre
-                                                </button>
-                                            </div>
-                                        @endif
-
-                                        @if(auth()->check() && (auth()->id() === $book->uploaded_by || auth()->user()->role === 'admin'))
-                                            <div class="mt-4">
-                                                <form action="{{ auth()->check() && auth()->user()->role === 'admin' ? admin_route('books.delete', $book) : route('author.books.delete', $book) }}" method="POST"
-                                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                            class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                                        <i class="fas fa-trash mr-2"></i>
-                                                        Supprimer ce livre
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Header avec statut et actions -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">{{ $book->title }}</h1>
+                <div class="flex flex-wrap items-center gap-3">
+                    <!-- Statut -->
+                    @php
+                        $statusColors = [
+                            'approved' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                            'pending' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+                            'rejected' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                            'suspended' => 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
+                            'under_review' => 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                        ];
+                        $statusIcons = [
+                            'approved' => 'fa-check-circle',
+                            'pending' => 'fa-clock',
+                            'rejected' => 'fa-times-circle',
+                            'suspended' => 'fa-pause-circle',
+                            'under_review' => 'fa-search'
+                        ];
+                        $statusLabels = [
+                            'approved' => 'Approuvé',
+                            'pending' => 'En attente',
+                            'rejected' => 'Rejeté',
+                            'suspended' => 'Suspendu',
+                            'under_review' => 'En révision'
+                        ];
+                    @endphp
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $statusColors[$book->status ?? 'pending'] }}">
+                        <i class="fas {{ $statusIcons[$book->status ?? 'pending'] }} mr-2"></i>
+                        {{ $statusLabels[$book->status ?? 'pending'] }}
+                    </span>
+                    
+                    <!-- Niveau éducatif -->
+                    @if($book->level)
+                        @php
+                            $levelColors = [
+                                'primaire' => 'bg-blue-100 text-blue-800',
+                                'college' => 'bg-indigo-100 text-indigo-800',
+                                'lycee' => 'bg-purple-100 text-purple-800',
+                                'superieur' => 'bg-pink-100 text-pink-800',
+                                'professionnel' => 'bg-orange-100 text-orange-800'
+                            ];
+                            $levelIcons = [
+                                'primaire' => 'fa-child',
+                                'college' => 'fa-user-graduate',
+                                'lycee' => 'fa-graduation-cap',
+                                'superieur' => 'fa-university',
+                                'professionnel' => 'fa-briefcase'
+                            ];
+                        @endphp
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $levelColors[$book->level] ?? 'bg-gray-100 text-gray-800' }}">
+                            <i class="fas {{ $levelIcons[$book->level] ?? 'fa-book' }} mr-2"></i>
+                            {{ ucfirst($book->level) }}
+                        </span>
+                    @endif
+                    
+                    <!-- Langue -->
+                    @if($book->language)
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                            <i class="fas fa-language mr-2"></i>
+                            @switch($book->language)
+                                @case('fr') Français @break
+                                @case('en') Anglais @break
+                                @case('ar') Arabe @break
+                                @case('es') Espagnol @break
+                                @default {{ strtoupper($book->language) }}
+                            @endswitch
+                        </span>
+                    @endif
+                    
+                    <!-- Featured -->
+                    @if($book->is_featured ?? false)
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                            <i class="fas fa-star mr-2"></i>
+                            En vedette
+                        </span>
+                    @endif
+                </div>
+            </div>
+            
+            <!-- Actions rapides -->
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ admin_route('books.edit', $book) }}" 
+                   class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors inline-flex items-center">
+                    <i class="fas fa-edit mr-2"></i>
+                    Modifier
+                </a>
+                
+                @if($pdfPath)
+                    <button onclick="togglePdfReader()"
+                            id="toggleReaderBtn"
+                            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors inline-flex items-center">
+                        <i class="fas fa-book-open mr-2"></i>
+                        <span id="readerBtnText">Lire ici</span>
+                    </button>
+                    
+                    <a href="{{ asset('storage/' . $pdfPath) }}" 
+                       target="_blank"
+                       class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition-colors inline-flex items-center">
+                        <i class="fas fa-external-link-alt mr-2"></i>
+                        Ouvrir PDF
+                    </a>
+                @else
+                    <button disabled
+                            class="px-4 py-2 bg-gray-400 cursor-not-allowed text-white rounded-lg text-sm font-medium inline-flex items-center opacity-50">
+                        <i class="fas fa-eye-slash mr-2"></i>
+                        PDF non disponible
+                    </button>
+                @endif
+                
+                <button onclick="openDeleteModal()" 
+                        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors inline-flex items-center">
+                    <i class="fas fa-trash mr-2"></i>
+                    Supprimer
+                </button>
+            </div>
         </div>
     </div>
-    <!-- Modale d'approbation moderne -->
-    @if(auth()->user()->role === 'admin' && !$book->is_approved)
-    <div id="approvalModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm overflow-y-auto h-full w-full z-50 hidden transition-all duration-300">
-        <div class="relative top-20 mx-auto p-0 border-0 w-full max-w-md">
-            <!-- Contenu de la modale -->
-            <div class="relative bg-white rounded-2xl shadow-2xl transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
-                <!-- En-tête avec icône -->
-                <div class="flex flex-col items-center pt-8 pb-6 px-6">
-                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 text-center mb-2">
-                        Approuver ce livre ?
+    
+    <!-- Lecteur PDF intégré -->
+    @if($pdfPath)
+        <div id="pdfReaderContainer" style="display: none;" class="mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        <i class="fas fa-book-reader mr-2 text-green-600"></i>
+                        Lecteur PDF intégré
                     </h3>
-                    <p class="text-sm text-gray-600 text-center leading-relaxed">
-                        Cette action rendra le livre visible à tous les utilisateurs de la bibliothèque.
-                    </p>
+                    <button onclick="closePdfReader()" 
+                            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
                 </div>
+                <iframe src="{{ asset('storage/' . $pdfPath) }}"
+                        class="w-full h-[10000px] border-2 border-gray-300 dark:border-gray-600 rounded-lg"
+                        title="Lecteur PDF">
+                </iframe>
+            </div>
+        </div>
+    @endif
 
-                <!-- Boutons d'action -->
-                <div class="flex gap-3 px-6 pb-6">
-                    <button type="button"
-                            onclick="hideApprovalModal()"
-                            class="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300">
+    <!-- Contenu principal -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Colonne gauche - Couverture et infos de base -->
+        <div class="lg:col-span-1">
+            <!-- Couverture -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+                @if($book->cover_image)
+                    <img src="{{ asset('storage/' . $book->cover_image) }}"
+                         alt="Couverture de {{ $book->title }}"
+                         class="w-full rounded-lg shadow-lg mb-4">
+                @else
+                    <div class="w-full aspect-[3/4] bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-lg shadow-lg flex items-center justify-center mb-4">
+                        <div class="text-center text-white p-4">
+                            <i class="fas fa-book text-6xl mb-3 opacity-50"></i>
+                            <p class="text-sm font-medium">Pas de couverture</p>
+                        </div>
+                    </div>
+                @endif
+                
+                <!-- Boutons d'action pour le statut -->
+                <div class="space-y-2">
+                    @if($book->status !== 'approved')
+                        <form action="{{ admin_route('books.approve', $book) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors">
+                                <i class="fas fa-check mr-2"></i>
+                                Approuver
+                            </button>
+                        </form>
+                    @endif
+                    
+                    @if($book->status !== 'rejected')
+                        <form action="{{ admin_route('books.reject', $book) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors">
+                                <i class="fas fa-times mr-2"></i>
+                                Rejeter
+                            </button>
+                        </form>
+                    @endif
+                    
+                    @if($book->status !== 'suspended')
+                        <form action="{{ admin_route('books.suspend', $book) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition-colors">
+                                <i class="fas fa-pause mr-2"></i>
+                                Suspendre
+                            </button>
+                        </form>
+                    @endif
+                    
+                    @if($book->status !== 'under_review')
+                        <form action="{{ admin_route('books.review', $book) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors">
+                                <i class="fas fa-search mr-2"></i>
+                                Mettre en révision
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+            
+            <!-- Statistiques -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                    <i class="fas fa-chart-bar mr-2 text-blue-600"></i>
+                    Statistiques
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600 dark:text-gray-400">Téléchargements</span>
+                        <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ $book->downloads ?? 0 }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600 dark:text-gray-400">Vues</span>
+                        <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ $book->views ?? 0 }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600 dark:text-gray-400">Note moyenne</span>
+                        <div class="flex items-center">
+                            @for($i = 1; $i <= 5; $i++)
+                                <i class="fas fa-star text-{{ ($book->average_rating ?? 0) >= $i ? 'yellow' : 'gray' }}-400"></i>
+                            @endfor
+                            <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">({{ $book->ratings_count ?? 0 }})</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Colonne centrale et droite - Informations détaillées -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Informations générales -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                    <i class="fas fa-info-circle mr-2 text-blue-600"></i>
+                    Informations générales
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Auteur</label>
+                        <p class="text-gray-900 dark:text-white font-medium">{{ $book->author_name }}</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Catégorie</label>
+                        <p class="text-gray-900 dark:text-white font-medium">{{ $book->category ?? 'Non catégorisé' }}</p>
+                    </div>
+                    
+                    @if($book->isbn)
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">ISBN</label>
+                        <p class="text-gray-900 dark:text-white font-medium font-mono">{{ $book->isbn }}</p>
+                    </div>
+                    @endif
+                    
+                    @if($book->publisher)
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Éditeur</label>
+                        <p class="text-gray-900 dark:text-white font-medium">{{ $book->publisher }}</p>
+                    </div>
+                    @endif
+                    
+                    @if($book->publication_year)
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Année de publication</label>
+                        <p class="text-gray-900 dark:text-white font-medium">{{ $book->publication_year }}</p>
+                    </div>
+                    @endif
+                    
+                    @if($book->pages)
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Nombre de pages</label>
+                        <p class="text-gray-900 dark:text-white font-medium">{{ $book->pages }} pages</p>
+                    </div>
+                    @endif
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Téléchargé par</label>
+                        <a href="{{ admin_route('users.show', $book->uploader) }}" class="text-blue-600 hover:text-blue-700 font-medium">
+                            {{ $book->uploader->name }}
+                        </a>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Date d'ajout</label>
+                        <p class="text-gray-900 dark:text-white font-medium">{{ $book->created_at->format('d/m/Y à H:i') }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Description -->
+            @if($book->description)
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                    <i class="fas fa-align-left mr-2 text-blue-600"></i>
+                    Description
+                </h3>
+                <div class="prose prose-gray dark:prose-invert max-w-none">
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ $book->description }}</p>
+                </div>
+            </div>
+            @endif
+            
+            <!-- Métadonnées techniques -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                    <i class="fas fa-cog mr-2 text-blue-600"></i>
+                    Informations techniques
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">ID du livre</label>
+                        <p class="text-gray-900 dark:text-white font-mono">#{{ $book->id }}</p>
+                    </div>
+                    
+                    @if($book->pdf_path)
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Fichier PDF</label>
+                        <p class="text-gray-900 dark:text-white font-mono text-sm truncate">{{ basename($book->pdf_path) }}</p>
+                    </div>
+                    @endif
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Dernière modification</label>
+                        <p class="text-gray-900 dark:text-white">{{ $book->updated_at->format('d/m/Y à H:i') }}</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Taille du fichier</label>
+                        <p class="text-gray-900 dark:text-white">
+                            @if($book->pdf_path && Storage::disk('public')->exists($book->pdf_path))
+                                {{ number_format(Storage::disk('public')->size($book->pdf_path) / 1048576, 2) }} MB
+                            @else
+                                N/A
+                            @endif
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Historique des statuts -->
+            @if($book->status_history ?? false)
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                    <i class="fas fa-history mr-2 text-blue-600"></i>
+                    Historique des statuts
+                </h3>
+                <div class="space-y-3">
+                    @foreach($book->status_history as $history)
+                    <div class="flex items-start gap-3">
+                        <div class="flex-shrink-0 w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                            <i class="fas fa-circle text-xs text-gray-400"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">
+                                Changé en <span class="font-semibold">{{ $history->status }}</span>
+                            </p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                Par {{ $history->user->name }} le {{ $history->created_at->format('d/m/Y à H:i') }}
+                            </p>
+                            @if($history->reason)
+                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ $history->reason }}</p>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Modal de suppression -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4">
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Confirmer la suppression</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Cette action est irréversible</p>
+                    </div>
+                </div>
+                
+                <p class="text-gray-700 dark:text-gray-300 mb-6">
+                    Êtes-vous sûr de vouloir supprimer le livre "<strong>{{ $book->title }}</strong>" ? 
+                    Cette action supprimera également le fichier PDF et la couverture associés.
+                </p>
+                
+                <div class="flex justify-end space-x-3">
+                    <button onclick="closeDeleteModal()" 
+                            class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors">
                         Annuler
                     </button>
-                    <button type="button"
-                            onclick="confirmApproval()"
-                            class="flex-1 px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg hover:shadow-xl transform hover:scale-[1.02]">
-                        OK
-                    </button>
+                    <form action="{{ admin_route('books.delete', $book) }}" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" 
+                                class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors">
+                            <i class="fas fa-trash mr-2"></i>
+                            Supprimer définitivement
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Formulaire caché pour l'approbation -->
-    <form id="approvalForm" action="{{ admin_route('books.approve', $book) }}" method="POST" style="display: none;">
-        @csrf
-        @method('PATCH')
-    </form>
-    @endif
-
     <script>
-        function showApprovalModal() {
-            const modal = document.getElementById('approvalModal');
-            const content = document.getElementById('modalContent');
-
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-
-            // Animation d'entrée
-            setTimeout(() => {
-                content.classList.remove('scale-95', 'opacity-0');
-                content.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function hideApprovalModal() {
-            const modal = document.getElementById('approvalModal');
-            const content = document.getElementById('modalContent');
-
-            content.classList.remove('scale-100', 'opacity-100');
-            content.classList.add('scale-95', 'opacity-0');
-
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            }, 300);
-        }
-
-        function confirmApproval() {
-            document.getElementById('approvalForm').submit();
-        }
-
-        // Fermer la modale en cliquant à l'extérieur
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('approvalModal');
-            if (modal) {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        hideApprovalModal();
-                    }
-                });
-            }
-
-            // Fermer avec la touche Échap
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                    hideApprovalModal();
+        // Fonctions pour le lecteur PDF
+        function togglePdfReader() {
+            const readerContainer = document.getElementById('pdfReaderContainer');
+            const btnText = document.getElementById('readerBtnText');
+            
+            if (readerContainer) {
+                if (readerContainer.style.display === 'none' || readerContainer.style.display === '') {
+                    readerContainer.style.display = 'block';
+                    if (btnText) btnText.textContent = 'Fermer lecteur';
+                } else {
+                    readerContainer.style.display = 'none';
+                    if (btnText) btnText.textContent = 'Lire ici';
                 }
-            });
+            }
+        }
+        
+        function closePdfReader() {
+            const readerContainer = document.getElementById('pdfReaderContainer');
+            const btnText = document.getElementById('readerBtnText');
+            
+            if (readerContainer) {
+                readerContainer.style.display = 'none';
+                if (btnText) btnText.textContent = 'Lire ici';
+            }
+        }
+        
+        // Fonctions pour le modal de suppression
+        function openDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Fermer en cliquant à l'extérieur
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
         });
     </script>
 @endsection
+

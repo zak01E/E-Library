@@ -72,7 +72,8 @@
                      currentPath.includes('/admin/themes') ||
                      currentPath.includes('/admin/emails') ||
                      currentPath.includes('/admin/notifications') ||
-                     currentPath.includes('/admin/subscriptions')) {
+                     currentPath.includes('/admin/subscriptions') ||
+                     currentPath.includes('/admin/homepage')) {
                 this.activeMenu = 'system';
             }
         }
@@ -225,7 +226,7 @@
 
                     <div class="space-y-1">
                         <button @click="toggleSubmenu('system')"
-                                :class="activeMenu === 'system' ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'"
+                                :class="activeMenu === 'system' || {{ request()->is('admin/homepage*') || request()->is('admin/settings*') || request()->is('admin/backup*') || request()->is('admin/logs*') || request()->is('admin/system-settings*') ? 'true' : 'false' }} ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'"
                                 class="flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors">
                             <div class="flex items-center">
                                 <i class="fas fa-cogs w-5 h-5"></i>
@@ -239,8 +240,8 @@
                             <a href="{{ admin_route('settings') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->is('admin/settings*') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <i class="fas fa-sliders-h w-4 h-4 mr-2"></i>Paramètres généraux
                             </a>
-                            <a href="{{ admin_route('homepage-content.index') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->is('admin/homepage-content*') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-                                <i class="fas fa-home w-4 h-4 mr-2"></i>Contenu Page d'Accueil
+                            <a href="{{ admin_route('homepage-content.index') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->is('admin/homepage*') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                <i class="fas fa-home w-4 h-4 mr-2"></i>Contenu page d'accueil
                             </a>
                             <a href="{{ admin_route('backup') }}" class="block px-4 py-2 text-sm rounded-md transition-colors {{ request()->is('admin/backup') ? 'bg-emerald-100 dark:bg-indigo-900 text-emerald-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 <i class="fas fa-database w-4 h-4 mr-2"></i>Sauvegarde
@@ -497,13 +498,13 @@
             <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl transform transition-all duration-300 scale-95 opacity-0" id="logoutModalContent">
                 <!-- En-tête avec icône -->
                 <div class="flex flex-col items-center pt-6 pb-4 px-6">
-                    <div class="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center mb-3 shadow-lg">
+                    <div class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mb-3 shadow-lg ring-4 ring-emerald-100">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
                     </div>
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white text-center mb-1">
-                        🚪 Déconnexion
+                        Déconnexion
                     </h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400 text-center">
                         Êtes-vous sûr de vouloir vous déconnecter ?
@@ -512,11 +513,17 @@
 
                 <!-- Informations utilisateur -->
                 <div class="px-6 pb-4">
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 mb-4 border-l-4 border-blue-500">
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-5 h-5 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
+                    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 dark:bg-gray-700 rounded-lg p-3 mb-4 border-l-4 border-emerald-500">
+                        <div class="flex items-center space-x-3">
+                            @if(Auth::user()->profile_photo)
+                                <img src="{{ Auth::user()->profile_photo_url }}" 
+                                     alt="{{ Auth::user()->name }}" 
+                                     class="w-10 h-10 rounded-full object-cover ring-2 ring-emerald-400">
+                            @else
+                                <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center text-white font-bold">
+                                    {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
+                                </div>
+                            @endif
                             <div>
                                 <h4 class="font-semibold text-gray-900 dark:text-white text-sm">{{ Auth::user()->name ?? 'Admin' }}</h4>
                                 <p class="text-xs text-gray-600 dark:text-gray-400">{{ ucfirst(Auth::user()->role ?? 'admin') }}</p>
@@ -528,13 +535,13 @@
                     <div class="flex gap-2">
                         <button type="button"
                                 onclick="hideLogoutModal()"
-                                class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm">
-                            ✕ Annuler
+                                class="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm">
+                            <i class="fas fa-times mr-1"></i> Annuler
                         </button>
                         <button type="button"
                                 onclick="confirmLogout()"
-                                class="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg hover:shadow-xl text-sm">
-                            🚪 Se déconnecter
+                                class="flex-1 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-lg hover:shadow-xl text-sm">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Se déconnecter
                         </button>
                     </div>
                 </div>

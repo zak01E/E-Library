@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class AdminController extends Controller
@@ -56,10 +57,69 @@ class AdminController extends Controller
         ));
     }
 
-    public function users()
+    public function users(Request $request)
     {
-        $users = User::paginate(20);
-        return view('admin.users', compact('users'));
+        $query = User::query();
+        
+        // Filtre par recherche (nom ou email)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+        
+        // Filtre par rôle
+        if ($request->filled('role') && $request->role !== 'all') {
+            $query->where('role', $request->role);
+        }
+        
+        // Filtre par statut de vérification email
+        if ($request->filled('verified')) {
+            if ($request->verified === 'yes') {
+                $query->whereNotNull('email_verified_at');
+            } elseif ($request->verified === 'no') {
+                $query->whereNull('email_verified_at');
+            }
+        }
+        
+        // Filtre par période d'inscription
+        if ($request->filled('period')) {
+            switch($request->period) {
+                case 'today':
+                    $query->whereDate('created_at', today());
+                    break;
+                case 'week':
+                    $query->where('created_at', '>=', now()->subWeek());
+                    break;
+                case 'month':
+                    $query->where('created_at', '>=', now()->subMonth());
+                    break;
+                case 'year':
+                    $query->where('created_at', '>=', now()->subYear());
+                    break;
+            }
+        }
+        
+        // Tri
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+        $query->orderBy($sortBy, $sortOrder);
+        
+        $users = $query->paginate(20)->withQueryString();
+        
+        // Statistiques pour les filtres
+        $stats = [
+            'total' => User::count(),
+            'admins' => User::where('role', 'admin')->count(),
+            'authors' => User::where('role', 'author')->count(),
+            'users' => User::where('role', 'user')->count(),
+            'verified' => User::whereNotNull('email_verified_at')->count(),
+            'unverified' => User::whereNull('email_verified_at')->count(),
+        ];
+        
+        return view('admin.users', compact('users', 'stats'));
     }
 
     public function usersActive()
@@ -77,6 +137,26 @@ class AdminController extends Controller
         $user->update(['role' => $request->role]);
 
         return redirect()->back()->with('success', 'Rôle utilisateur mis à jour avec succès.');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|in:user,author,admin'
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'email_verified_at' => $request->has('email_verified') ? now() : null,
+        ]);
+
+        return redirect()->back()->with('success', 'Utilisateur créé avec succès: ' . $user->name);
     }
 
     public function showUser(User $user)
@@ -114,28 +194,86 @@ class AdminController extends Controller
     public function books(Request $request)
     {
         $query = Book::with('uploader');
-
-        // Filtre par recherche (titre, auteur, catégorie)
+        
+        // Filtre par recherche (titre, auteur, catégorie, ISBN, éditeur)
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
                   ->orWhere('author_name', 'like', "%{$search}%")
-                  ->orWhere('category', 'like', "%{$search}%");
+                  ->orWhere('category', 'like', "%{$search}%")
+                  ->orWhere('isbn', 'like', "%{$search}%")
+                  ->orWhere('publisher', 'like', "%{$search}%");
             });
         }
-
+        
         // Filtre par statut
         if ($request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
-
-        $books = $query->orderBy('created_at', 'desc')->paginate(20);
-
-        // Conserver les paramètres de recherche dans la pagination
-        $books->appends($request->query());
-
-        return view('admin.books', compact('books'));
+        
+        // Filtre par niveau
+        if ($request->filled('level') && $request->level !== 'all') {
+            if ($request->level === 'null') {
+                $query->whereNull('level');
+            } else {
+                $query->where('level', $request->level);
+            }
+        }
+        
+        // Filtre par catégorie
+        if ($request->filled('category') && $request->category !== 'all') {
+            $query->where('category', $request->category);
+        }
+        
+        // Filtre par langue
+        if ($request->filled('language') && $request->language !== 'all') {
+            $query->where('language', $request->language);
+        }
+        
+        // Filtre par année de publication
+        if ($request->filled('year_from')) {
+            $query->where('publication_year', '>=', $request->year_from);
+        }
+        if ($request->filled('year_to')) {
+            $query->where('publication_year', '<=', $request->year_to);
+        }
+        
+        // Tri
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+        $query->orderBy($sortBy, $sortOrder);
+        
+        $books = $query->paginate(20)->withQueryString();
+        
+        // Obtenir les options de filtre
+        $categories = Book::select('category')
+            ->distinct()
+            ->whereNotNull('category')
+            ->orderBy('category')
+            ->pluck('category');
+            
+        $languages = Book::select('language')
+            ->distinct()
+            ->whereNotNull('language')
+            ->orderBy('language')
+            ->pluck('language');
+            
+        $levels = ['primaire', 'college', 'lycee', 'superieur', 'professionnel'];
+        
+        $statuses = ['approved', 'pending', 'rejected'];
+        
+        // Statistiques
+        $stats = [
+            'total' => Book::count(),
+            'approved' => Book::where('status', 'approved')->count(),
+            'pending' => Book::where('status', 'pending')->count(),
+            'rejected' => Book::where('status', 'rejected')->count(),
+            'with_level' => Book::whereNotNull('level')->count(),
+            'without_level' => Book::whereNull('level')->count(),
+        ];
+        
+        return view('admin.books', compact('books', 'categories', 'languages', 'levels', 'statuses', 'stats'));
     }
 
     public function showBook(Book $book)
@@ -196,11 +334,102 @@ class AdminController extends Controller
         ->orderBy('books_count', 'desc')
         ->get();
 
+        // Statistiques par niveau
+        $levelStats = DB::table('books')
+            ->select('level', DB::raw('COUNT(*) as count'))
+            ->whereNotNull('level')
+            ->groupBy('level')
+            ->orderBy('count', 'desc')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->level => $item->count];
+            });
+        
+        // Ajouter le compte des livres sans niveau
+        $booksWithoutLevel = Book::whereNull('level')->count();
+        
+        // Statistiques par langue
+        $languageStats = DB::table('books')
+            ->select('language', DB::raw('COUNT(*) as count'))
+            ->whereNotNull('language')
+            ->groupBy('language')
+            ->orderBy('count', 'desc')
+            ->get();
+        
+        // Mapper les codes de langue aux noms
+        $languageNames = [
+            'fr' => 'Français',
+            'en' => 'Anglais',
+            'ar' => 'Arabe',
+            'es' => 'Espagnol',
+            'de' => 'Allemand',
+            'it' => 'Italien',
+            'pt' => 'Portugais',
+            'nl' => 'Néerlandais',
+            'ru' => 'Russe',
+            'zh' => 'Chinois',
+            'ja' => 'Japonais',
+            'ko' => 'Coréen',
+            'hi' => 'Hindi'
+        ];
+        
+        // Statistiques par statut
+        $statusStats = DB::table('books')
+            ->select('status', DB::raw('COUNT(*) as count'))
+            ->groupBy('status')
+            ->orderBy('count', 'desc')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->status => $item->count];
+            });
+        
+        // Top catégories par niveau
+        $categoriesByLevel = [];
+        $levels = ['primaire', 'college', 'lycee', 'superieur', 'professionnel'];
+        foreach ($levels as $level) {
+            $categoriesByLevel[$level] = DB::table('books')
+                ->select('category', DB::raw('COUNT(*) as count'))
+                ->where('level', $level)
+                ->whereNotNull('category')
+                ->groupBy('category')
+                ->orderBy('count', 'desc')
+                ->limit(5)
+                ->get();
+        }
+        
+        // Statistiques générales
         $totalBooks = Book::count();
         $totalCategories = $categories->count();
         $averagePerCategory = $totalCategories > 0 ? round($totalBooks / $totalCategories) : 0;
+        $totalWithLevel = Book::whereNotNull('level')->count();
+        $percentWithLevel = $totalBooks > 0 ? round(($totalWithLevel / $totalBooks) * 100) : 0;
+        
+        // Croissance mensuelle (derniers 6 mois)
+        $monthlyGrowth = DB::table('books')
+            ->select(
+                DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('created_at', '>=', now()->subMonths(6))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
 
-        return view('admin.categories', compact('categories', 'totalBooks', 'totalCategories', 'averagePerCategory'));
+        return view('admin.categories', compact(
+            'categories', 
+            'levelStats',
+            'booksWithoutLevel',
+            'languageStats',
+            'languageNames',
+            'statusStats',
+            'categoriesByLevel',
+            'totalBooks', 
+            'totalCategories', 
+            'averagePerCategory',
+            'totalWithLevel',
+            'percentWithLevel',
+            'monthlyGrowth'
+        ));
     }
 
     public function storeCategory(Request $request)

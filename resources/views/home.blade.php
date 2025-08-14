@@ -107,7 +107,7 @@
                                 </div>
                                 <a href="{{ route('books.public.index') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition group">
                                     <i class="fas fa-book-open mr-2 w-4 text-emerald-500"></i>Bibliothèque numérique
-                                    <span class="text-xs text-gray-500 block ml-6">50,000+ livres</span>
+                                    <span class="text-xs text-gray-500 block ml-6">{{ number_format($stats['total_books'] ?? 0) }}+ livres</span>
                                 </a>
                                 <a href="{{ route('news.index') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition">
                                     <i class="fas fa-newspaper mr-2 w-4 text-orange-500"></i>Actualités éducatives
@@ -120,7 +120,7 @@
                                 <div class="border-t border-gray-100"></div>
                                 <a href="{{ route('mentorship.index') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition rounded-b-xl">
                                     <i class="fas fa-user-graduate mr-2 w-4 text-amber-500"></i>Programme mentorat
-                                    <span class="text-xs text-gray-500 block ml-6">250+ mentors</span>
+                                    <span class="text-xs text-gray-500 block ml-6">{{ $stats['total_authors'] ?? 0 }}+ mentors</span>
                                 </a>
                             </div>
                         </div>
@@ -156,7 +156,7 @@
                         </a>
 
                         <!-- Auteurs -->
-                        <a href="{{ route('author.login') }}" class="text-gray-700 hover:text-amber-600 px-4 py-2 font-medium transition flex items-center group">
+                        <a href="{{ route('authors.index') }}" class="text-gray-700 hover:text-amber-600 px-4 py-2 font-medium transition flex items-center group">
                             <i class="fas fa-pen-fancy mr-2 text-sm text-amber-500"></i>
                             <span class="group-hover:text-amber-600">Auteurs</span>
                         </a>
@@ -185,9 +185,9 @@
                             <!-- User Menu -->
                             <div class="relative group">
                                 <button class="flex items-center space-x-2 text-gray-700 hover:text-emerald-600 transition">
-                                    <div class="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center shadow-md">
-                                        <i class="fas fa-user text-sm text-white"></i>
-                                    </div>
+                                    <img src="{{ Auth::user()->profile_photo_url }}" 
+                                         alt="{{ Auth::user()->name }}" 
+                                         class="w-9 h-9 rounded-full object-cover ring-2 ring-emerald-400 shadow-md hover:ring-emerald-500 transition-all">
                                     <span class="font-medium">{{ Auth::user()->name }}</span>
                                     <i class="fas fa-chevron-down text-xs"></i>
                                 </button>
@@ -211,13 +211,50 @@
                                 </div>
                             </div>
                         @else
-                            <a href="{{ route('login') }}" class="text-gray-700 hover:text-emerald-600 px-4 py-2 font-medium transition">
-                                Connexion
-                            </a>
-                            <a href="{{ route('register') }}" class="relative group overflow-hidden bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-5 py-2 rounded-full hover:shadow-lg transition font-medium">
-                                <span class="relative z-10">Inscription</span>
-                                <div class="absolute inset-0 bg-gradient-to-r from-orange-500 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            </a>
+                            <!-- Dropdown Connexion avec choix -->
+                            <div class="relative group">
+                                <button class="text-gray-700 hover:text-emerald-600 px-4 py-2 font-medium transition flex items-center">
+                                    Connexion
+                                    <i class="fas fa-chevron-down ml-1 text-xs text-gray-400"></i>
+                                </button>
+                                <div class="absolute top-full right-0 mt-1 w-64 bg-white rounded-xl shadow-2xl border border-emerald-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-t-xl px-4 py-2 border-b border-emerald-100">
+                                        <span class="text-xs font-semibold text-emerald-700">CHOISIR VOTRE ESPACE</span>
+                                    </div>
+                                    <a href="{{ route('login') }}" 
+                                       class="block px-4 py-3 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition group">
+                                        <i class="fas fa-user mr-2 w-4 text-emerald-500"></i>Espace Lecteur
+                                        <span class="text-xs text-gray-500 block ml-6">Accéder à votre bibliothèque</span>
+                                    </a>
+                                    <a href="{{ route('author.login') }}" 
+                                       class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition rounded-b-xl">
+                                        <i class="fas fa-pen-fancy mr-2 w-4 text-amber-500"></i>Espace Auteur
+                                        <span class="text-xs text-gray-500 block ml-6">Publier et gérer vos œuvres</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Dropdown Inscription avec choix -->
+                            <div class="relative group">
+                                <button class="relative overflow-hidden bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-5 py-2 rounded-full hover:shadow-lg transition font-medium flex items-center">
+                                    <span class="relative z-10">Inscription</span>
+                                    <i class="fas fa-chevron-down ml-1 text-xs text-white/80 relative z-10"></i>
+                                </button>
+                                <div class="absolute top-full right-0 mt-1 w-64 bg-white rounded-xl shadow-2xl border border-emerald-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-t-xl px-4 py-2 border-b border-emerald-100">
+                                        <span class="text-xs font-semibold text-emerald-700">CRÉER VOTRE COMPTE</span>
+                                    </div>
+                                    <a href="{{ route('register') }}" 
+                                       class="block px-4 py-3 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition group">
+                                        <i class="fas fa-user-plus mr-2 w-4 text-emerald-500"></i>Compte Lecteur
+                                        <span class="text-xs text-gray-500 block ml-6">Accédez à des milliers de livres</span>
+                                    </a>
+                                    <a href="{{ route('author.register') }}" 
+                                       class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition rounded-b-xl">
+                                        <i class="fas fa-pen-nib mr-2 w-4 text-amber-500"></i>Compte Auteur
+                                        <span class="text-xs text-gray-500 block ml-6">Publiez et partagez vos œuvres</span>
+                                    </a>
+                                </div>
+                            </div>
                         @endauth
                     </div>
 
@@ -262,11 +299,21 @@
                             </button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="block bg-emerald-600 text-white text-center px-6 py-2 rounded-full mt-3">
-                            Se Connecter
+                        <div class="border-t border-gray-100 my-2"></div>
+                        <p class="text-xs text-gray-500 px-3 py-1">CONNEXION</p>
+                        <a href="{{ route('login') }}" class="block text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-user mr-2"></i>Espace Lecteur
                         </a>
-                        <a href="{{ route('register') }}" class="block bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-center px-6 py-2 rounded-full mt-2 shadow-md">
-                            Créer un compte
+                        <a href="{{ route('author.login') }}" class="block text-gray-700 hover:bg-amber-50 hover:text-amber-600 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-pen-fancy mr-2"></i>Espace Auteur
+                        </a>
+                        <div class="border-t border-gray-100 my-2"></div>
+                        <p class="text-xs text-gray-500 px-3 py-1">INSCRIPTION</p>
+                        <a href="{{ route('register') }}" class="block text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-user-plus mr-2"></i>Compte Lecteur
+                        </a>
+                        <a href="{{ route('author.register') }}" class="block text-gray-700 hover:bg-amber-50 hover:text-amber-600 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-pen-nib mr-2"></i>Compte Auteur
                         </a>
                     @endauth
                 </div>
@@ -317,12 +364,12 @@
                         <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                         </svg>
-                        <span class="ml-1 font-medium text-gray-700">4.8/5</span>
+                        <span class="ml-1 font-medium text-gray-700">{{ $stats['average_rating'] ?? '4.6' }}/5</span>
                     </div>
                     <span class="text-gray-400">•</span>
-                    <span class="font-medium text-gray-700">15,000+ étudiants</span>
+                    <span class="font-medium text-gray-700">{{ number_format($stats['total_users'] ?? 0) }}+ étudiants</span>
                     <span class="text-gray-400">•</span>
-                    <span class="font-medium text-gray-700">50,000+ livres</span>
+                    <span class="font-medium text-gray-700">{{ number_format($stats['total_books'] ?? 0) }}+ livres</span>
                 </div>
 
                 <!-- Barre de Recherche Géante -->
@@ -380,23 +427,29 @@
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 @php
                 $niveaux = [
-                    ['name' => 'Primaire', 'icon' => 'fa-child', 'color' => 'bg-gradient-to-br from-yellow-400 to-amber-500', 'count' => '2,500+'],
-                    ['name' => 'Collège', 'icon' => 'fa-school', 'color' => 'bg-gradient-to-br from-blue-400 to-cyan-500', 'count' => '3,200+'],
-                    ['name' => 'Lycée', 'icon' => 'fa-graduation-cap', 'color' => 'bg-gradient-to-br from-emerald-400 to-teal-500', 'count' => '4,100+'],
-                    ['name' => 'Supérieur', 'icon' => 'fa-university', 'color' => 'bg-gradient-to-br from-slate-500 to-gray-600', 'count' => '5,800+'],
-                    ['name' => 'Examens', 'icon' => 'fa-clipboard-check', 'color' => 'bg-gradient-to-br from-orange-400 to-red-500', 'count' => '1,500+'],
-                    ['name' => 'Professionnel', 'icon' => 'fa-briefcase', 'color' => 'bg-gradient-to-br from-amber-400 to-orange-500', 'count' => '2,000+'],
+                    ['name' => 'Primaire', 'value' => 'primaire', 'icon' => 'fa-child', 'color' => 'bg-gradient-to-br from-yellow-400 to-amber-500', 'count' => number_format($levelStats['primaire'] ?? 0)],
+                    ['name' => 'Collège', 'value' => 'college', 'icon' => 'fa-school', 'color' => 'bg-gradient-to-br from-blue-400 to-cyan-500', 'count' => number_format($levelStats['college'] ?? 0)],
+                    ['name' => 'Lycée', 'value' => 'lycee', 'icon' => 'fa-graduation-cap', 'color' => 'bg-gradient-to-br from-emerald-400 to-teal-500', 'count' => number_format($levelStats['lycee'] ?? 0)],
+                    ['name' => 'Supérieur', 'value' => 'superieur', 'icon' => 'fa-university', 'color' => 'bg-gradient-to-br from-slate-500 to-gray-600', 'count' => number_format($levelStats['superieur'] ?? 0)],
+                    ['name' => 'Professionnel', 'value' => 'professionnel', 'icon' => 'fa-briefcase', 'color' => 'bg-gradient-to-br from-amber-400 to-orange-500', 'count' => number_format($levelStats['professionnel'] ?? 0)],
+                    ['name' => 'Examens', 'value' => 'Examens', 'icon' => 'fa-clipboard-check', 'color' => 'bg-gradient-to-br from-orange-400 to-red-500', 'count' => number_format($levelStats['examens'] ?? 0), 'isCategory' => true],
                 ];
                 @endphp
 
                 @foreach($niveaux as $niveau)
-                <a href="{{ route('books.public.index', ['level' => $niveau['name']]) }}" 
+                <a href="{{ route('books.search', isset($niveau['isCategory']) ? ['category' => $niveau['value']] : ['level' => $niveau['value']]) }}" 
                    class="bg-white rounded-xl p-6 text-center hover:shadow-xl transition-all card-hover group">
                     <div class="{{ $niveau['color'] }} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition shadow-lg">
                         <i class="fas {{ $niveau['icon'] }} text-white text-2xl"></i>
                     </div>
                     <h3 class="font-semibold text-gray-900 mb-1">{{ $niveau['name'] }}</h3>
-                    <p class="text-sm text-gray-500">{{ $niveau['count'] }} livres</p>
+                    <p class="text-sm text-gray-500">
+                        @if($niveau['count'] > 0)
+                            {{ $niveau['count'] }}+ livres
+                        @else
+                            Aucun livre
+                        @endif
+                    </p>
                 </a>
                 @endforeach
             </div>
@@ -417,22 +470,13 @@
 
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
                 @php
-                // Utiliser les vraies données si disponibles
-                $popularBooks = $popularBooks ?? collect([
-                    (object)['id' => 1, 'title' => 'Mathématiques 3ème', 'author' => 'MENET-FP', 'cover' => null, 'rating' => 4.5],
-                    (object)['id' => 2, 'title' => 'Histoire de la Côte d\'Ivoire', 'author' => 'Prof. Kouassi', 'cover' => null, 'rating' => 4.8],
-                    (object)['id' => 3, 'title' => 'Sciences Physiques BAC', 'author' => 'Collection Excellence', 'cover' => null, 'rating' => 4.6],
-                    (object)['id' => 4, 'title' => 'Français Terminale', 'author' => 'MENET-FP', 'cover' => null, 'rating' => 4.7],
-                    (object)['id' => 5, 'title' => 'Anglais BEPC', 'author' => 'Cambridge CI', 'cover' => null, 'rating' => 4.4],
-                    (object)['id' => 6, 'title' => 'Philosophie BAC', 'author' => 'Prof. Diabaté', 'cover' => null, 'rating' => 4.3],
-                    (object)['id' => 7, 'title' => 'Économie Première', 'author' => 'MENET-FP', 'cover' => null, 'rating' => 4.5],
-                    (object)['id' => 8, 'title' => 'Informatique Lycée', 'author' => 'Tech Education', 'cover' => null, 'rating' => 4.9],
-                ])->take(8);
+                // Utiliser les vraies données depuis le contrôleur
+                $popularBooks = isset($featuredBooks['popular']) ? $featuredBooks['popular']->take(8) : collect([]);
                 @endphp
 
-                @foreach($popularBooks as $book)
+                @forelse($popularBooks as $book)
                 <div class="group cursor-pointer">
-                    <a href="{{ route('books.public.show', $book->id ?? $book) }}" class="block">
+                    <a href="{{ route('books.public.show', $book->id) }}" class="block">
                         <div class="bg-gray-200 rounded-lg aspect-[3/4] mb-3 overflow-hidden group-hover:shadow-lg transition">
                             @if(isset($book->cover_image) && $book->cover_image)
                                 <img src="{{ asset('storage/' . $book->cover_image) }}" 
@@ -448,22 +492,31 @@
                         <h3 class="font-semibold text-sm text-gray-900 line-clamp-2 group-hover:text-emerald-600 transition">
                             {{ $book->title }}
                         </h3>
-                        <p class="text-xs text-gray-500 truncate">{{ $book->author ?? 'Auteur' }}</p>
+                        <p class="text-xs text-gray-500 truncate">
+                            {{ $book->author ?? ($book->uploader ? $book->uploader->name : 'Auteur inconnu') }}
+                        </p>
                         <div class="flex items-center mt-1">
                             <div class="flex text-yellow-400">
+                                @php
+                                    $rating = $book->rating ?? ($book->views > 1000 ? 4.5 : 4.0);
+                                @endphp
                                 @for($i = 0; $i < 5; $i++)
-                                    @if($i < floor($book->rating ?? 4))
+                                    @if($i < floor($rating))
                                         <i class="fas fa-star text-xs"></i>
                                     @else
                                         <i class="far fa-star text-xs"></i>
                                     @endif
                                 @endfor
                             </div>
-                            <span class="text-xs text-gray-500 ml-1">{{ $book->rating ?? '4.0' }}</span>
+                            <span class="text-xs text-gray-500 ml-1">{{ number_format($rating, 1) }}</span>
                         </div>
                     </a>
                 </div>
-                @endforeach
+                @empty
+                <div class="col-span-full text-center py-8">
+                    <p class="text-gray-500">Aucun livre populaire cette semaine</p>
+                </div>
+                @endforelse
             </div>
         </div>
     </section>
@@ -480,11 +533,11 @@
                 </p>
             </div>
 
-            <!-- Features Grid - Maintenant avec 6 features -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
+            <!-- Features Grid - 4 features uniformes -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                 <!-- Actualités -->
                 <a href="{{ route('news.index') }}" class="group">
-                    <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 text-center hover:shadow-lg transition-all card-hover">
+                    <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 text-center hover:shadow-lg transition-all card-hover h-full">
                         <div class="bg-orange-500 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
                             <i class="fas fa-newspaper text-white text-xl"></i>
                         </div>
@@ -498,7 +551,7 @@
 
                 <!-- Calendrier -->
                 <a href="{{ route('calendar.index') }}" class="group">
-                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 text-center hover:shadow-lg transition-all card-hover">
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 text-center hover:shadow-lg transition-all card-hover h-full">
                         <div class="bg-blue-500 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
                             <i class="fas fa-calendar-alt text-white text-xl"></i>
                         </div>
@@ -512,13 +565,13 @@
 
                 <!-- Mentorat -->
                 <a href="{{ route('mentorship.index') }}" class="group">
-                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-5 text-center hover:shadow-md transition-all card-hover">
-                        <div class="bg-teal-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition">
-                            <i class="fas fa-hands-helping text-white text-lg"></i>
+                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 text-center hover:shadow-lg transition-all card-hover h-full">
+                        <div class="bg-teal-500 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
+                            <i class="fas fa-hands-helping text-white text-xl"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900 mb-1.5 text-sm">Programme Mentorat</h3>
-                        <p class="text-xs text-gray-600">Connectez-vous avec des mentors expérimentés</p>
-                        <span class="inline-block mt-2 text-teal-600 font-medium text-xs">
+                        <h3 class="font-semibold text-gray-900 mb-2">Programme Mentorat</h3>
+                        <p class="text-sm text-gray-600">Connectez-vous avec des mentors expérimentés</p>
+                        <span class="inline-block mt-3 text-teal-600 font-medium text-sm">
                             Explorer <i class="fas fa-arrow-right ml-1 text-xs"></i>
                         </span>
                     </div>
@@ -526,46 +579,18 @@
 
                 <!-- NOUVEAU : MAMA ÉCOLE -->
                 <a href="{{ route('mama-ecole.index') }}" class="group">
-                    <div class="bg-gradient-to-br from-pink-50 to-red-100 rounded-lg p-5 text-center hover:shadow-md transition-all card-hover relative">
+                    <div class="bg-gradient-to-br from-pink-50 to-red-100 rounded-xl p-6 text-center hover:shadow-lg transition-all card-hover h-full relative">
                         <!-- Badge NOUVEAU -->
                         <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full animate-pulse">
                             NEW
                         </span>
-                        <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition">
-                            <i class="fas fa-phone-volume text-white text-lg"></i>
+                        <div class="bg-red-500 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
+                            <i class="fas fa-phone-volume text-white text-xl"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900 mb-1.5 text-sm">MAMA ÉCOLE</h3>
-                        <p class="text-xs text-gray-600">Parents illettrés inclus par messages vocaux</p>
-                        <span class="inline-block mt-2 text-red-600 font-medium text-xs">
+                        <h3 class="font-semibold text-gray-900 mb-2">MAMA ÉCOLE</h3>
+                        <p class="text-sm text-gray-600">Parents illettrés inclus par messages vocaux</p>
+                        <span class="inline-block mt-3 text-red-600 font-medium text-sm">
                             Découvrir <i class="fas fa-arrow-right ml-1 text-xs"></i>
-                        </span>
-                    </div>
-                </a>
-
-                <!-- NOUVEAU : Découvrir Plus -->
-                <a href="{{ route('mama-ecole.demo') }}" class="group">
-                    <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-5 text-center hover:shadow-md transition-all card-hover">
-                        <div class="bg-emerald-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition">
-                            <i class="fas fa-rocket text-white text-lg"></i>
-                        </div>
-                        <h3 class="font-semibold text-gray-900 mb-1.5 text-sm">Innovations CI</h3>
-                        <p class="text-xs text-gray-600">Solutions uniques pour l'éducation ivoirienne</p>
-                        <span class="inline-block mt-2 text-emerald-600 font-medium text-xs">
-                            Explorer <i class="fas fa-arrow-right ml-1 text-xs"></i>
-                        </span>
-                    </div>
-                </a>
-
-                <!-- Espace Auteur -->
-                <a href="{{ route('author.login') }}" class="group">
-                    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-5 text-center hover:shadow-md transition-all card-hover">
-                        <div class="bg-green-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition">
-                            <i class="fas fa-pen-fancy text-white text-lg"></i>
-                        </div>
-                        <h3 class="font-semibold text-gray-900 mb-1.5 text-sm">Publier vos Œuvres</h3>
-                        <p class="text-xs text-gray-600">Partagez vos connaissances avec la communauté</p>
-                        <span class="inline-block mt-2 text-green-600 font-medium text-xs">
-                            Commencer <i class="fas fa-arrow-right ml-1 text-xs"></i>
                         </span>
                     </div>
                 </a>
@@ -575,19 +600,49 @@
             <div class="bg-gray-50 rounded-xl p-4">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
                     <div>
-                        <div class="text-xl md:text-2xl font-bold text-emerald-600">50K+</div>
+                        <div class="text-xl md:text-2xl font-bold text-emerald-600">
+                            @if($stats['total_books'] >= 1000000)
+                                {{ round($stats['total_books'] / 1000000, 1) }}M+
+                            @elseif($stats['total_books'] >= 1000)
+                                {{ round($stats['total_books'] / 1000, 1) }}K+
+                            @else
+                                {{ $stats['total_books'] }}+
+                            @endif
+                        </div>
                         <div class="text-xs text-gray-600">Livres disponibles</div>
                     </div>
                     <div>
-                        <div class="text-xl md:text-2xl font-bold text-orange-600">500+</div>
-                        <div class="text-xs text-gray-600">Actualités/mois</div>
+                        <div class="text-xl md:text-2xl font-bold text-orange-600">
+                            @if($stats['new_books_this_month'] >= 1000)
+                                {{ round($stats['new_books_this_month'] / 1000, 1) }}K+
+                            @else
+                                {{ $stats['new_books_this_month'] ?? 0 }}+
+                            @endif
+                        </div>
+                        <div class="text-xs text-gray-600">Nouveaux ce mois</div>
                     </div>
                     <div>
-                        <div class="text-xl md:text-2xl font-bold text-teal-600">250+</div>
-                        <div class="text-xs text-gray-600">Mentors actifs</div>
+                        <div class="text-xl md:text-2xl font-bold text-teal-600">
+                            @if($stats['total_downloads'] >= 1000000)
+                                {{ round($stats['total_downloads'] / 1000000, 1) }}M+
+                            @elseif($stats['total_downloads'] >= 1000)
+                                {{ round($stats['total_downloads'] / 1000, 1) }}K+
+                            @else
+                                {{ $stats['total_downloads'] }}+
+                            @endif
+                        </div>
+                        <div class="text-xs text-gray-600">Téléchargements</div>
                     </div>
                     <div>
-                        <div class="text-xl md:text-2xl font-bold text-green-600">1000+</div>
+                        <div class="text-xl md:text-2xl font-bold text-green-600">
+                            @if($stats['total_authors'] >= 1000000)
+                                {{ round($stats['total_authors'] / 1000000, 1) }}M+
+                            @elseif($stats['total_authors'] >= 1000)
+                                {{ round($stats['total_authors'] / 1000, 1) }}K+
+                            @else
+                                {{ $stats['total_authors'] }}+
+                            @endif
+                        </div>
                         <div class="text-xs text-gray-600">Auteurs publiés</div>
                     </div>
                 </div>
@@ -645,60 +700,176 @@
         </div>
     </section>
 
-    <!-- Footer Minimal -->
-    <footer class="bg-gray-800 text-gray-300 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-3 gap-6 text-sm">
-                <!-- Logo & Description -->
-                <div>
-                    <div class="flex items-center mb-3">
-                        @if(site_logo())
-                            <img src="{{ site_logo() }}" alt="{{ site_name() }}" class="h-6 w-auto brightness-0 invert opacity-60">
-                        @else
-                            <svg class="w-6 h-6 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.669 0-3.218.51-4.5 1.385V4.804z"/>
-                            </svg>
-                        @endif
-                        <span class="ml-2 font-semibold">{{ site_name() }}</span>
+    <!-- Footer Amélioré -->
+    <footer class="bg-gradient-to-b from-gray-900 to-black text-gray-300">
+        <!-- Newsletter Section -->
+        <div class="bg-emerald-600 py-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="md:flex md:items-center md:justify-between">
+                    <div class="mb-4 md:mb-0">
+                        <h3 class="text-xl font-bold text-white mb-1">Restez informé des nouveautés</h3>
+                        <p class="text-emerald-100 text-sm">Recevez les derniers livres et actualités directement dans votre boîte mail</p>
                     </div>
-                    <p class="text-xs text-gray-400">
-                        Bibliothèque numérique pour l'excellence éducative.
-                    </p>
-                </div>
-
-                <!-- Liens -->
-                <div class="flex space-x-8">
-                    <div>
-                        <h4 class="font-medium mb-2 text-gray-200">Services</h4>
-                        <ul class="space-y-1 text-xs">
-                            <li><a href="{{ route('books.public.index') }}" class="hover:text-white transition">Catalogue</a></li>
-                            <li><a href="{{ route('news.index') }}" class="hover:text-white transition">Actualités</a></li>
-                            <li><a href="{{ route('calendar.index') }}" class="hover:text-white transition">Calendrier</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="font-medium mb-2 text-gray-200">Support</h4>
-                        <ul class="space-y-1 text-xs">
-                            <li><a href="#" class="hover:text-white transition">Aide</a></li>
-                            <li><a href="#" class="hover:text-white transition">Contact</a></li>
-                            <li><a href="#" class="hover:text-white transition">À propos</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Contact -->
-                <div>
-                    <h4 class="font-medium mb-2 text-gray-200">Contact</h4>
-                    <ul class="space-y-1 text-xs">
-                        <li>contact@elibrary.ci</li>
-                        <li>+225 27 22 XX XX XX</li>
-                        <li>Abidjan, Côte d'Ivoire</li>
-                    </ul>
+                    <form class="flex flex-col sm:flex-row gap-3 max-w-md">
+                        <input type="email" placeholder="Votre email" 
+                               class="flex-1 px-4 py-2 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white">
+                        <button type="submit" class="bg-white text-emerald-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition">
+                            S'abonner
+                        </button>
+                    </form>
                 </div>
             </div>
+        </div>
 
-            <div class="border-t border-gray-700 mt-6 pt-4 text-center text-xs text-gray-400">
-                <p>&copy; 2024 E-Library Côte d'Ivoire. Tous droits réservés.</p>
+        <!-- Main Footer Content -->
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+                    <!-- Logo & Description -->
+                    <div class="col-span-2">
+                        <div class="flex items-center mb-4">
+                            @if(site_logo())
+                                <img src="{{ site_logo() }}" alt="{{ site_name() }}" class="h-10 w-auto">
+                            @else
+                                <div class="bg-gradient-to-br from-emerald-50 to-teal-100 p-2.5 rounded-lg shadow-lg">
+                                    <svg class="w-8 h-8 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.669 0-3.218.51-4.5 1.385V4.804z"/>
+                                    </svg>
+                                </div>
+                            @endif
+                            <div class="ml-3">
+                                <span class="text-xl font-bold text-white">{{ site_name() }}</span>
+                                <span class="block text-xs text-emerald-400">Excellence & Innovation</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-4 max-w-xs">
+                            La première bibliothèque numérique dédiée à l'excellence éducative en Côte d'Ivoire. 
+                            Plus de {{ number_format($stats['total_books'] ?? 21000) }} ressources pour votre réussite.
+                        </p>
+                        <!-- Social Media -->
+                        <div class="flex space-x-3">
+                            <a href="#" class="bg-gray-800 hover:bg-emerald-600 p-2 rounded-lg transition">
+                                <i class="fab fa-facebook-f w-5 h-5 text-center"></i>
+                            </a>
+                            <a href="#" class="bg-gray-800 hover:bg-emerald-600 p-2 rounded-lg transition">
+                                <i class="fab fa-twitter w-5 h-5 text-center"></i>
+                            </a>
+                            <a href="#" class="bg-gray-800 hover:bg-emerald-600 p-2 rounded-lg transition">
+                                <i class="fab fa-linkedin-in w-5 h-5 text-center"></i>
+                            </a>
+                            <a href="#" class="bg-gray-800 hover:bg-emerald-600 p-2 rounded-lg transition">
+                                <i class="fab fa-whatsapp w-5 h-5 text-center"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Resources -->
+                    <div>
+                        <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-wider">Ressources</h4>
+                        <ul class="space-y-2">
+                            <li><a href="{{ route('books.public.index') }}" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>Bibliothèque
+                            </a></li>
+                            <li><a href="{{ route('news.index') }}" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>Actualités
+                            </a></li>
+                            <li><a href="{{ route('calendar.index') }}" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>Calendrier
+                            </a></li>
+                            <li><a href="{{ route('mentorship.index') }}" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>Mentorat
+                            </a></li>
+                            <li><a href="{{ route('mama-ecole.index') }}" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>MAMA ÉCOLE
+                                <span class="ml-1 bg-red-500 text-white text-xs px-1 rounded">NEW</span>
+                            </a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Niveaux -->
+                    <div>
+                        <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-wider">Niveaux</h4>
+                        <ul class="space-y-2">
+                            <li><a href="{{ route('books.search', ['level' => 'primaire']) }}" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>Primaire
+                            </a></li>
+                            <li><a href="{{ route('books.search', ['level' => 'college']) }}" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>Collège
+                            </a></li>
+                            <li><a href="{{ route('books.search', ['level' => 'lycee']) }}" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>Lycée
+                            </a></li>
+                            <li><a href="{{ route('books.search', ['level' => 'superieur']) }}" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>Supérieur
+                            </a></li>
+                            <li><a href="{{ route('books.search', ['category' => 'examens']) }}" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>Examens
+                            </a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Support -->
+                    <div>
+                        <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-wider">Support</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>Centre d'aide
+                            </a></li>
+                            <li><a href="#" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>FAQ
+                            </a></li>
+                            <li><a href="#" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>Contact
+                            </a></li>
+                            <li><a href="#" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>À propos
+                            </a></li>
+                            <li><a href="#" class="text-sm hover:text-emerald-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-gray-600"></i>Politique de confidentialité
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Info Bar -->
+                <div class="mt-8 pt-8 border-t border-gray-800">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div class="flex items-center justify-center space-x-2">
+                            <i class="fas fa-phone text-emerald-400"></i>
+                            <span class="text-sm">+225 27 22 48 48 48</span>
+                        </div>
+                        <div class="flex items-center justify-center space-x-2">
+                            <i class="fas fa-envelope text-emerald-400"></i>
+                            <span class="text-sm">contact@elibrary.ci</span>
+                        </div>
+                        <div class="flex items-center justify-center space-x-2">
+                            <i class="fas fa-map-marker-alt text-emerald-400"></i>
+                            <span class="text-sm">Abidjan, Côte d'Ivoire</span>
+                        </div>
+                        <div class="flex items-center justify-center space-x-2">
+                            <i class="fas fa-clock text-emerald-400"></i>
+                            <span class="text-sm">24/7 Support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="bg-black py-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="md:flex md:items-center md:justify-between">
+                    <div class="text-xs text-gray-500">
+                        &copy; 2024 E-Library Côte d'Ivoire. Tous droits réservés.
+                    </div>
+                    <div class="mt-2 md:mt-0 flex items-center space-x-4 text-xs">
+                        <span class="text-gray-500">Propulsé par</span>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-orange-400">🇨🇮</span>
+                            <span class="text-white font-semibold">Innovation Ivoirienne</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>

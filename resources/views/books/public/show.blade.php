@@ -182,18 +182,19 @@
                             </div>
                         @endif
 
-                        <!-- Floating Stats -->
-                        <div class="absolute -top-3 -right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 text-emerald-600 shadow-lg">
-                            <div class="text-center">
-                                <div class="text-lg font-bold">{{ number_format($book->downloads) }}</div>
-                                <div class="text-xs font-medium">Téléchargements</div>
+                        <!-- Floating Stats (Style subtil) -->
+                        <div class="absolute bottom-2 right-2 flex gap-2">
+                            <div class="bg-emerald-500/20 backdrop-blur-sm rounded-md px-2 py-1 opacity-85 hover:opacity-100 transition-opacity">
+                                <div class="flex items-center gap-1">
+                                    <i class="fas fa-eye text-emerald-600" style="font-size: 10px;"></i>
+                                    <span class="text-emerald-700 text-xs font-medium">{{ number_format($book->views, 0, '', ' ') }}</span>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="absolute -bottom-3 -left-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 text-emerald-600 shadow-lg">
-                            <div class="text-center">
-                                <div class="text-lg font-bold">{{ number_format($book->views) }}</div>
-                                <div class="text-xs font-medium">Vues</div>
+                            <div class="bg-teal-500/20 backdrop-blur-sm rounded-md px-2 py-1 opacity-85 hover:opacity-100 transition-opacity">
+                                <div class="flex items-center gap-1">
+                                    <i class="fas fa-download text-teal-600" style="font-size: 10px;"></i>
+                                    <span class="text-teal-700 text-xs font-medium">{{ number_format($book->downloads, 0, '', ' ') }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -208,12 +209,48 @@
                             <span>{{ $book->uploader->name }}</span>
                         </div>
 
-                        @if($book->category)
-                            <div class="inline-flex items-center bg-emerald-500/20 rounded-full px-3 py-1 text-sm font-medium mb-4 border border-emerald-400/30">
-                                <i class="fas fa-tag mr-1"></i>
-                                {{ $book->category }}
-                            </div>
-                        @endif
+                        @php
+                            // Définir les couleurs et icônes pour les niveaux
+                            $levelColors = [
+                                'primaire' => 'bg-blue-500/20 border-blue-400/30 text-blue-100',
+                                'college' => 'bg-purple-500/20 border-purple-400/30 text-purple-100',
+                                'lycee' => 'bg-orange-500/20 border-orange-400/30 text-orange-100',
+                                'superieur' => 'bg-red-500/20 border-red-400/30 text-red-100',
+                                'professionnel' => 'bg-indigo-500/20 border-indigo-400/30 text-indigo-100'
+                            ];
+                            $levelIcons = [
+                                'primaire' => 'fa-child',
+                                'college' => 'fa-school',
+                                'lycee' => 'fa-graduation-cap',
+                                'superieur' => 'fa-university',
+                                'professionnel' => 'fa-briefcase'
+                            ];
+                            
+                            // Éviter la redondance
+                            $redundantCategories = ['Primaire', 'Collège', 'Lycée', 'Supérieur', 'Professionnel'];
+                            $showCategory = $book->category && !in_array($book->category, $redundantCategories) && 
+                                           strtolower($book->category) !== $book->level;
+                        @endphp
+                        
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            @if($book->level)
+                                @php
+                                    $levelColor = $levelColors[$book->level] ?? 'bg-gray-500/20 border-gray-400/30 text-gray-100';
+                                    $levelIcon = $levelIcons[$book->level] ?? 'fa-book';
+                                @endphp
+                                <div class="inline-flex items-center {{ $levelColor }} rounded-full px-3 py-1 text-sm font-semibold border">
+                                    <i class="fas {{ $levelIcon }} mr-1.5"></i>
+                                    Niveau {{ ucfirst($book->level) }}
+                                </div>
+                            @endif
+                            
+                            @if($showCategory)
+                                <div class="inline-flex items-center bg-emerald-500/20 rounded-full px-3 py-1 text-sm font-medium border border-emerald-400/30">
+                                    <i class="fas fa-tag mr-1"></i>
+                                    {{ $book->category }}
+                                </div>
+                            @endif
+                        </div>
                     </div>
 
                     @if($book->description)
@@ -281,7 +318,24 @@
                         @if($book->language)
                             <div class="flex flex-col">
                                 <span class="text-emerald-200 text-xs uppercase tracking-wide mb-1">Langue</span>
-                                <span class="text-white font-medium">{{ strtoupper($book->language) }}</span>
+                                @php
+                                    $langNames = [
+                                        'fr' => 'Français',
+                                        'en' => 'Anglais',
+                                        'es' => 'Espagnol',
+                                        'de' => 'Allemand',
+                                        'it' => 'Italien',
+                                        'pt' => 'Portugais',
+                                        'ar' => 'Arabe',
+                                        'zh' => 'Chinois',
+                                        'ja' => 'Japonais',
+                                        'ru' => 'Russe',
+                                        'ko' => 'Coréen',
+                                        'hi' => 'Hindi'
+                                    ];
+                                    $langDisplay = $langNames[$book->language] ?? strtoupper($book->language);
+                                @endphp
+                                <span class="text-white font-medium">{{ $langDisplay }}</span>
                             </div>
                         @endif
 
@@ -289,6 +343,34 @@
                             <div class="flex flex-col">
                                 <span class="text-emerald-200 text-xs uppercase tracking-wide mb-1">Pages</span>
                                 <span class="text-white font-medium">{{ $book->pages }}</span>
+                            </div>
+                        @endif
+
+                        @if($book->level)
+                            <div class="flex flex-col">
+                                <span class="text-emerald-200 text-xs uppercase tracking-wide mb-1">Niveau</span>
+                                <span class="text-white font-medium">{{ ucfirst($book->level) }}</span>
+                            </div>
+                        @endif
+
+                        @if($showCategory)
+                            <div class="flex flex-col">
+                                <span class="text-emerald-200 text-xs uppercase tracking-wide mb-1">Catégorie</span>
+                                <span class="text-white font-medium">{{ $book->category }}</span>
+                            </div>
+                        @endif
+
+                        @if($book->isbn)
+                            <div class="flex flex-col">
+                                <span class="text-emerald-200 text-xs uppercase tracking-wide mb-1">ISBN</span>
+                                <span class="text-white font-medium">{{ $book->isbn }}</span>
+                            </div>
+                        @endif
+
+                        @if($book->publisher)
+                            <div class="flex flex-col">
+                                <span class="text-emerald-200 text-xs uppercase tracking-wide mb-1">Éditeur</span>
+                                <span class="text-white font-medium">{{ $book->publisher }}</span>
                             </div>
                         @endif
                     </div>
@@ -339,9 +421,9 @@
                                 </div>
                             @endif
 
-                            <!-- Stats Badge -->
-                            <div class="absolute top-2 right-2 bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
-                                <i class="fas fa-download mr-1"></i>{{ number_format($similarBook->downloads) }}
+                            <!-- Stats Badge (Subtil mais visible) -->
+                            <div class="absolute bottom-2 right-2 bg-emerald-500/15 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-75 hover:opacity-100 transition-opacity">
+                                <i class="fas fa-download mr-0.5 text-emerald-600" style="font-size: 8px;"></i>{{ number_format($similarBook->downloads, 0, '', ' ') }}
                             </div>
                         </div>
                         <div class="p-4 flex-1 flex flex-col justify-between">

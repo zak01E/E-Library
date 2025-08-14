@@ -6,9 +6,9 @@
 
 @section('content')
     <!-- Stats Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-            <div class="flex items-center">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 h-32 flex items-center">
+            <div class="flex items-center w-full">
                 <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
                     <i class="fas fa-users text-blue-600 dark:text-blue-400 text-xl"></i>
                 </div>
@@ -20,8 +20,8 @@
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-            <div class="flex items-center">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 h-32 flex items-center">
+            <div class="flex items-center w-full">
                 <div class="p-3 rounded-full bg-green-100 dark:bg-green-900">
                     <i class="fas fa-user-check text-green-600 dark:text-green-400 text-xl"></i>
                 </div>
@@ -33,8 +33,8 @@
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-            <div class="flex items-center">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 h-32 flex items-center">
+            <div class="flex items-center w-full">
                 <div class="p-3 rounded-full bg-teal-100 dark:bg-purple-900">
                     <i class="fas fa-crown text-teal-600 dark:text-purple-400 text-xl"></i>
                 </div>
@@ -46,8 +46,8 @@
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-            <div class="flex items-center">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 h-32 flex items-center">
+            <div class="flex items-center w-full">
                 <div class="p-3 rounded-full bg-orange-100 dark:bg-orange-900">
                     <i class="fas fa-file-alt text-orange-600 dark:text-orange-400 text-xl"></i>
                 </div>
@@ -93,9 +93,9 @@
     </div>
 
     <!-- Authors Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
         <!-- Author Card 1 -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow h-64 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-3">
                     <img class="w-12 h-12 rounded-full" src="https://ui-avatars.com/api/?name=Marie+Dubois&background=6366f1&color=fff" alt="Marie Dubois">
@@ -124,7 +124,7 @@
                 </div>
             </div>
             
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mt-auto">
                 <div class="flex items-center space-x-2">
                     <div class="flex text-yellow-400">
                         <i class="fas fa-star text-xs"></i>
@@ -150,7 +150,7 @@
         </div>
 
         <!-- Author Card 2 -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow h-64 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-3">
                     <img class="w-12 h-12 rounded-full" src="https://ui-avatars.com/api/?name=Jean+Martin&background=10b981&color=fff" alt="Jean Martin">
@@ -179,7 +179,7 @@
                 </div>
             </div>
             
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mt-auto">
                 <div class="flex items-center space-x-2">
                     <div class="flex text-yellow-400">
                         <i class="fas fa-star text-xs"></i>
@@ -205,7 +205,7 @@
         </div>
 
         <!-- Author Card 3 -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow h-64 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-3">
                     <img class="w-12 h-12 rounded-full" src="https://ui-avatars.com/api/?name=Sophie+Laurent&background=f59e0b&color=fff" alt="Sophie Laurent">
@@ -234,7 +234,7 @@
                 </div>
             </div>
             
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mt-auto">
                 <div class="flex items-center space-x-2">
                     <div class="flex text-yellow-400">
                         <i class="fas fa-star text-xs"></i>
@@ -260,7 +260,7 @@
         </div>
 
         <!-- Author Card 4 -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow h-64 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-3">
                     <img class="w-12 h-12 rounded-full" src="https://ui-avatars.com/api/?name=Pierre+Durand&background=ef4444&color=fff" alt="Pierre Durand">
@@ -289,7 +289,7 @@
                 </div>
             </div>
             
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mt-auto">
                 <div class="flex items-center space-x-2">
                     <div class="flex text-yellow-400">
                         <i class="fas fa-star text-xs"></i>
@@ -315,7 +315,7 @@
         </div>
 
         <!-- Author Card 5 -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow h-64 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-3">
                     <img class="w-12 h-12 rounded-full" src="https://ui-avatars.com/api/?name=Anne+Moreau&background=8b5cf6&color=fff" alt="Anne Moreau">
@@ -344,7 +344,7 @@
                 </div>
             </div>
             
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mt-auto">
                 <div class="flex items-center space-x-2">
                     <div class="flex text-yellow-400">
                         <i class="fas fa-star text-xs"></i>
@@ -370,7 +370,7 @@
         </div>
 
         <!-- Author Card 6 -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow h-64 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-3">
                     <img class="w-12 h-12 rounded-full" src="https://ui-avatars.com/api/?name=Thomas+Bernard&background=06b6d4&color=fff" alt="Thomas Bernard">
@@ -399,7 +399,7 @@
                 </div>
             </div>
             
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mt-auto">
                 <div class="flex items-center space-x-2">
                     <div class="flex text-yellow-400">
                         <i class="fas fa-star text-xs"></i>

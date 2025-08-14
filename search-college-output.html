@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de livres - E-Library</title>
+    <link rel="icon" type="image/x-icon" href="http://localhost/storage/site-assets/qseqb8pYN3OaBKl49mZIKHbNjWF6VAEwTJZlk78J.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preload" as="style" href="http://localhost/build/assets/app-105a573f.css" /><link rel="modulepreload" href="http://localhost/build/assets/app-2f5f0ab1.js" /><link rel="stylesheet" href="http://localhost/build/assets/app-105a573f.css" /><script type="module" src="http://localhost/build/assets/app-2f5f0ab1.js"></script>    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #10b981 0%, #14b8a6 50%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen" x-data="{ mobileMenuOpen: false }">
+
+    <!-- Alpine.js pour les dropdowns -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+<style>
+    /* Cache les dropdowns par défaut */
+    [x-cloak] { display: none !important; }
+</style>
+
+<!-- Top bar annonce -->
+<div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-2">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center text-sm">
+            <div class="flex items-center space-x-4">
+                <span class="hidden sm:inline-flex items-center">
+                    <i class="fas fa-phone mr-2"></i>+225 27 22 55 66 77
+                </span>
+                <span class="hidden md:inline-flex items-center">
+                    <i class="fas fa-envelope mr-2"></i>contact@elibrary.ci
+                </span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="/mama-ecole" class="inline-flex items-center bg-white/20 px-3 py-1 rounded-full hover:bg-white/30 transition">
+                    <i class="fas fa-phone-alt mr-2 text-xs"></i>
+                    MAMA ÉCOLE
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation principale -->
+<nav class="bg-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <!-- Logo et Nom -->
+            <div class="flex items-center">
+                <a href="/" class="flex items-center group">
+                                            <img src="http://localhost/storage/site-assets/y8oHL5wuS8dq4yBanIE9hrf29MGmQpy3wBAhsm4w.png" alt="E-Library" class="h-10 w-auto group-hover:scale-105 transition">
+                                        <div class="ml-3">
+                        <span class="text-xl font-bold text-gray-900">E-Library</span>
+                        <span class="hidden lg:block text-xs text-gray-500">Excellence & Innovation</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Menu Desktop -->
+            <div class="hidden md:flex items-center space-x-1">
+                <!-- Dropdown Ressources -->
+                <div class="relative group" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
+                    <button class="text-gray-700 hover:text-emerald-600 px-4 py-2 font-medium transition flex items-center group">
+                        <span class="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent group-hover:from-emerald-600 group-hover:to-teal-700">
+                            <i class="fas fa-book mr-2 text-sm text-emerald-600"></i>
+                            Ressources
+                        </span>
+                        <i class="fas fa-chevron-down ml-1 text-xs text-gray-400"></i>
+                    </button>
+                    <div x-show="open" x-transition x-cloak class="absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-2xl border border-emerald-100">
+                        <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-t-xl px-4 py-2 border-b border-emerald-100">
+                            <span class="text-xs font-semibold text-emerald-700">CONTENUS ÉDUCATIFS</span>
+                        </div>
+                        <a href="http://localhost/search" class="block px-4 py-3 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition group">
+                            <i class="fas fa-book-open mr-2 w-4 text-emerald-500"></i>Bibliothèque numérique
+                            <span class="text-xs text-gray-500 block ml-6">50,000+ livres</span>
+                        </a>
+                        <a href="/actualites" class="block px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition">
+                            <i class="fas fa-newspaper mr-2 w-4 text-orange-500"></i>Actualités éducatives
+                            <span class="text-xs text-gray-500 block ml-6">Mises à jour quotidiennes</span>
+                        </a>
+                        <a href="/calendrier" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition">
+                            <i class="fas fa-calendar-alt mr-2 w-4 text-blue-500"></i>Calendrier scolaire
+                            <span class="text-xs text-gray-500 block ml-6">2024-2025</span>
+                        </a>
+                        <div class="border-t border-gray-100"></div>
+                        <a href="/parrainage" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition rounded-b-xl">
+                            <i class="fas fa-user-graduate mr-2 w-4 text-amber-500"></i>Programme mentorat
+                            <span class="text-xs text-gray-500 block ml-6">250+ mentors</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Niveaux scolaires -->
+                <div class="relative group" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
+                    <button class="text-gray-700 hover:text-teal-600 px-4 py-2 font-medium transition flex items-center">
+                        <i class="fas fa-graduation-cap mr-2 text-sm text-teal-600"></i>
+                        Niveaux
+                        <i class="fas fa-chevron-down ml-1 text-xs text-gray-400"></i>
+                    </button>
+                    <div x-show="open" x-transition x-cloak class="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl shadow-2xl border border-teal-100">
+                        <a href="/search?level=primaire" class="block px-4 py-3 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-700 transition rounded-t-xl">
+                            <i class="fas fa-child mr-2 w-4 text-yellow-500"></i>Primaire
+                        </a>
+                        <a href="/search?level=college" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition">
+                            <i class="fas fa-school mr-2 w-4 text-blue-500"></i>Collège
+                        </a>
+                        <a href="/search?level=lycee" class="block px-4 py-3 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition">
+                            <i class="fas fa-university mr-2 w-4 text-emerald-500"></i>Lycée
+                        </a>
+                        <div class="border-t border-gray-100"></div>
+                        <a href="/search?level=superieur" class="block px-4 py-3 text-sm text-gray-700 hover:bg-slate-50 hover:text-slate-700 transition rounded-b-xl">
+                            <i class="fas fa-user-graduate mr-2 w-4 text-slate-500"></i>Supérieur
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Examens -->
+                <a href="/search?category=Examens" class="text-gray-700 hover:text-orange-600 px-4 py-2 font-medium transition flex items-center group">
+                    <i class="fas fa-medal mr-2 text-sm text-orange-500"></i>
+                    <span class="group-hover:text-orange-600">Examens</span>
+                </a>
+
+                <!-- Auteurs -->
+                <a href="/authors" class="text-gray-700 hover:text-amber-600 px-4 py-2 font-medium transition flex items-center group">
+                    <i class="fas fa-pen-fancy mr-2 text-sm text-amber-500"></i>
+                    <span class="group-hover:text-amber-600">Auteurs</span>
+                </a>
+            </div>
+
+            <!-- Actions droite -->
+            <div class="hidden md:flex items-center space-x-3">
+                <!-- Recherche rapide -->
+                <button onclick="document.getElementById('search-modal').classList.remove('hidden')" class="text-gray-500 hover:text-emerald-600 p-2 transition group">
+                    <i class="fas fa-search text-lg"></i>
+                </button>
+
+                                    <a href="http://localhost/login" class="text-gray-700 hover:text-emerald-600 font-medium transition">
+                        Connexion
+                    </a>
+                    <a href="http://localhost/register" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-xl transform hover:-translate-y-0.5">
+                        Créer un compte
+                    </a>
+                            </div>
+
+            <!-- Mobile menu button -->
+            <div class="md:hidden">
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Search Modal -->
+<div id="search-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-20">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4">
+        <form action="/search" method="GET" class="p-6">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-search text-emerald-500 text-xl"></i>
+                <input type="text" name="q" placeholder="Rechercher des livres, auteurs, matières..." 
+                       class="flex-1 text-lg outline-none focus:ring-2 focus:ring-emerald-500 rounded-lg px-3 py-2" autofocus>
+                <button type="button" onclick="document.getElementById('search-modal').classList.add('hidden')" 
+                        class="text-gray-400 hover:text-gray-600 transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="mt-4 flex gap-2">
+                <button type="submit" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-xl">
+                    Rechercher
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+    <!-- Hero Section -->
+    <section class="relative py-12 bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-10"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                    Recherche Avancée
+                </h1>
+                <p class="text-xl text-emerald-100 max-w-2xl mx-auto">
+                    Explorez notre collection de 948 livres numériques
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Search and Filters -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 mb-8 border border-gray-100">
+                <form method="GET" action="http://localhost/search" class="space-y-6">
+                    <!-- Search Bar -->
+                    <div class="relative">
+                        <label for="search" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-search mr-2 text-emerald-500"></i>Rechercher
+                        </label>
+                        <input type="text" name="q" id="search" value="" 
+                               placeholder="Rechercher par titre, auteur, ISBN, éditeur..."
+                               class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-200">
+                    </div>
+
+                    <!-- Filters Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Level Filter -->
+                        <div>
+                            <label for="level" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-graduation-cap mr-2 text-emerald-500"></i>Niveau
+                            </label>
+                            <select name="level" id="level" 
+                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-200">
+                                <option value="">Tous les niveaux</option>
+                                <option value="primaire" >Primaire</option>
+                                <option value="college" selected>Collège</option>
+                                <option value="lycee" >Lycée</option>
+                                <option value="superieur" >Supérieur</option>
+                                <option value="professionnel" >Professionnel</option>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </select>
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div>
+                            <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-folder mr-2 text-teal-500"></i>Catégorie
+                            </label>
+                            <select name="category" id="category" 
+                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-200">
+                                <option value="">Toutes les catégories</option>
+                                                                    <option value="Adventure" >
+                                        Adventure
+                                    </option>
+                                                                    <option value="Anglais" >
+                                        Anglais
+                                    </option>
+                                                                    <option value="Architecture" >
+                                        Architecture
+                                    </option>
+                                                                    <option value="Art" >
+                                        Art
+                                    </option>
+                                                                    <option value="BD &amp; Manga" >
+                                        BD &amp; Manga
+                                    </option>
+                                                                    <option value="Biographie" >
+                                        Biographie
+                                    </option>
+                                                                    <option value="Biography" >
+                                        Biography
+                                    </option>
+                                                                    <option value="Biology" >
+                                        Biology
+                                    </option>
+                                                                    <option value="Business" >
+                                        Business
+                                    </option>
+                                                                    <option value="Chemistry" >
+                                        Chemistry
+                                    </option>
+                                                                    <option value="Cinema" >
+                                        Cinema
+                                    </option>
+                                                                    <option value="Collège" >
+                                        Collège
+                                    </option>
+                                                                    <option value="Cooking" >
+                                        Cooking
+                                    </option>
+                                                                    <option value="Cuisine" >
+                                        Cuisine
+                                    </option>
+                                                                    <option value="Dance" >
+                                        Dance
+                                    </option>
+                                                                    <option value="Design" >
+                                        Design
+                                    </option>
+                                                                    <option value="Drama" >
+                                        Drama
+                                    </option>
+                                                                    <option value="Développement Personnel" >
+                                        Développement Personnel
+                                    </option>
+                                                                    <option value="Economics" >
+                                        Economics
+                                    </option>
+                                                                    <option value="Education" >
+                                        Education
+                                    </option>
+                                                                    <option value="Engineering" >
+                                        Engineering
+                                    </option>
+                                                                    <option value="Examens" >
+                                        Examens
+                                    </option>
+                                                                    <option value="Fantasy" >
+                                        Fantasy
+                                    </option>
+                                                                    <option value="Fiction" >
+                                        Fiction
+                                    </option>
+                                                                    <option value="Français" >
+                                        Français
+                                    </option>
+                                                                    <option value="Health" >
+                                        Health
+                                    </option>
+                                                                    <option value="Histoire" >
+                                        Histoire
+                                    </option>
+                                                                    <option value="Histoire-Géographie" >
+                                        Histoire-Géographie
+                                    </option>
+                                                                    <option value="History" >
+                                        History
+                                    </option>
+                                                                    <option value="Horror" >
+                                        Horror
+                                    </option>
+                                                                    <option value="Informatique" >
+                                        Informatique
+                                    </option>
+                                                                    <option value="Jeunesse" >
+                                        Jeunesse
+                                    </option>
+                                                                    <option value="Literature" >
+                                        Literature
+                                    </option>
+                                                                    <option value="Lycée" >
+                                        Lycée
+                                    </option>
+                                                                    <option value="Manuels MENET-FP" >
+                                        Manuels MENET-FP
+                                    </option>
+                                                                    <option value="Mathematics" >
+                                        Mathematics
+                                    </option>
+                                                                    <option value="Mathématiques" >
+                                        Mathématiques
+                                    </option>
+                                                                    <option value="Medicine" >
+                                        Medicine
+                                    </option>
+                                                                    <option value="Music" >
+                                        Music
+                                    </option>
+                                                                    <option value="Musique" >
+                                        Musique
+                                    </option>
+                                                                    <option value="Mystery" >
+                                        Mystery
+                                    </option>
+                                                                    <option value="Méthodologie" >
+                                        Méthodologie
+                                    </option>
+                                                                    <option value="Nature" >
+                                        Nature
+                                    </option>
+                                                                    <option value="Non-Fiction" >
+                                        Non-Fiction
+                                    </option>
+                                                                    <option value="Philosophie" >
+                                        Philosophie
+                                    </option>
+                                                                    <option value="Philosophy" >
+                                        Philosophy
+                                    </option>
+                                                                    <option value="Photography" >
+                                        Photography
+                                    </option>
+                                                                    <option value="Physics" >
+                                        Physics
+                                    </option>
+                                                                    <option value="Poetry" >
+                                        Poetry
+                                    </option>
+                                                                    <option value="Politics" >
+                                        Politics
+                                    </option>
+                                                                    <option value="Poésie" >
+                                        Poésie
+                                    </option>
+                                                                    <option value="Primaire" >
+                                        Primaire
+                                    </option>
+                                                                    <option value="Professionnel" >
+                                        Professionnel
+                                    </option>
+                                                                    <option value="Programming" >
+                                        Programming
+                                    </option>
+                                                                    <option value="Psychologie" >
+                                        Psychologie
+                                    </option>
+                                                                    <option value="Psychology" >
+                                        Psychology
+                                    </option>
+                                                                    <option value="Religion" >
+                                        Religion
+                                    </option>
+                                                                    <option value="Roman" >
+                                        Roman
+                                    </option>
+                                                                    <option value="Romance" >
+                                        Romance
+                                    </option>
+                                                                    <option value="SVT" >
+                                        SVT
+                                    </option>
+                                                                    <option value="Santé" >
+                                        Santé
+                                    </option>
+                                                                    <option value="Science" >
+                                        Science
+                                    </option>
+                                                                    <option value="Science-Fiction" >
+                                        Science-Fiction
+                                    </option>
+                                                                    <option value="Sciences Physiques" >
+                                        Sciences Physiques
+                                    </option>
+                                                                    <option value="Self-Help" >
+                                        Self-Help
+                                    </option>
+                                                                    <option value="Sociology" >
+                                        Sociology
+                                    </option>
+                                                                    <option value="Spirituality" >
+                                        Spirituality
+                                    </option>
+                                                                    <option value="Sport" >
+                                        Sport
+                                    </option>
+                                                                    <option value="Sports" >
+                                        Sports
+                                    </option>
+                                                                    <option value="Supérieur" >
+                                        Supérieur
+                                    </option>
+                                                                    <option value="Technologie" >
+                                        Technologie
+                                    </option>
+                                                                    <option value="Technology" >
+                                        Technology
+                                    </option>
+                                                                    <option value="Theater" >
+                                        Theater
+                                    </option>
+                                                                    <option value="Thriller" >
+                                        Thriller
+                                    </option>
+                                                                    <option value="Théâtre" >
+                                        Théâtre
+                                    </option>
+                                                                    <option value="Travel" >
+                                        Travel
+                                    </option>
+                                                                    <option value="Voyage" >
+                                        Voyage
+                                    </option>
+                                                                    <option value="Économie" >
+                                        Économie
+                                    </option>
+                                                                    <option value="Économie-Gestion" >
+                                        Économie-Gestion
+                                    </option>
+                                                            </select>
+                        </div>
+
+                        <!-- Language Filter -->
+                        <div>
+                            <label for="language" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-language mr-2 text-emerald-500"></i>Langue
+                            </label>
+                            <select name="language" id="language" 
+                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-200">
+                                <option value="">Toutes les langues</option>
+                                                                    <option value="ar" >
+                                         العربية
+                                                                            </option>
+                                                                    <option value="de" >
+                                         de
+                                                                            </option>
+                                                                    <option value="en" >
+                                         English
+                                                                            </option>
+                                                                    <option value="es" >
+                                         es
+                                                                            </option>
+                                                                    <option value="fr" >
+                                         Français
+                                                                            </option>
+                                                                    <option value="hi" >
+                                         hi
+                                                                            </option>
+                                                                    <option value="it" >
+                                         it
+                                                                            </option>
+                                                                    <option value="ja" >
+                                         ja
+                                                                            </option>
+                                                                    <option value="ko" >
+                                         ko
+                                                                            </option>
+                                                                    <option value="pt" >
+                                         pt
+                                                                            </option>
+                                                                    <option value="ru" >
+                                         ru
+                                                                            </option>
+                                                                    <option value="zh" >
+                                         zh
+                                                                            </option>
+                                                            </select>
+                        </div>
+
+                        <!-- Year From -->
+                        <div>
+                            <label for="year_from" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-calendar-alt mr-2 text-teal-500"></i>Année (de)
+                            </label>
+                            <input type="number" name="year_from" id="year_from" value="" 
+                                   min="1800" max="2025"
+                                   class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-200">
+                        </div>
+
+                        <!-- Year To -->
+                        <div>
+                            <label for="year_to" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-calendar-check mr-2 text-emerald-500"></i>Année (à)
+                            </label>
+                            <input type="number" name="year_to" id="year_to" value="" 
+                                   min="1800" max="2025"
+                                   class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-200">
+                        </div>
+                    </div>
+
+                    <!-- Sort Options -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="sort_by" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-sort mr-2 text-teal-500"></i>Trier par
+                            </label>
+                            <select name="sort_by" id="sort_by" 
+                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-200">
+                                <option value="created_at" >Date d'ajout</option>
+                                <option value="title" >Titre</option>
+                                <option value="author_name" >Auteur</option>
+                                <option value="publication_year" >Année de publication</option>
+                                <option value="views" >Plus consultés</option>
+                                <option value="downloads" >Plus téléchargés</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="sort_order" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-sort-amount-down mr-2 text-emerald-500"></i>Ordre
+                            </label>
+                            <select name="sort_order" id="sort_order" 
+                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-200">
+                                <option value="desc" >Décroissant</option>
+                                <option value="asc" >Croissant</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Active filters display -->
+                    <div class="space-y-2">
+                                                
+                                                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+                                <span class="text-sm text-emerald-700">
+                                    <i class="fas fa-graduation-cap mr-2"></i>
+                                    Niveau filtré : <strong>College</strong>
+                                </span>
+                            </div>
+                                                
+                                            </div>
+
+                    <!-- Submit Buttons -->
+                    <div class="flex items-center space-x-4">
+                        <button type="submit" 
+                                class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-xl transform hover:-translate-y-0.5">
+                            <i class="fas fa-search mr-2"></i>Rechercher
+                        </button>
+                        <a href="http://localhost/search" 
+                           class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-all duration-200">
+                            <i class="fas fa-redo mr-2"></i>Réinitialiser
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Results Section -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
+                <!-- Results Header -->
+                <div class="mb-6 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Résultats de recherche</h2>
+                        <p class="text-gray-600 mt-1">948 livre(s) trouvé(s)</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-500">Affichage</span>
+                        <span class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            1-12
+                        </span>
+                    </div>
+                </div>
+
+                                    <!-- Books Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
+                                                                            <img src="/storage/covers/cover-1409.jpg" 
+                                             alt="Une Dimension Sans Âme - Tome 1" 
+                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                                                        
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>40 118
+                                        </span>
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>6 256
+                                        </span>
+                                    </div>
+
+                                                                    </div>
+                                
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
+                                            Une Dimension Sans Âme - Tome 1
+                                        </h3>
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>Louis Lefebvre
+                                        </p>
+                                                                                    <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 150px;">
+                                                Mathématiques
+                                            </span>
+                                                                            </div>
+                                    
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="http://localhost/library/17874" 
+                                           class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                            <i class="fas fa-eye mr-2"></i>Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
+                                                                            <img src="/storage/books/covers/cover_65.png" 
+                                             alt="La Labyrinthe Final - Tome 3" 
+                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                                                        
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>32 211
+                                        </span>
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>6 444
+                                        </span>
+                                    </div>
+
+                                                                    </div>
+                                
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
+                                            La Labyrinthe Final - Tome 3
+                                        </h3>
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>Philippe Vincent
+                                        </p>
+                                                                                    <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 150px;">
+                                                Sciences Physiques
+                                            </span>
+                                                                            </div>
+                                    
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="http://localhost/library/19753" 
+                                           class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                            <i class="fas fa-eye mr-2"></i>Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
+                                                                            <img src="/storage/covers/cover-4793.jpg" 
+                                             alt="La Oracle Central - Tome 3" 
+                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                                                        
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>16 130
+                                        </span>
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>4 237
+                                        </span>
+                                    </div>
+
+                                                                    </div>
+                                
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
+                                            La Oracle Central - Tome 3
+                                        </h3>
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>Bernard Petit
+                                        </p>
+                                                                                    <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 150px;">
+                                                Mathématiques
+                                            </span>
+                                                                            </div>
+                                    
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="http://localhost/library/21258" 
+                                           class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                            <i class="fas fa-eye mr-2"></i>Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
+                                                                            <img src="/storage/books/covers/cover_50.png" 
+                                             alt="Le Secret Ancien" 
+                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                                                        
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>23 561
+                                        </span>
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>1 057
+                                        </span>
+                                    </div>
+
+                                                                    </div>
+                                
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
+                                            Le Secret Ancien
+                                        </h3>
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>Lucie Thomas
+                                        </p>
+                                                                                    <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 150px;">
+                                                Mathématiques
+                                            </span>
+                                                                            </div>
+                                    
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="http://localhost/library/17062" 
+                                           class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                            <i class="fas fa-eye mr-2"></i>Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
+                                                                            <div class="w-full h-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center group-hover:from-emerald-600 group-hover:to-teal-700 transition-all duration-300">
+                                            <div class="text-white text-center p-3 max-w-full">
+                                                <i class="fas fa-book text-3xl mb-2"></i>
+                                                <div class="font-bold text-sm leading-tight break-words line-clamp-3">Livre Numéro 196</div>
+                                            </div>
+                                        </div>
+                                                                        
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>1 913
+                                        </span>
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>344
+                                        </span>
+                                    </div>
+
+                                                                    </div>
+                                
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
+                                            Livre Numéro 196
+                                        </h3>
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>Steve Jobs
+                                        </p>
+                                                                                    <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 150px;">
+                                                Sciences Physiques
+                                            </span>
+                                                                            </div>
+                                    
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="http://localhost/library/6148" 
+                                           class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                            <i class="fas fa-eye mr-2"></i>Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
+                                                                            <div class="w-full h-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center group-hover:from-emerald-600 group-hover:to-teal-700 transition-all duration-300">
+                                            <div class="text-white text-center p-3 max-w-full">
+                                                <i class="fas fa-book text-3xl mb-2"></i>
+                                                <div class="font-bold text-sm leading-tight break-words line-clamp-3">Livre Numéro 479</div>
+                                            </div>
+                                        </div>
+                                                                        
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>1 107
+                                        </span>
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>460
+                                        </span>
+                                    </div>
+
+                                                                    </div>
+                                
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
+                                            Livre Numéro 479
+                                        </h3>
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>Winston Churchill
+                                        </p>
+                                                                                    <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 150px;">
+                                                Collège
+                                            </span>
+                                                                            </div>
+                                    
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="http://localhost/library/6431" 
+                                           class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                            <i class="fas fa-eye mr-2"></i>Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
+                                                                            <div class="w-full h-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center group-hover:from-emerald-600 group-hover:to-teal-700 transition-all duration-300">
+                                            <div class="text-white text-center p-3 max-w-full">
+                                                <i class="fas fa-book text-3xl mb-2"></i>
+                                                <div class="font-bold text-sm leading-tight break-words line-clamp-3">Livre Numéro 228</div>
+                                            </div>
+                                        </div>
+                                                                        
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>1 297
+                                        </span>
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>330
+                                        </span>
+                                    </div>
+
+                                                                    </div>
+                                
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
+                                            Livre Numéro 228
+                                        </h3>
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>Charles Darwin
+                                        </p>
+                                                                                    <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 150px;">
+                                                Mathématiques
+                                            </span>
+                                                                            </div>
+                                    
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="http://localhost/library/6180" 
+                                           class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                            <i class="fas fa-eye mr-2"></i>Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
+                                                                            <div class="w-full h-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center group-hover:from-emerald-600 group-hover:to-teal-700 transition-all duration-300">
+                                            <div class="text-white text-center p-3 max-w-full">
+                                                <i class="fas fa-book text-3xl mb-2"></i>
+                                                <div class="font-bold text-sm leading-tight break-words line-clamp-3">Livre Numéro 233</div>
+                                            </div>
+                                        </div>
+                                                                        
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>1 664
+                                        </span>
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>458
+                                        </span>
+                                    </div>
+
+                                                                    </div>
+                                
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
+                                            Livre Numéro 233
+                                        </h3>
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>Honoré de Balzac
+                                        </p>
+                                                                                    <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 150px;">
+                                                Sciences Physiques
+                                            </span>
+                                                                            </div>
+                                    
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="http://localhost/library/6185" 
+                                           class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                            <i class="fas fa-eye mr-2"></i>Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
+                                                                            <div class="w-full h-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center group-hover:from-emerald-600 group-hover:to-teal-700 transition-all duration-300">
+                                            <div class="text-white text-center p-3 max-w-full">
+                                                <i class="fas fa-book text-3xl mb-2"></i>
+                                                <div class="font-bold text-sm leading-tight break-words line-clamp-3">Livre Numéro 128</div>
+                                            </div>
+                                        </div>
+                                                                        
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>185
+                                        </span>
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>201
+                                        </span>
+                                    </div>
+
+                                                                    </div>
+                                
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
+                                            Livre Numéro 128
+                                        </h3>
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>Martin Luther King Jr.
+                                        </p>
+                                                                                    <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 150px;">
+                                                Mathématiques
+                                            </span>
+                                                                            </div>
+                                    
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="http://localhost/library/6080" 
+                                           class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                            <i class="fas fa-eye mr-2"></i>Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
+                                                                            <div class="w-full h-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center group-hover:from-emerald-600 group-hover:to-teal-700 transition-all duration-300">
+                                            <div class="text-white text-center p-3 max-w-full">
+                                                <i class="fas fa-book text-3xl mb-2"></i>
+                                                <div class="font-bold text-sm leading-tight break-words line-clamp-3">Livre Numéro 390</div>
+                                            </div>
+                                        </div>
+                                                                        
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>1 369
+                                        </span>
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>100
+                                        </span>
+                                    </div>
+
+                                                                    </div>
+                                
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
+                                            Livre Numéro 390
+                                        </h3>
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>Nelson Mandela
+                                        </p>
+                                                                                    <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 150px;">
+                                                Collège
+                                            </span>
+                                                                            </div>
+                                    
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="http://localhost/library/6342" 
+                                           class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                            <i class="fas fa-eye mr-2"></i>Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
+                                                                            <div class="w-full h-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center group-hover:from-emerald-600 group-hover:to-teal-700 transition-all duration-300">
+                                            <div class="text-white text-center p-3 max-w-full">
+                                                <i class="fas fa-book text-3xl mb-2"></i>
+                                                <div class="font-bold text-sm leading-tight break-words line-clamp-3">Livre Numéro 174</div>
+                                            </div>
+                                        </div>
+                                                                        
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>545
+                                        </span>
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>55
+                                        </span>
+                                    </div>
+
+                                                                    </div>
+                                
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
+                                            Livre Numéro 174
+                                        </h3>
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>Mahatma Gandhi
+                                        </p>
+                                                                                    <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 150px;">
+                                                Sciences Physiques
+                                            </span>
+                                                                            </div>
+                                    
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="http://localhost/library/6126" 
+                                           class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                            <i class="fas fa-eye mr-2"></i>Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
+                                                                            <div class="w-full h-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center group-hover:from-emerald-600 group-hover:to-teal-700 transition-all duration-300">
+                                            <div class="text-white text-center p-3 max-w-full">
+                                                <i class="fas fa-book text-3xl mb-2"></i>
+                                                <div class="font-bold text-sm leading-tight break-words line-clamp-3">Livre Numéro 176</div>
+                                            </div>
+                                        </div>
+                                                                        
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>580
+                                        </span>
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>292
+                                        </span>
+                                    </div>
+
+                                                                    </div>
+                                
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
+                                            Livre Numéro 176
+                                        </h3>
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>Warren Buffett
+                                        </p>
+                                                                                    <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 150px;">
+                                                Mathématiques
+                                            </span>
+                                                                            </div>
+                                    
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="http://localhost/library/6128" 
+                                           class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+                                            <i class="fas fa-eye mr-2"></i>Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                            </div>
+
+                    <!-- Pagination -->
+                                            <div class="mt-8 flex justify-center">
+                            <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-between">
+        <div class="flex justify-between flex-1 sm:hidden">
+                            <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md dark:text-gray-600 dark:bg-gray-800 dark:border-gray-600">
+                    pagination.previous
+                </span>
+            
+                            <a href="http://localhost/search?level=college&amp;page=2" class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:focus:border-blue-700 dark:active:bg-gray-700 dark:active:text-gray-300">
+                    pagination.next
+                </a>
+                    </div>
+
+        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <div>
+                <p class="text-sm text-gray-700 leading-5 dark:text-gray-400">
+                    Showing
+                                            <span class="font-medium">1</span>
+                        to
+                        <span class="font-medium">12</span>
+                                        of
+                    <span class="font-medium">948</span>
+                    results
+                </p>
+            </div>
+
+            <div>
+                <span class="relative z-0 inline-flex rtl:flex-row-reverse shadow-sm rounded-md">
+                    
+                                            <span aria-disabled="true" aria-label="pagination.previous">
+                            <span class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default rounded-l-md leading-5 dark:bg-gray-800 dark:border-gray-600" aria-hidden="true">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </span>
+                    
+                    
+                                            
+                        
+                        
+                                                                                                                        <span aria-current="page">
+                                        <span class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 dark:bg-gray-800 dark:border-gray-600">1</span>
+                                    </span>
+                                                                                                                                <a href="http://localhost/search?level=college&amp;page=2" class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300 dark:active:bg-gray-700 dark:focus:border-blue-800" aria-label="Go to page 2">
+                                        2
+                                    </a>
+                                                                                                                                <a href="http://localhost/search?level=college&amp;page=3" class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300 dark:active:bg-gray-700 dark:focus:border-blue-800" aria-label="Go to page 3">
+                                        3
+                                    </a>
+                                                                                                                                <a href="http://localhost/search?level=college&amp;page=4" class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300 dark:active:bg-gray-700 dark:focus:border-blue-800" aria-label="Go to page 4">
+                                        4
+                                    </a>
+                                                                                                                                <a href="http://localhost/search?level=college&amp;page=5" class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300 dark:active:bg-gray-700 dark:focus:border-blue-800" aria-label="Go to page 5">
+                                        5
+                                    </a>
+                                                                                                                                <a href="http://localhost/search?level=college&amp;page=6" class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300 dark:active:bg-gray-700 dark:focus:border-blue-800" aria-label="Go to page 6">
+                                        6
+                                    </a>
+                                                                                                                                <a href="http://localhost/search?level=college&amp;page=7" class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300 dark:active:bg-gray-700 dark:focus:border-blue-800" aria-label="Go to page 7">
+                                        7
+                                    </a>
+                                                                                                                                <a href="http://localhost/search?level=college&amp;page=8" class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300 dark:active:bg-gray-700 dark:focus:border-blue-800" aria-label="Go to page 8">
+                                        8
+                                    </a>
+                                                                                                                                <a href="http://localhost/search?level=college&amp;page=9" class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300 dark:active:bg-gray-700 dark:focus:border-blue-800" aria-label="Go to page 9">
+                                        9
+                                    </a>
+                                                                                                                                <a href="http://localhost/search?level=college&amp;page=10" class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300 dark:active:bg-gray-700 dark:focus:border-blue-800" aria-label="Go to page 10">
+                                        10
+                                    </a>
+                                                                                                                                
+                                                    <span aria-disabled="true">
+                                <span class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 cursor-default leading-5 dark:bg-gray-800 dark:border-gray-600">...</span>
+                            </span>
+                        
+                        
+                                                                    
+                        
+                        
+                                                                                                                        <a href="http://localhost/search?level=college&amp;page=78" class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300 dark:active:bg-gray-700 dark:focus:border-blue-800" aria-label="Go to page 78">
+                                        78
+                                    </a>
+                                                                                                                                <a href="http://localhost/search?level=college&amp;page=79" class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300 dark:active:bg-gray-700 dark:focus:border-blue-800" aria-label="Go to page 79">
+                                        79
+                                    </a>
+                                                                                                        
+                    
+                                            <a href="http://localhost/search?level=college&amp;page=2" rel="next" class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md leading-5 hover:text-gray-400 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:active:bg-gray-700 dark:focus:border-blue-800" aria-label="pagination.next">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                                    </span>
+            </div>
+        </div>
+    </nav>
+
+                        </div>
+                                                </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-12 bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-4">Restez informé</h2>
+            <p class="text-xl opacity-90 mb-8">
+                Recevez nos dernières nouveautés et recommandations de lecture
+            </p>
+            <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <input type="email" placeholder="Votre email" 
+                       class="flex-1 px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500">
+                <button type="submit" class="bg-white text-emerald-600 px-6 py-3 rounded-lg font-semibold hover:bg-emerald-50 transition-all duration-200 shadow-md hover:shadow-lg">
+                    S'abonner
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; 2025 E-Library - Tous droits réservés</p>
+        </div>
+    </footer>
+</body>
+</html>

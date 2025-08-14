@@ -61,13 +61,38 @@
                         <label for="search" class="block text-sm font-semibold text-gray-700 mb-2">
                             <i class="fas fa-search mr-2 text-emerald-500"></i>Rechercher
                         </label>
-                        <input type="text" name="search" id="search" value="{{ request('search') }}" 
+                        <input type="text" name="q" id="search" value="{{ request('q') ?: request('search') }}" 
                                placeholder="Rechercher par titre, auteur, ISBN, éditeur..."
                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-200">
                     </div>
 
                     <!-- Filters Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Level Filter -->
+                        <div>
+                            <label for="level" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-graduation-cap mr-2 text-emerald-500"></i>Niveau
+                            </label>
+                            <select name="level" id="level" 
+                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-200">
+                                <option value="">Tous les niveaux</option>
+                                <option value="primaire" {{ request('level') == 'primaire' ? 'selected' : '' }}>Primaire</option>
+                                <option value="college" {{ request('level') == 'college' ? 'selected' : '' }}>Collège</option>
+                                <option value="lycee" {{ request('level') == 'lycee' ? 'selected' : '' }}>Lycée</option>
+                                <option value="superieur" {{ request('level') == 'superieur' ? 'selected' : '' }}>Supérieur</option>
+                                <option value="professionnel" {{ request('level') == 'professionnel' ? 'selected' : '' }}>Professionnel</option>
+                                @if(isset($levels))
+                                    @foreach($levels as $lvl)
+                                        @if(!in_array($lvl, ['primaire', 'college', 'lycee', 'superieur', 'professionnel']))
+                                            <option value="{{ $lvl }}" {{ request('level') == $lvl ? 'selected' : '' }}>
+                                                {{ ucfirst($lvl) }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+
                         <!-- Category Filter -->
                         <div>
                             <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -154,16 +179,35 @@
                         </div>
                     </div>
 
-                    <!-- Level Filter (if present) -->
-                    @if(request('level'))
-                        <input type="hidden" name="level" value="{{ request('level') }}">
-                        <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
-                            <span class="text-sm text-emerald-700">
-                                <i class="fas fa-graduation-cap mr-2"></i>
-                                Niveau filtré : <strong>{{ ucfirst(request('level')) }}</strong>
-                            </span>
-                        </div>
-                    @endif
+                    <!-- Active filters display -->
+                    <div class="space-y-2">
+                        @if(request('q') || request('search'))
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                <span class="text-sm text-blue-700">
+                                    <i class="fas fa-search mr-2"></i>
+                                    Recherche active : <strong>{{ request('q') ?: request('search') }}</strong>
+                                </span>
+                            </div>
+                        @endif
+                        
+                        @if(request('level'))
+                            <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+                                <span class="text-sm text-emerald-700">
+                                    <i class="fas fa-graduation-cap mr-2"></i>
+                                    Niveau filtré : <strong>{{ ucfirst(request('level')) }}</strong>
+                                </span>
+                            </div>
+                        @endif
+                        
+                        @if(request('category'))
+                            <div class="bg-teal-50 border border-teal-200 rounded-lg p-3">
+                                <span class="text-sm text-teal-700">
+                                    <i class="fas fa-folder mr-2"></i>
+                                    Catégorie filtrée : <strong>{{ request('category') }}</strong>
+                                </span>
+                            </div>
+                        @endif
+                    </div>
 
                     <!-- Submit Buttons -->
                     <div class="flex items-center space-x-4">
@@ -199,8 +243,8 @@
                     <!-- Books Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         @foreach($books as $book)
-                            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group h-96 flex flex-col card-hover border border-gray-100">
-                                <div class="relative h-56 flex-shrink-0">
+                            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 400px;">
+                                <div class="relative flex-shrink-0" style="height: 200px;">
                                     @if($book->cover_image)
                                         <img src="{{ Storage::url($book->cover_image) }}" 
                                              alt="{{ $book->title }}" 
@@ -214,13 +258,13 @@
                                         </div>
                                     @endif
                                     
-                                    <!-- Stats Badges -->
-                                    <div class="absolute top-2 right-2 flex flex-col gap-1">
-                                        <span class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-md">
-                                            <i class="fas fa-eye mr-1"></i>{{ number_format($book->views) }}
+                                    <!-- Stats Badges (Subtils mais visibles) -->
+                                    <div class="absolute bottom-2 right-2 flex gap-1.5">
+                                        <span class="bg-emerald-500/20 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-eye mr-0.5 text-emerald-600" style="font-size: 8px;"></i>{{ number_format($book->views, 0, '', ' ') }}
                                         </span>
-                                        <span class="bg-gradient-to-r from-teal-500 to-emerald-600 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-md">
-                                            <i class="fas fa-download mr-1"></i>{{ number_format($book->downloads) }}
+                                        <span class="bg-teal-500/20 backdrop-blur-sm text-teal-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-80 hover:opacity-100 transition-opacity">
+                                            <i class="fas fa-download mr-0.5 text-teal-600" style="font-size: 8px;"></i>{{ number_format($book->downloads, 0, '', ' ') }}
                                         </span>
                                     </div>
 
@@ -233,23 +277,58 @@
                                     @endif
                                 </div>
                                 
-                                <div class="p-4 flex-1 flex flex-col justify-between">
-                                    <div>
-                                        <h3 class="font-bold text-gray-900 mb-2 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2">
+                                <div class="p-4 flex flex-col flex-1" style="max-height: 200px;">
+                                    <div class="flex-1 overflow-hidden">
+                                        <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
                                             {{ $book->title }}
                                         </h3>
-                                        <p class="text-gray-600 text-xs mb-2">
-                                            <i class="fas fa-user mr-1 text-gray-400"></i>{{ $book->author_name }}
+                                        <p class="text-gray-600 text-xs mb-2 truncate">
+                                            <i class="fas fa-user mr-1 text-gray-400"></i>{{ Str::limit($book->author_name, 25) }}
                                         </p>
-                                        @if($book->category)
-                                            <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-3 py-1 text-xs font-semibold">
-                                                {{ $book->category }}
-                                            </span>
-                                        @endif
+                                        <div class="flex flex-wrap gap-1 mb-1">
+                                            @if($book->level)
+                                                @php
+                                                    $levelColors = [
+                                                        'primaire' => 'from-blue-50 to-blue-100 text-blue-700 border-blue-200',
+                                                        'college' => 'from-purple-50 to-purple-100 text-purple-700 border-purple-200',
+                                                        'lycee' => 'from-orange-50 to-orange-100 text-orange-700 border-orange-200',
+                                                        'superieur' => 'from-red-50 to-red-100 text-red-700 border-red-200',
+                                                        'professionnel' => 'from-indigo-50 to-indigo-100 text-indigo-700 border-indigo-200'
+                                                    ];
+                                                    $levelIcons = [
+                                                        'primaire' => 'fa-child',
+                                                        'college' => 'fa-school',
+                                                        'lycee' => 'fa-graduation-cap',
+                                                        'superieur' => 'fa-university',
+                                                        'professionnel' => 'fa-briefcase'
+                                                    ];
+                                                    $levelColor = $levelColors[$book->level] ?? 'from-gray-50 to-gray-100 text-gray-700 border-gray-200';
+                                                    $levelIcon = $levelIcons[$book->level] ?? 'fa-book';
+                                                    
+                                                    // Éviter la redondance: ne pas afficher la catégorie si elle est identique au niveau
+                                                    $redundantCategories = ['Primaire', 'Collège', 'Lycée', 'Supérieur', 'Professionnel'];
+                                                    $showCategory = !in_array($book->category, $redundantCategories) && 
+                                                                   strtolower($book->category) !== $book->level;
+                                                @endphp
+                                                <span class="inline-block bg-gradient-to-r {{ $levelColor }} border rounded-full px-2 py-0.5 text-xs font-semibold">
+                                                    <i class="fas {{ $levelIcon }} mr-1" style="font-size: 10px;"></i>{{ ucfirst($book->level) }}
+                                                </span>
+                                            @else
+                                                @php
+                                                    $showCategory = true;
+                                                @endphp
+                                            @endif
+                                            
+                                            @if($book->category && $showCategory)
+                                                <span class="inline-block bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium truncate" style="max-width: 120px;" title="{{ $book->category }}">
+                                                    {{ $book->category }}
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
                                     
-                                    <div class="mt-auto pt-3 border-t border-gray-100">
-                                        <a href="{{ route('books.show', $book) }}" 
+                                    <div class="mt-3 pt-3 border-t border-gray-100">
+                                        <a href="{{ route('books.public.show', $book) }}" 
                                            class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
                                             <i class="fas fa-eye mr-2"></i>Voir détails
                                         </a>

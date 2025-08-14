@@ -26,6 +26,11 @@ class HomeController extends Controller
             return $this->getGeneralStats();
         });
 
+        // Statistiques par niveau (pour les cards du home)
+        $levelStats = Cache::remember('level_stats', 300, function() {
+            return $this->getLevelStatistics();
+        });
+
         // Catégories éducatives ivoiriennes
         $ivorianEducationCategories = $this->getIvorianEducationCategories();
         
@@ -64,6 +69,7 @@ class HomeController extends Controller
 
         return view('home', [
             'stats' => $stats,
+            'levelStats' => $levelStats,
             'ivorianEducationCategories' => $ivorianEducationCategories,
             'languageStats' => $languageStats,
             'regionStats' => $regionStats,
@@ -79,6 +85,63 @@ class HomeController extends Controller
     }
 
 
+
+    /**
+     * Get statistics per educational level
+     */
+    private function getLevelStatistics()
+    {
+        return [
+            'primaire' => Book::where('status', 'approved')
+                ->where(function($query) {
+                    $query->where('level', 'primaire')
+                          ->orWhere('category', 'LIKE', '%primaire%');
+                })->count(),
+            
+            'college' => Book::where('status', 'approved')
+                ->where(function($query) {
+                    $query->where('level', 'college')
+                          ->orWhere('level', 'collège')
+                          ->orWhere('category', 'LIKE', '%collège%')
+                          ->orWhere('category', 'LIKE', '%college%');
+                })->count(),
+            
+            'lycee' => Book::where('status', 'approved')
+                ->where(function($query) {
+                    $query->where('level', 'lycee')
+                          ->orWhere('level', 'lycée')
+                          ->orWhere('category', 'LIKE', '%lycée%')
+                          ->orWhere('category', 'LIKE', '%lycee%');
+                })->count(),
+            
+            'superieur' => Book::where('status', 'approved')
+                ->where(function($query) {
+                    $query->where('level', 'superieur')
+                          ->orWhere('level', 'supérieur')
+                          ->orWhere('category', 'LIKE', '%supérieur%')
+                          ->orWhere('category', 'LIKE', '%superieur%')
+                          ->orWhere('category', 'LIKE', '%universitaire%');
+                })->count(),
+            
+            'professionnel' => Book::where('status', 'approved')
+                ->where(function($query) {
+                    $query->where('level', 'professionnel')
+                          ->orWhere('category', 'LIKE', '%professionnel%')
+                          ->orWhere('category', 'LIKE', '%formation%')
+                          ->orWhere('category', 'LIKE', '%BTS%')
+                          ->orWhere('category', 'LIKE', '%CAP%');
+                })->count(),
+            
+            'examens' => Book::where('status', 'approved')
+                ->where(function($query) {
+                    $query->where('category', 'Examens')
+                          ->orWhere('category', 'LIKE', '%examen%')
+                          ->orWhere('category', 'LIKE', '%BAC%')
+                          ->orWhere('category', 'LIKE', '%BEPC%')
+                          ->orWhere('category', 'LIKE', '%annales%');
+                })->count(),
+        ];
+    }
 
     /**
      * Get general statistics for the homepage
@@ -123,19 +186,41 @@ class HomeController extends Controller
         // Nombre fixe de livres à afficher par section
         $booksPerSection = 24; // 4 colonnes x 6 lignes
 
-        // Livres récents
+        // Livres récents de cette semaine
         $recentBooks = Book::where('status', 'approved')
             ->with(['uploader'])
+            ->where('created_at', '>=', Carbon::now()->subWeek())
             ->latest()
             ->limit($booksPerSection)
             ->get();
+        
+        // Si pas assez de livres cette semaine, prendre les plus récents
+        if ($recentBooks->count() < 8) {
+            $recentBooks = Book::where('status', 'approved')
+                ->with(['uploader'])
+                ->latest()
+                ->limit($booksPerSection)
+                ->get();
+        }
 
-        // Livres populaires (par téléchargements)
+        // Livres populaires cette semaine (par vues de la semaine)
         $popularBooks = Book::where('status', 'approved')
             ->with(['uploader'])
+            ->where('updated_at', '>=', Carbon::now()->subWeek())
+            ->orderBy('views', 'desc')
             ->orderBy('downloads', 'desc')
             ->limit($booksPerSection)
             ->get();
+        
+        // Si pas assez de livres cette semaine, prendre les plus populaires globalement
+        if ($popularBooks->count() < 8) {
+            $popularBooks = Book::where('status', 'approved')
+                ->with(['uploader'])
+                ->orderBy('downloads', 'desc')
+                ->orderBy('views', 'desc')
+                ->limit($booksPerSection)
+                ->get();
+        }
 
         // Livres les plus vus
         $mostViewedBooks = Book::where('status', 'approved')

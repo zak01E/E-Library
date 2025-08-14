@@ -59,7 +59,16 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // Determine redirect route based on user role
+        $route = match($request->user()->role) {
+            'admin' => 'admin.profile.edit',
+            'author' => 'author.profile.edit',
+            default => 'profile.edit'
+        };
+
+        return Redirect::route($route)
+            ->with('success', '✓ Profil mis à jour avec succès')
+            ->with('status', 'profile-updated');
     }
 
     /**
@@ -88,7 +97,16 @@ class ProfileController extends Controller
             'profile_photo' => $path,
         ]);
 
-        return Redirect::route('profile.edit')->with('status', 'profile-photo-updated');
+        // Determine redirect route based on user role
+        $route = match($user->role) {
+            'admin' => 'admin.profile.edit',
+            'author' => 'author.profile.edit',
+            default => 'profile.edit'
+        };
+
+        return Redirect::route($route)
+            ->with('success', '✓ Photo de profil mise à jour')
+            ->with('status', 'profile-photo-updated');
     }
 
     /**
@@ -103,7 +121,16 @@ class ProfileController extends Controller
             $user->update(['profile_photo' => null]);
         }
 
-        return Redirect::route('profile.edit')->with('status', 'profile-photo-deleted');
+        // Determine redirect route based on user role
+        $route = match($user->role) {
+            'admin' => 'admin.profile.edit',
+            'author' => 'author.profile.edit',
+            default => 'profile.edit'
+        };
+
+        return Redirect::route($route)
+            ->with('success', '✓ Photo de profil supprimée')
+            ->with('status', 'profile-photo-deleted');
     }
 
     public function destroy(Request $request): RedirectResponse

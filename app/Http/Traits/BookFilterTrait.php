@@ -13,6 +13,11 @@ trait BookFilterTrait
      */
     public function applyBookFilters(Builder $query, Request $request): Builder
     {
+        // Filter by level (primaire, collège, lycée, etc.)
+        if ($request->filled('level') && $request->level !== 'all') {
+            $query->where('level', $request->level);
+        }
+
         // Filter by category
         if ($request->filled('category') && $request->category !== 'all') {
             $query->where('category', $request->category);
@@ -28,16 +33,30 @@ trait BookFilterTrait
             $query->where('author_name', $request->author);
         }
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('author_name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhere('isbn', 'like', "%{$search}%")
-                  ->orWhere('publisher', 'like', "%{$search}%");
+        // Search functionality - support both 'search' and 'q' parameters
+        $searchTerm = $request->get('search') ?: $request->get('q');
+        if ($searchTerm) {
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('title', 'like', "%{$searchTerm}%")
+                  ->orWhere('author_name', 'like', "%{$searchTerm}%")
+                  ->orWhere('description', 'like', "%{$searchTerm}%")
+                  ->orWhere('isbn', 'like', "%{$searchTerm}%")
+                  ->orWhere('publisher', 'like', "%{$searchTerm}%")
+                  ->orWhere('category', 'like', "%{$searchTerm}%");
             });
+            
+            // Add relevance scoring for better search results
+            $query->selectRaw('*, 
+                CASE 
+                    WHEN title LIKE ? THEN 100
+                    WHEN category LIKE ? THEN 80
+                    WHEN author_name LIKE ? THEN 60
+                    WHEN publisher LIKE ? THEN 40
+                    WHEN description LIKE ? THEN 20
+                    ELSE 10
+                END as relevance_score', 
+                ["%{$searchTerm}%", "%{$searchTerm}%", "%{$searchTerm}%", "%{$searchTerm}%", "%{$searchTerm}%"]
+            )->orderByDesc('relevance_score');
         }
 
         return $query;
@@ -48,21 +67,32 @@ trait BookFilterTrait
      */
     public function applyBookSorting(Builder $query, Request $request): Builder
     {
-        $sort = $request->get('sort', 'latest');
+        // Support both 'sort' and 'sort_by' parameters
+        $sortBy = $request->get('sort_by') ?: $request->get('sort', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
         
-        switch ($sort) {
+        switch ($sortBy) {
             case 'popular':
-                $query->orderBy('views', 'desc');
+            case 'views':
+                $query->orderBy('views', $sortOrder);
                 break;
             case 'downloads':
-                $query->orderBy('downloads', 'desc');
+                $query->orderBy('downloads', $sortOrder);
                 break;
             case 'alphabetical':
-                $query->orderBy('title', 'asc');
+            case 'title':
+                $query->orderBy('title', $sortOrder);
+                break;
+            case 'author_name':
+                $query->orderBy('author_name', $sortOrder);
+                break;
+            case 'publication_year':
+                $query->orderBy('publication_year', $sortOrder);
                 break;
             case 'latest':
+            case 'created_at':
             default:
-                $query->latest();
+                $query->orderBy('created_at', $sortOrder);
                 break;
         }
 

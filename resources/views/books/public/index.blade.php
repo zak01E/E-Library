@@ -106,8 +106,8 @@
             <div class="books-grid-container">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @forelse($books as $book)
-                    <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-xl transition-all duration-300 group h-96 flex flex-col card-hover border border-gray-100">
-                        <div class="relative h-56 flex-shrink-0">
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col card-hover border border-gray-100" style="height: 380px;">
+                        <div class="relative flex-shrink-0" style="height: 200px;">
                             @if($book->cover_image)
                                 <img src="{{ Storage::url($book->cover_image) }}"
                                      alt="{{ $book->title }}"
@@ -121,19 +121,19 @@
                                 </div>
                             @endif
 
-                            <!-- Stats Badge -->
-                            <div class="absolute top-2 right-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-md">
-                                <i class="fas fa-download mr-1"></i>{{ number_format($book->downloads) }}
+                            <!-- Stats Badge (Subtil mais visible) -->
+                            <div class="absolute bottom-2 right-2 bg-emerald-500/15 backdrop-blur-sm text-emerald-700 px-1.5 py-0.5 rounded text-[10px] font-medium opacity-75 hover:opacity-100 transition-opacity">
+                                <i class="fas fa-download mr-0.5 text-emerald-600" style="font-size: 8px;"></i>{{ number_format($book->downloads, 0, '', ' ') }}
                             </div>
                         </div>
-                        <div class="p-4 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-gray-900 mb-2 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2">
+                        <div class="p-4 flex flex-col" style="height: 180px;">
+                            <div class="flex-1 overflow-hidden">
+                                <h3 class="font-bold text-gray-900 mb-1 text-sm group-hover:text-emerald-600 transition-colors line-clamp-2" style="max-height: 2.5rem;">
                                     {{ $book->title }}
                                 </h3>
-                                <p class="text-gray-600 text-xs mb-3 leading-relaxed line-clamp-2">{{ $book->description }}</p>
+                                <p class="text-gray-600 text-xs mb-2 line-clamp-2" style="max-height: 2rem;">{{ Str::limit($book->description, 60) }}</p>
                             </div>
-                            <div class="flex items-center justify-between mt-auto">
+                            <div class="flex items-center justify-between mt-auto pt-2">
                                 <div class="flex items-center text-xs text-gray-500">
                                     <i class="fas fa-user mr-1"></i>
                                     <span>{{ Str::limit($book->uploader->name, 12) }}</span>

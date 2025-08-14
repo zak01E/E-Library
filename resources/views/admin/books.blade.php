@@ -36,149 +36,267 @@
 
 
 @section('content')
-    <!-- En-tête avec statistiques rapides -->
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-            <div class="flex items-center">
-                <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                    <i class="fas fa-book text-blue-600 dark:text-blue-400"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Livres</p>
-                    <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $books->total() }}</p>
-                </div>
+    <!-- Conteneur principal des statistiques -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-6 p-6">
+        <!-- Titre et actions principales -->
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Tableau de bord des livres</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Vue d'ensemble et statistiques de la bibliothèque</p>
+            </div>
+            <div class="flex space-x-2">
+                <a href="{{ admin_route('books.create') }}" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors">
+                    <i class="fas fa-plus mr-2"></i>
+                    Ajouter un livre
+                </a>
+                <button type="button" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+                    <i class="fas fa-download mr-2"></i>
+                    Exporter
+                </button>
             </div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-            <div class="flex items-center">
-                <div class="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
-                    <i class="fas fa-check-circle text-green-600 dark:text-green-400"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Approuvés</p>
-                    <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $books->where('status', 'approved')->count() }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-            <div class="flex items-center">
-                <div class="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
-                    <i class="fas fa-clock text-yellow-600 dark:text-yellow-400"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">En Attente</p>
-                    <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $books->where('status', 'pending')->count() }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-            <div class="flex items-center">
-                <div class="p-2 bg-teal-100 dark:bg-purple-900 rounded-lg">
-                    <i class="fas fa-download text-teal-600 dark:text-purple-400"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Téléchargements</p>
-                    <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $books->sum('downloads') }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-            <div class="flex items-center">
-                <div class="p-2 bg-red-100 dark:bg-red-900 rounded-lg">
-                    <i class="fas fa-times-circle text-red-600 dark:text-red-400"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Rejetés</p>
-                    <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $books->where('status', 'rejected')->count() }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Statistiques des nouveaux statuts -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-            <div class="flex items-center">
-                <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                    <i class="fas fa-search text-blue-600 dark:text-blue-400"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">En Révision</p>
-                    <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $books->where('status', 'under_review')->count() }}</p>
-                </div>
+        <!-- Statistiques principales en ligne -->
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 mb-6">
+            <!-- Total -->
+            <div class="text-center">
+                <div class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ $stats['total'] ?? 0 }}</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Total livres</div>
+            </div>
+            <!-- Approuvés -->
+            <div class="text-center">
+                <div class="text-3xl font-bold text-green-600 dark:text-green-400">{{ $stats['approved'] ?? 0 }}</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Approuvés</div>
+            </div>
+            <!-- En attente -->
+            <div class="text-center">
+                <div class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">{{ $stats['pending'] ?? 0 }}</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">En attente</div>
+            </div>
+            <!-- Rejetés -->
+            <div class="text-center">
+                <div class="text-3xl font-bold text-red-600 dark:text-red-400">{{ $stats['rejected'] ?? 0 }}</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Rejetés</div>
+            </div>
+            <!-- Avec niveau -->
+            <div class="text-center">
+                <div class="text-3xl font-bold text-purple-600 dark:text-purple-400">{{ $stats['with_level'] ?? 0 }}</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Avec niveau</div>
+            </div>
+            <!-- Sans niveau -->
+            <div class="text-center">
+                <div class="text-3xl font-bold text-gray-600 dark:text-gray-400">{{ $stats['without_level'] ?? 0 }}</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Sans niveau</div>
+            </div>
+            <!-- Téléchargements -->
+            <div class="text-center">
+                <div class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $books->sum('downloads') }}</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Téléchargements</div>
+            </div>
+            <!-- Vues -->
+            <div class="text-center">
+                <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ $books->sum('views') ?? 0 }}</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Vues totales</div>
             </div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-            <div class="flex items-center">
-                <div class="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg">
-                    <i class="fas fa-pause-circle text-orange-600 dark:text-orange-400"></i>
+
+        <!-- Barres de progression par statut -->
+        <div class="space-y-3">
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-600 dark:text-gray-400">Livres approuvés</span>
+                    <span class="text-gray-900 dark:text-gray-100 font-medium">{{ $stats['approved'] ?? 0 }} / {{ $stats['total'] ?? 0 }}</span>
                 </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Suspendus</p>
-                    <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $books->where('status', 'suspended')->count() }}</p>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div class="bg-green-600 h-2 rounded-full transition-all duration-500" style="width: {{ $stats['total'] > 0 ? round(($stats['approved'] / $stats['total']) * 100) : 0 }}%"></div>
                 </div>
             </div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-            <div class="flex items-center">
-                <div class="p-2 bg-emerald-100 dark:bg-emerald-900 rounded-lg">
-                    <i class="fas fa-chart-line text-emerald-600 dark:text-emerald-400"></i>
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-600 dark:text-gray-400">Livres avec niveau éducatif</span>
+                    <span class="text-gray-900 dark:text-gray-100 font-medium">{{ $stats['with_level'] ?? 0 }} / {{ $stats['total'] ?? 0 }}</span>
                 </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Publics</p>
-                    <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $books->where('is_public', true)->count() }}</p>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div class="bg-purple-600 h-2 rounded-full transition-all duration-500" style="width: {{ $stats['total'] > 0 ? round(($stats['with_level'] / $stats['total']) * 100) : 0 }}%"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-        <!-- En-tête du tableau avec filtres -->
+        <!-- En-tête compact avec titre et bouton filtres -->
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Gestion des Livres</h3>
-                    @if(request('search') || request('status'))
-                        <div class="flex items-center space-x-2 mt-1">
-                            @if(request('search'))
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
-                                    <i class="fas fa-search mr-1"></i>
-                                    "{{ request('search') }}"
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Liste des livres</h3>
+                    @if(request()->hasAny(['search', 'status', 'level', 'category', 'language', 'year_from', 'year_to']))
+                        <div class="flex items-center">
+                            <span class="text-sm text-gray-500 dark:text-gray-400 mr-2">Filtres actifs:</span>
+                            <div class="flex flex-wrap items-center gap-1">
+                                @php $filterCount = 0; @endphp
+                                @if(request('search')) @php $filterCount++; @endphp @endif
+                                @if(request('status') && request('status') !== 'all') @php $filterCount++; @endphp @endif
+                                @if(request('level') && request('level') !== 'all') @php $filterCount++; @endphp @endif
+                                @if(request('category') && request('category') !== 'all') @php $filterCount++; @endphp @endif
+                                @if(request('language') && request('language') !== 'all') @php $filterCount++; @endphp @endif
+                                @if(request('year_from') || request('year_to')) @php $filterCount++; @endphp @endif
+                                
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                    {{ $filterCount }} {{ $filterCount > 1 ? 'filtres' : 'filtre' }}
                                 </span>
-                            @endif
-                            @if(request('status'))
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                    <i class="fas fa-filter mr-1"></i>
-                                    {{
-                                        request('status') == 'approved' ? 'Approuvés' :
-                                        (request('status') == 'pending' ? 'En attente' : 'Rejetés')
-                                    }}
-                                </span>
-                            @endif
-                            <a href="{{ admin_route('books') }}" class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                                <i class="fas fa-times mr-1"></i>Effacer les filtres
-                            </a>
+                                <a href="{{ admin_route('books') }}" class="ml-2 text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                    <i class="fas fa-times"></i> Réinitialiser
+                                </a>
+                            </div>
                         </div>
                     @endif
                 </div>
-                <form method="GET" action="{{ admin_route('books') }}" class="mt-3 sm:mt-0 flex items-center space-x-3" id="filterForm">
-                    <div class="relative">
-                        <input type="text"
-                               name="search"
-                               value="{{ request('search') }}"
-                               placeholder="Rechercher..."
-                               class="w-64 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-                    </div>
-                    <select name="status"
-                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-white text-sm"
-                            onchange="document.getElementById('filterForm').submit()">
-                        <option value="">Tous les statuts</option>
-                        <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approuvés</option>
-                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>En attente</option>
-                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejetés</option>
-                    </select>
-                </form>
+                <div class="flex items-center space-x-2">
+                    <button type="button" onclick="toggleFilters()" class="px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors">
+                        <i class="fas fa-filter mr-2"></i>
+                        {{ request()->hasAny(['search', 'status', 'level', 'category', 'language', 'year_from', 'year_to']) ? 'Modifier les filtres' : 'Filtrer' }}
+                        <i id="filterToggleIcon" class="fas fa-chevron-down ml-2 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Zone de filtres avancés (masquée par défaut) -->
+        <div id="advancedFilters" class="hidden border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+            <div class="p-6">
+                <form method="GET" action="{{ admin_route('books') }}" id="filterForm">
+                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                            <!-- Recherche -->
+                            <div class="relative">
+                                <input type="text"
+                                       name="search"
+                                       value="{{ request('search') }}"
+                                       placeholder="Titre, auteur, ISBN..."
+                                       class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm">
+                                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                            </div>
+                            
+                            <!-- Statut -->
+                            <select name="status"
+                                    class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-white text-sm">
+                                <option value="all">Tous les statuts</option>
+                                @if(isset($statuses))
+                                    @foreach($statuses as $status)
+                                        <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>
+                                            {{ ucfirst($status) }}
+                                        </option>
+                                    @endforeach
+                                @else
+                                    <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approuvés</option>
+                                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>En attente</option>
+                                    <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejetés</option>
+                                @endif
+                            </select>
+                            
+                            <!-- Niveau -->
+                            <select name="level"
+                                    class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-white text-sm">
+                                <option value="all">Tous les niveaux</option>
+                                <option value="null" {{ request('level') == 'null' ? 'selected' : '' }}>Sans niveau</option>
+                                @if(isset($levels))
+                                    @foreach($levels as $level)
+                                        <option value="{{ $level }}" {{ request('level') == $level ? 'selected' : '' }}>
+                                            {{ ucfirst($level) }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                            
+                            <!-- Catégorie -->
+                            <select name="category"
+                                    class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-white text-sm">
+                                <option value="all">Toutes les catégories</option>
+                                @if(isset($categories))
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category }}" {{ request('category') == $category ? 'selected' : '' }}>
+                                            {{ $category }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                            
+                            <!-- Langue -->
+                            <select name="language"
+                                    class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-white text-sm">
+                                <option value="all">Toutes les langues</option>
+                                @if(isset($languages))
+                                    @foreach($languages as $language)
+                                        <option value="{{ $language }}" {{ request('language') == $language ? 'selected' : '' }}>
+                                            @php
+                                                $languageNames = [
+                                                    'fr' => 'Français',
+                                                    'en' => 'Anglais',
+                                                    'ar' => 'Arabe',
+                                                    'es' => 'Espagnol',
+                                                    'de' => 'Allemand',
+                                                    'it' => 'Italien',
+                                                    'pt' => 'Portugais',
+                                                    'nl' => 'Néerlandais',
+                                                    'ru' => 'Russe',
+                                                    'zh' => 'Chinois',
+                                                    'ja' => 'Japonais',
+                                                    'ko' => 'Coréen'
+                                                ];
+                                            @endphp
+                                            {{ $languageNames[$language] ?? $language }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                            
+                            <!-- Année de publication (De) -->
+                            <input type="number"
+                                   name="year_from"
+                                   value="{{ request('year_from') }}"
+                                   placeholder="Année de..."
+                                   min="1900"
+                                   max="{{ date('Y') }}"
+                                   class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-white text-sm">
+                            
+                            <!-- Année de publication (À) -->
+                            <input type="number"
+                                   name="year_to"
+                                   value="{{ request('year_to') }}"
+                                   placeholder="Année à..."
+                                   min="1900"
+                                   max="{{ date('Y') }}"
+                                   class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-white text-sm">
+                            
+                            <!-- Tri -->
+                            <div class="flex space-x-2">
+                                <select name="sort_by"
+                                        class="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-white text-sm">
+                                    <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>Date d'ajout</option>
+                                    <option value="title" {{ request('sort_by') == 'title' ? 'selected' : '' }}>Titre</option>
+                                    <option value="author_name" {{ request('sort_by') == 'author_name' ? 'selected' : '' }}>Auteur</option>
+                                    <option value="downloads" {{ request('sort_by') == 'downloads' ? 'selected' : '' }}>Téléchargements</option>
+                                    <option value="views" {{ request('sort_by') == 'views' ? 'selected' : '' }}>Vues</option>
+                                </select>
+                                <select name="sort_order"
+                                        class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-white text-sm">
+                                    <option value="desc" {{ request('sort_order', 'desc') == 'desc' ? 'selected' : '' }}>↓</option>
+                                    <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>↑</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Boutons d'action -->
+                        <div class="flex justify-end space-x-2 mt-3">
+                            <a href="{{ admin_route('books') }}" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors">
+                                Réinitialiser
+                            </a>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+                                <i class="fas fa-search mr-2"></i>
+                                Appliquer les filtres
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -207,6 +325,9 @@
                                     </th>
                                     <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Catégorie
+                                    </th>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Niveau
                                     </th>
                                     <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Statut
@@ -251,6 +372,26 @@
                                             <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                                                 {{ Str::limit($book->category, 10) }}
                                             </span>
+                                        </td>
+                                        <td class="px-2 py-1">
+                                            @if($book->level)
+                                                @php
+                                                    $levelConfig = [
+                                                        'primaire' => ['icon' => 'fa-child', 'color' => 'green'],
+                                                        'college' => ['icon' => 'fa-school', 'color' => 'blue'],
+                                                        'lycee' => ['icon' => 'fa-graduation-cap', 'color' => 'purple'],
+                                                        'superieur' => ['icon' => 'fa-university', 'color' => 'indigo'],
+                                                        'professionnel' => ['icon' => 'fa-briefcase', 'color' => 'gray']
+                                                    ];
+                                                    $config = $levelConfig[$book->level] ?? ['icon' => 'fa-book', 'color' => 'gray'];
+                                                @endphp
+                                                <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-{{ $config['color'] }}-100 text-{{ $config['color'] }}-800 dark:bg-{{ $config['color'] }}-900 dark:text-{{ $config['color'] }}-200">
+                                                    <i class="fas {{ $config['icon'] }} mr-1" style="font-size: 10px;"></i>
+                                                    {{ ucfirst($book->level) }}
+                                                </span>
+                                            @else
+                                                <span class="text-xs text-gray-400">-</span>
+                                            @endif
                                         </td>
                                         <td class="px-2 py-1">
                                             <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium {{ $book->status_badge_class }} dark:bg-opacity-20">
@@ -323,31 +464,32 @@
     </div>
 
     <script>
-        // Recherche avec délai pour éviter trop de requêtes
-        let searchTimeout;
-        const searchInput = document.querySelector('input[name="search"]');
-
-        if (searchInput) {
-            searchInput.addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    document.getElementById('filterForm').submit();
-                }, 500); // Délai de 500ms
-            });
+        // Fonction pour basculer l'affichage des filtres
+        function toggleFilters() {
+            const filtersDiv = document.getElementById('advancedFilters');
+            const toggleIcon = document.getElementById('filterToggleIcon');
+            
+            if (filtersDiv.classList.contains('hidden')) {
+                filtersDiv.classList.remove('hidden');
+                toggleIcon.classList.add('rotate-180');
+            } else {
+                filtersDiv.classList.add('hidden');
+                toggleIcon.classList.remove('rotate-180');
+            }
         }
-
-        // Bouton pour effacer la recherche
-        if (searchInput && searchInput.value) {
-            const clearButton = document.createElement('button');
-            clearButton.type = 'button';
-            clearButton.className = 'absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600';
-            clearButton.innerHTML = '<i class="fas fa-times text-xs"></i>';
-            clearButton.onclick = function() {
-                searchInput.value = '';
-                document.getElementById('filterForm').submit();
-            };
-            searchInput.parentNode.appendChild(clearButton);
-        }
+        
+        // Ouvrir automatiquement les filtres si des filtres sont actifs
+        document.addEventListener('DOMContentLoaded', function() {
+            const hasActiveFilters = {{ request()->hasAny(['search', 'status', 'level', 'category', 'language', 'year_from', 'year_to']) ? 'true' : 'false' }};
+            if (hasActiveFilters) {
+                const filtersDiv = document.getElementById('advancedFilters');
+                const toggleIcon = document.getElementById('filterToggleIcon');
+                if (filtersDiv) {
+                    filtersDiv.classList.remove('hidden');
+                    toggleIcon.classList.add('rotate-180');
+                }
+            }
+        });
     </script>
 @endsection
 

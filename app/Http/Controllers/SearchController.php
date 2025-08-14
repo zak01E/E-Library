@@ -21,8 +21,11 @@ class SearchController extends Controller
         // Apply filters using the trait
         $query = $this->applyBookFilters($query, $request);
 
-        // Apply sorting using the trait
-        $query = $this->applyBookSorting($query, $request);
+        // Apply sorting using the trait (only if no search term)
+        $searchTerm = $request->get('search') ?: $request->get('q');
+        if (!$searchTerm) {
+            $query = $this->applyBookSorting($query, $request);
+        }
 
         // Add year range filters (specific to search)
         if ($request->filled('year_from')) {
@@ -36,11 +39,18 @@ class SearchController extends Controller
 
         // Get filter options using the trait
         $filterOptions = $this->getFilterOptions();
+        
+        // Get available levels
+        $levels = Book::whereNotNull('level')
+            ->distinct()
+            ->pluck('level')
+            ->sort();
 
         return view('books.search', [
             'books' => $books,
             'categories' => $filterOptions['categories'],
             'languages' => $filterOptions['languages'],
+            'levels' => $levels,
         ]);
     }
 }
